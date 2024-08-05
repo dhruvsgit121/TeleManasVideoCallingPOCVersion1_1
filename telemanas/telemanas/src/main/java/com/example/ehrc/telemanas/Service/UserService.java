@@ -21,4 +21,10 @@ public class UserService {
     public List<User> saveAllUsers(List<User> user) throws SQLException {
         return userRepository.saveAll(user);
     }
+
+
+    public User getUserByID(long userID){
+        return userRepository.getReferenceById(userID);
+    }
+
 }
