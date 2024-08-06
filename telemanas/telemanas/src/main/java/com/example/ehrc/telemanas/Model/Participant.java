@@ -47,6 +47,13 @@ public class Participant {
     }
 
 
+    public Participant(LocalDateTime joinDate, LocalDateTime leftDate, String jwtToken, Long participantId) {
+        this.joinDate = joinDate;
+        this.leftDate = leftDate;
+        this.jwtToken = jwtToken;
+        this.participantId = participantId;
+    }
+
     public Room getRoom() {
         return room;
     }

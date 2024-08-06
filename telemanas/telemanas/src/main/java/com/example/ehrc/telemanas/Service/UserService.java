@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -22,6 +23,9 @@ public class UserService {
         return userRepository.saveAll(user);
     }
 
+    public Optional<User>getUserByID(long userID, String userRole){
+        return userRepository.findUserByIDAndRole(userID, userRole);
+    }
 
     public User getUserByID(long userID){
         return userRepository.getReferenceById(userID);

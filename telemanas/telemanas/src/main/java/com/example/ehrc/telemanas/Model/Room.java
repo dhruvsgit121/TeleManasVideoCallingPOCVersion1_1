@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @AllArgsConstructor
-@NoArgsConstructor
+//@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -37,6 +37,10 @@ public class Room {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Set<Participant> participants = new HashSet<>();
+
+
+    public Room() {
+    }
 
     public Room(String roomId, LocalDateTime creationDate, LocalDateTime expirationDate, boolean isActive, String roomShortCode) {
         this.roomId = roomId;
