@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -30,10 +28,11 @@ public class User {
     @Column(nullable = false, unique = true)
     private String contactNumber;
 
+    @Column(nullable = false, unique = true)
+    private String userEmail;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-//    @OneToMany(mappedBy = "user")
-//    private Set<Participant> praticipants;
 }
