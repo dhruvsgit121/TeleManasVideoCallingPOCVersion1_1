@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 //import javax.swing.text.html.Option;
 import javax.validation.Valid;
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.*;
 //import java.util.Optional;
@@ -164,9 +165,8 @@ public class RoomController {
         responseData.put("roomID", roomDetails.getRoomId());
 
         User firstUser = userService.getUserByID(firstParticipant.getParticipantId());
-//        User secondUser = userService.getUserByID(secondParticipant.getParticipantId());
 
-        if (roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP.toString())) {
+        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP.toString())) || (roomDetailsRequest.getIsMHP() == 0 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
 
             responseData.put("jwtToken", firstParticipant.getJwtToken());
             responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), firstParticipant.getJwtToken()));
@@ -176,6 +176,66 @@ public class RoomController {
             responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), secondParticipant.getJwtToken()));
 
         }
+        return new ResponseEntity(responseData, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/joinroom")
+    public ResponseEntity<Map<String, Object>> setJoinRoomTime(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
+
+        Map<String, Object> responseData = new HashMap<>();
+
+        ArrayList<Long> participantsList = new ArrayList(participantService.getParticipantsListWith(roomDetailsRequest.getRoomShortCode()));
+
+        if (participantsList.size() != 2) {
+            throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
+        }
+
+        Participant firstParticipant = participantService.getParticipantByID(participantsList.get(0));
+        Participant secondParticipant = participantService.getParticipantByID(participantsList.get(1));
+
+        User firstUser = userService.getUserByID(firstParticipant.getParticipantId());
+
+        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() == 0 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
+            firstParticipant.setJoinDate(videoCallingUtilities.getDateTimeWithOffset(0));
+            participantService.saveParticipant(firstParticipant);
+        } else {
+            secondParticipant.setJoinDate(videoCallingUtilities.getDateTimeWithOffset(0));
+            participantService.saveParticipant(secondParticipant);
+        }
+
+        responseData.put("message", "success");
+        return new ResponseEntity(responseData, HttpStatus.OK);
+    }
+
+
+
+
+    @PostMapping("/exitroom")
+    public ResponseEntity<Map<String, Object>> setExitRoomTime(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
+
+        Map<String, Object> responseData = new HashMap<>();
+
+        ArrayList<Long> participantsList = new ArrayList(participantService.getParticipantsListWith(roomDetailsRequest.getRoomShortCode()));
+
+        if (participantsList.size() != 2) {
+            throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
+        }
+
+        Participant firstParticipant = participantService.getParticipantByID(participantsList.get(0));
+        Participant secondParticipant = participantService.getParticipantByID(participantsList.get(1));
+
+        User firstUser = userService.getUserByID(firstParticipant.getParticipantId());
+
+        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() == 0 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
+            firstParticipant.setLeftDate(videoCallingUtilities.getDateTimeWithOffset(0));
+            participantService.saveParticipant(firstParticipant);
+        } else {
+            secondParticipant.setLeftDate(videoCallingUtilities.getDateTimeWithOffset(0));
+            participantService.saveParticipant(secondParticipant);
+        }
+
+        responseData.put("message", "success");
         return new ResponseEntity(responseData, HttpStatus.OK);
     }
 }
