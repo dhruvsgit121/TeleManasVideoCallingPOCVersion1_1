@@ -10,20 +10,9 @@ import java.security.Key;
 import java.util.HashMap;
 import java.util.Map;
 
-//import com.EHRC.VideoCalling.Utilities.JitsiJWTUtilities;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Service;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.stereotype.Service;
-//
-//import javax.crypto.spec.SecretKeySpec;
-//import java.nio.charset.StandardCharsets;
-//import java.security.Key;
-//import java.util.HashMap;
-//import java.util.Map;
-
 
 
 @Service
@@ -48,11 +37,11 @@ public class JWTTokenService {
     private String jitsiFullDomain;
 
 
-    public Map<String, Object> generateUserJWTTokenData(String doctorName, String doctorEmail, String doctorPhoneNumber, String patientName, String patientEmail, String patientPhoneNumber) {
+    public Map<String, Object> generateUserJWTTokenData(String doctorName, String doctorEmail, String doctorPhoneNumber, String patientName, String patientEmail, String patientPhoneNumber, String roomID) {
 
-        String randomDoctorUserID = videoCallingUtilities.generateRandomString(10);
-        String randomPatientUserID = videoCallingUtilities.generateRandomString(10);
-        String randomRoomID = videoCallingUtilities.generateRandomString(10);
+        String randomDoctorUserID = doctorName;//videoCallingUtilities.generateRandomString(10);
+        String randomPatientUserID = patientName;//videoCallingUtilities.generateRandomString(10);
+        String randomRoomID = roomID;//videoCallingUtilities.generateRandomString(10);
         String audienceID = appID + ":" + randomRoomID;
 
         System.out.println("generateUserJWTTokenData called");

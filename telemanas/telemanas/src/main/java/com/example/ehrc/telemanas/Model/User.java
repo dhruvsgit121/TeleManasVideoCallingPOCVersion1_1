@@ -36,16 +36,16 @@ public class User {
     private UserRole userRole;
 
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", userName='" + userName + '\'' +
-                ", contactNumber='" + contactNumber + '\'' +
-                ", userEmail='" + userEmail + '\'' +
-                ", userRole=" + userRole +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "userId=" + userId +
+//                ", userName='" + userName + '\'' +
+//                ", contactNumber='" + contactNumber + '\'' +
+//                ", userEmail='" + userEmail + '\'' +
+//                ", userRole=" + userRole +
+//                '}';
+//    }
 
 
     public Long getUserId() {

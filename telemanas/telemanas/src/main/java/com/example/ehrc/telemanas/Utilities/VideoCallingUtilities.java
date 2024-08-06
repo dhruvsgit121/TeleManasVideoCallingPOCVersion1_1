@@ -1,6 +1,7 @@
 package com.example.ehrc.telemanas.Utilities;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ import java.util.Objects;
 
 @Service
 public class VideoCallingUtilities {
+
+    @Value("${jwt.jitsiFullDomain}")
+    private String jitsiFullDomain;
 
 
     public ResponseEntity<Map<String, Object>> getErrorMessageResponseEntity(String errorMessage, HttpStatusCode statusCode){
@@ -45,4 +49,16 @@ public class VideoCallingUtilities {
         LocalDateTime now = LocalDateTime.now().plusSeconds(offSet);
         return now;
     }
+
+    public String generateJWTURL(String roomID, String JWTToken) {
+        return jitsiFullDomain + roomID + "?jwt=" + JWTToken;
+//        return roomID;
+
+//        boolean useLetters = true;
+//        boolean useNumbers = true;
+//        String generatedString = RandomStringUtils.random(stringLength, useLetters, useNumbers);
+//        return generatedString;
+    }
+
+
 }

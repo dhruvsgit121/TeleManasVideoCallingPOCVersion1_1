@@ -21,6 +21,11 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
+    public Room getRoomDetailsWith(String shortCode){
+        return roomRepository.findRoomDetailsWith(shortCode);
+    }
+
+
 //    public List<User> saveAllUsers(List<User> user) throws SQLException {
 //        return userRepository.saveAll(user);
 //    }

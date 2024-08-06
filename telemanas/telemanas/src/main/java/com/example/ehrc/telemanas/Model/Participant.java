@@ -54,6 +54,53 @@ public class Participant {
         this.participantId = participantId;
     }
 
+//    @Override
+//    public String toString() {
+//        return "Participant{" +
+//                "serialId=" + serialId +
+//                ", joinDate=" + joinDate +
+//                ", leftDate=" + leftDate +
+//                ", jwtToken='" + jwtToken + '\'' +
+//                ", participantId=" + participantId +
+//                ", room=" + room +
+//                '}';
+//    }
+
+    public Long getSerialId() {
+        return serialId;
+    }
+
+    public void setSerialId(Long serialId) {
+        this.serialId = serialId;
+    }
+
+    public LocalDateTime getJoinDate() {
+        return joinDate;
+    }
+
+    public void setJoinDate(LocalDateTime joinDate) {
+        this.joinDate = joinDate;
+    }
+
+    public LocalDateTime getLeftDate() {
+        return leftDate;
+    }
+
+    public void setLeftDate(LocalDateTime leftDate) {
+        this.leftDate = leftDate;
+    }
+
+    public String getJwtToken() {
+        return jwtToken;
+    }
+
+    public void setJwtToken(String jwtToken) {
+        this.jwtToken = jwtToken;
+    }
+
+
+//
+
     public Room getRoom() {
         return room;
     }

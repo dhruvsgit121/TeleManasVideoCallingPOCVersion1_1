@@ -63,6 +63,20 @@ public class Room {
         participant.setRoom(null);
     }
 
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "serialId=" + serialId +
+                ", roomId='" + roomId + '\'' +
+                ", creationDate=" + creationDate +
+                ", expirationDate=" + expirationDate +
+                ", isActive=" + isActive +
+                ", roomShortCode='" + roomShortCode + '\'' +
+                ", participants=" + participants +
+                '}';
+    }
+
     public Long getSerialId() {
         return serialId;
     }

@@ -8,8 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.List;
 
-//import java.util.Locale;
-//import java.util.regex.Pattern;
 
 public interface ParticipantRepository extends JpaRepository<Participant, Long> {
 
