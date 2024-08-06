@@ -53,10 +53,18 @@
 <!--			<artifactId>spring-boot-starter-web</artifactId>-->
 <!--		</dependency>-->
 
+<!--		<dependency>-->
+<!--			<groupId>org.projectlombok</groupId>-->
+<!--			<artifactId>lombok</artifactId>-->
+<!--			<version>1.18.24</version> &lt;!&ndash; Use the latest stable version &ndash;&gt;-->
+<!--			<scope>provided</scope>-->
+<!--		</dependency>-->
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<scope>provided</scope>
+<!--			<optional>true</optional>-->
 		</dependency>
 
 		<dependency>

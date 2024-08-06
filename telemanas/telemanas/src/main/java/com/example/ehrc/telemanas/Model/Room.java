@@ -2,19 +2,18 @@ package com.example.ehrc.telemanas.Model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @AllArgsConstructor
-//@NoArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
+@ToString
+
 @Entity
 public class Room {
 
@@ -39,9 +38,6 @@ public class Room {
     private Set<Participant> participants = new HashSet<>();
 
 
-    public Room() {
-    }
-
     public Room(String roomId, LocalDateTime creationDate, LocalDateTime expirationDate, boolean isActive, String roomShortCode) {
         this.roomId = roomId;
         this.creationDate = creationDate;
@@ -63,138 +59,4 @@ public class Room {
         participant.setRoom(null);
     }
 
-
-    @Override
-    public String toString() {
-        return "Room{" +
-                "serialId=" + serialId +
-                ", roomId='" + roomId + '\'' +
-                ", creationDate=" + creationDate +
-                ", expirationDate=" + expirationDate +
-                ", isActive=" + isActive +
-                ", roomShortCode='" + roomShortCode + '\'' +
-                ", participants=" + participants +
-                '}';
-    }
-
-    public Long getSerialId() {
-        return serialId;
-    }
-
-    public void setSerialId(Long serialId) {
-        this.serialId = serialId;
-    }
-
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
-    }
-
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public LocalDateTime getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(LocalDateTime expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
-    public String getRoomShortCode() {
-        return roomShortCode;
-    }
-
-    public void setRoomShortCode(String roomShortCode) {
-        this.roomShortCode = roomShortCode;
-    }
-
-    public Set<Participant> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(Set<Participant> participants) {
-        this.participants = participants;
-    }
-
-    //    public Set<Participant> getPraticipants() {
-//        return praticipants;
-//    }
-//
-//    public void setPraticipants(Set<Participant> praticipants) {
-//        this.praticipants = praticipants;
-//    }
-
-    //    public Room(String roomId, Date creationDate, Date expirationDate, boolean isActive, String roomShortCode) {
-//        this.serialId = serialId;
-//        this.roomId = roomId;
-//        this.creationDate = creationDate;
-//        this.expirationDate = expirationDate;
-//        this.isActive = isActive;
-//        this.roomShortCode = roomShortCode;
-//    }
-//
-//    public Long getSerialId() {
-//        return serialId;
-//    }
-//
-//    public void setSerialId(Long serialId) {
-//        this.serialId = serialId;
-//    }
-//
-//    public String getRoomId() {
-//        return roomId;
-//    }
-//
-//    public void setRoomId(String roomId) {
-//        this.roomId = roomId;
-//    }
-//
-//    public Date getCreationDate() {
-//        return creationDate;
-//    }
-//
-//    public void setCreationDate(Date creationDate) {
-//        this.creationDate = creationDate;
-//    }
-//
-//    public Date getExpirationDate() {
-//        return expirationDate;
-//    }
-//
-//    public void setExpirationDate(Date expirationDate) {
-//        this.expirationDate = expirationDate;
-//    }
-//
-//    public boolean isActive() {
-//        return isActive;
-//    }
-//
-//    public void setActive(boolean active) {
-//        isActive = active;
-//    }
-//
-//    public String getRoomShortCode() {
-//        return roomShortCode;
-//    }
-//
-//    public void setRoomShortCode(String roomShortCode) {
-//        this.roomShortCode = roomShortCode;
-//    }
 }

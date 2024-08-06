@@ -52,30 +52,30 @@ public class RoomController {
     @Autowired
     private JWTTokenService jwtTokenService;
 
+//    @PostMapping("/createroom")
+//    public ResponseEntity<Room> createVideoCallingRoom() {
+//
+//        String roomID = videoCallingUtilities.generateRandomString(20);
+//        String roomShortCode = videoCallingUtilities.generateRandomString(20);
+//
+//        Room roomData = new Room(roomID, videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomShortCode);
+//        Room savedRoomData = roomService.saveRoom(roomData);
+//
+//        return new ResponseEntity(savedRoomData, HttpStatus.OK);
+//    }
+
+
+//    @PostMapping("/createvideocallingroom")
+//    public ResponseEntity<String> createVideoCallingRoomWithRequest(@RequestBody CreateRoomDTO createRoomData) {
+//
+//        System.out.println("request parameters are MHP ID is : " + createRoomData.getMhpID() + " patient id is  : " + createRoomData.getPatientId());
+//
+//
+//        return new ResponseEntity<>("Success", HttpStatus.OK);
+//    }
+
+
     @PostMapping("/createroom")
-    public ResponseEntity<Room> createVideoCallingRoom() {
-
-        String roomID = videoCallingUtilities.generateRandomString(20);
-        String roomShortCode = videoCallingUtilities.generateRandomString(20);
-
-        Room roomData = new Room(roomID, videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomShortCode);
-        Room savedRoomData = roomService.saveRoom(roomData);
-
-        return new ResponseEntity(savedRoomData, HttpStatus.OK);
-    }
-
-
-    @PostMapping("/createvideocallingroom")
-    public ResponseEntity<String> createVideoCallingRoomWithRequest(@RequestBody CreateRoomDTO createRoomData) {
-
-        System.out.println("request parameters are MHP ID is : " + createRoomData.getMhpID() + " patient id is  : " + createRoomData.getPatientId());
-
-
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
-
-
-    @PostMapping("/createroomdummy")
     public ResponseEntity<Room> createVideoCallingRoomDummy(@Valid @RequestBody CreateRoomDTO createRoomData) {
 
         if (createRoomData.getPatientId() == null) {
