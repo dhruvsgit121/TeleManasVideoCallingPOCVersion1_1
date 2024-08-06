@@ -8,6 +8,7 @@ import com.example.ehrc.telemanas.Model.Room;
 //import com.example.ehrc.telemanas.Model.User;
 import com.example.ehrc.telemanas.Model.User;
 import com.example.ehrc.telemanas.Service.JWTTokenService;
+import com.example.ehrc.telemanas.Service.ParticipantService;
 import com.example.ehrc.telemanas.Service.RoomService;
 //import com.example.ehrc.telemanas.Service.UserService;
 import com.example.ehrc.telemanas.Service.UserService;
@@ -25,9 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 //import javax.swing.text.html.Option;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 //import java.util.Optional;
 //import java.util.Set;
 
@@ -46,6 +46,10 @@ public class RoomController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ParticipantService participantService;
+
 
     @Autowired
     private JWTTokenService jwtTokenService;
@@ -98,6 +102,24 @@ public class RoomController {
         } else {
             throw new ValidationMessagesException("Patient ID with this role does not exist.");
         }
+
+
+
+        LocalDateTime expiryDate = videoCallingUtilities.getDateTimeWithOffset(1800);
+
+        System.out.println("Exppiration time is : " + expiryDate);
+
+        System.out.println("Room code list is : " + participantService.getRoomShortCodeWith(createRoomData.getMhpID(), createRoomData.getPatientId(), expiryDate));
+
+        ArrayList<String> roomShortCodesList = new ArrayList<>(participantService.getRoomShortCodeWith(createRoomData.getMhpID(), createRoomData.getPatientId(), expiryDate));
+
+        //In case we have Already Room ID then we won't create it And will return the already existing ROOM CODE...
+        if( roomShortCodesList.size() > 0){
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("roomCode", roomShortCodesList.get(0));
+            return new ResponseEntity(responseMap, HttpStatus.OK);
+        }
+
 
 
         String roomID = videoCallingUtilities.generateRandomString(20);

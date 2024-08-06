@@ -8,6 +8,9 @@ import com.example.ehrc.telemanas.UserRepository.ParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
 public class ParticipantService {
 
@@ -19,4 +22,7 @@ public class ParticipantService {
         return participantRepository.save(participant);
     }
 
+    public List<String> getRoomShortCodeWith(Long MHPId, Long patientID, LocalDateTime expirationDate){
+        return participantRepository.findRoomShortCodeWith(MHPId, patientID, expirationDate);
+    }
 }
