@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,6 +23,7 @@ public class Room {
     private Long serialId;
 
     @Column(nullable = false, unique = true, length = 20)
+
     private String roomId;
 
     private LocalDateTime creationDate;
@@ -31,12 +34,28 @@ public class Room {
 
     private String roomShortCode;
 
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Participant> participants = new HashSet<>();
+
     public Room(String roomId, LocalDateTime creationDate, LocalDateTime expirationDate, boolean isActive, String roomShortCode) {
         this.roomId = roomId;
         this.creationDate = creationDate;
         this.expirationDate = expirationDate;
         this.isActive = isActive;
         this.roomShortCode = roomShortCode;
+    }
+
+
+    // Utility method to add a book to the author
+    public void addParticipant(Participant participant) {
+        participants.add(participant);
+        participant.setRoom(this);
+    }
+
+    // Utility method to remove a book from the author
+    public void removeParticipant(Participant participant) {
+        participants.remove(participant);
+        participant.setRoom(null);
     }
 
     public Long getSerialId() {
@@ -86,6 +105,22 @@ public class Room {
     public void setRoomShortCode(String roomShortCode) {
         this.roomShortCode = roomShortCode;
     }
+
+    public Set<Participant> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Set<Participant> participants) {
+        this.participants = participants;
+    }
+
+    //    public Set<Participant> getPraticipants() {
+//        return praticipants;
+//    }
+//
+//    public void setPraticipants(Set<Participant> praticipants) {
+//        this.praticipants = praticipants;
+//    }
 
     //    public Room(String roomId, Date creationDate, Date expirationDate, boolean isActive, String roomShortCode) {
 //        this.serialId = serialId;

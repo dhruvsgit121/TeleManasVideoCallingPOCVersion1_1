@@ -2,9 +2,9 @@ package com.example.ehrc.telemanas.Model;
 
 
 import jakarta.persistence.*;
-import java.sql.Date;
+//import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.Set;
+//import java.util.Set;
 
 @Entity
 public class Participant {
@@ -13,8 +13,8 @@ public class Participant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long serialId;
 
-    @Column(nullable = false, unique = true, length = 20)
-    private String roomId;
+//    @Column(nullable = false, unique = true, length = 20)
+//    private String roomName;
 
     private LocalDateTime joinDate;
 
@@ -22,35 +22,40 @@ public class Participant {
 
     private String jwtToken;
 
+    private Long participantId;
+
     @ManyToOne
-    @JoinColumn(name = "participant_id") // This is the foreign key column
-    private User user;
+    @JoinColumn(name = "room_id") // This is the foreign key column
+    private Room room;
+
 
     public Participant() {
     }
 
-    public Participant(String roomId, LocalDateTime joinDate, LocalDateTime leftDate, String jwtToken) {
-        this.roomId = roomId;
+
+    //String roomName,
+
+    public Participant(LocalDateTime joinDate, LocalDateTime leftDate, String jwtToken) {
+//        this.roomName = roomName;
         this.joinDate = joinDate;
         this.leftDate = leftDate;
         this.jwtToken = jwtToken;
     }
 
-    public User getUser() {
-        return user;
+
+    public Room getRoom() {
+        return room;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    public Long getParticipantId() {
+        return participantId;
+    }
+
+    public void setParticipantId(Long participantId) {
+        this.participantId = participantId;
     }
 }
-
-
-    //    @OneToMany(mappedBy = "participant")
-//    private Set<User> users;
-
-
-//    @Man
-//    private User user;
-
-//}

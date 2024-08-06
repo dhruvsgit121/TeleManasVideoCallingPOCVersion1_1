@@ -37,10 +37,10 @@ public class ParticipantController {
 
         User desiredUser = userService.getUserByID(1);
 
-        Participant pariticpantToBeAdded = new Participant("kldaehfjkees1", videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), "slqkjdeefklfhseekj111dhkjsfd");
-        pariticpantToBeAdded.setUser(desiredUser);
+        //Participant pariticpantToBeAdded = new Participant("kldaehfjkees1", videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), "slqkjdeefklfhseekj111dhkjsfd");
+//        pariticpantToBeAdded.setUser(desiredUser);
 
-        Participant addedParticipant = participantService.saveParticipant(pariticpantToBeAdded);
-        return new ResponseEntity<>(pariticpantToBeAdded, HttpStatus.CREATED);
+       // Participant addedParticipant = participantService.saveParticipant(pariticpantToBeAdded);
+        return new ResponseEntity<>(new Participant(), HttpStatus.CREATED);
     }
 }
