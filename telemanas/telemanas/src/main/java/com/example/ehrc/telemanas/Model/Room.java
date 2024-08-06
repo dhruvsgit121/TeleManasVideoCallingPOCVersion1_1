@@ -1,5 +1,6 @@
 package com.example.ehrc.telemanas.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,6 +36,7 @@ public class Room {
     private String roomShortCode;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<Participant> participants = new HashSet<>();
 
     public Room(String roomId, LocalDateTime creationDate, LocalDateTime expirationDate, boolean isActive, String roomShortCode) {
