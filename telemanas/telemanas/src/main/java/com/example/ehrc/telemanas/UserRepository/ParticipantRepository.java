@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ParticipantRepository extends JpaRepository<Participant, Long> {
 
-    @Query(value = "SELECT DISTINCT r.room_short_code FROM participant p JOIN room r ON p.room_id = r.serial_id WHERE r.is_active = true AND r.expiration_date > :expirationDate AND p.participant_id = :mhpId OR p.participant_id = :patientId", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT r.room_short_code FROM participant p JOIN room r ON p.room_id = r.serial_id WHERE r.is_active = 1 AND r.expiration_date > :expirationDate AND (p.participant_id = :mhpId OR p.participant_id = :patientId)", nativeQuery = true)
     List<String> findRoomShortCodeWith(@Param("mhpId") Long mhpId, @Param("patientId") Long patientId, @Param("expirationDate") LocalDateTime expirationDate);
 
     @Query(value = "SELECT p.serial_id FROM participant p JOIN room r ON p.room_id = r.serial_id WHERE r.room_short_code = :roomShortCode", nativeQuery = true)

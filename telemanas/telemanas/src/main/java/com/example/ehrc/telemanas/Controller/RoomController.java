@@ -104,6 +104,9 @@ public class RoomController {
 
         ArrayList<String> roomShortCodesList = new ArrayList<>(participantService.getRoomShortCodeWith(createRoomData.getMhpID(), createRoomData.getPatientId(), expiryDate));
 
+
+        System.out.println("roomShortCodesList : " + roomShortCodesList);
+
         //In case we have Already Room ID then we won't create it And will return the already existing ROOM CODE...
         if (roomShortCodesList.size() > 0) {
             Map<String, Object> responseMap = new HashMap<>();
@@ -117,12 +120,13 @@ public class RoomController {
 
         Room roomData = new Room(roomID, videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomShortCode);
 
-        Map<String, Object> jwtTokenData = jwtTokenService.generateUserJWTTokenData(extractedMPHUser.getUserName(), extractedMPHUser.getUserEmail(), extractedMPHUser.getContactNumber(), extractedPatientUser.getUserName(), extractedPatientUser.getUserEmail(), extractedPatientUser.getContactNumber(), roomID);
 
-        System.out.println("JWT token dtaa is : " + jwtTokenData);
+        String doctorJWTToken = jwtTokenService.generateJWTToken(extractedMPHUser.getUserName(), extractedMPHUser.getUserEmail(), roomID, true);
+        String patientJWTToken = jwtTokenService.generateJWTToken(extractedPatientUser.getUserName(), extractedPatientUser.getUserEmail(), roomID, false);
 
-        Participant mhpUser = new Participant(null, null, jwtTokenData.get("doctorJWTToken").toString(), createRoomData.getMhpID());
-        Participant patientUser = new Participant(null, null, jwtTokenData.get("patientJWTToken").toString(), createRoomData.getPatientId());
+
+        Participant mhpUser = new Participant(null, null, doctorJWTToken, createRoomData.getMhpID());
+        Participant patientUser = new Participant(null, null, patientJWTToken, createRoomData.getPatientId());
 
         roomData.addParticipant(mhpUser);
         roomData.addParticipant(patientUser);
@@ -154,6 +158,9 @@ public class RoomController {
 
         Participant firstParticipant = participantsList.get(0);
         Participant secondParticipant = participantsList.get(1);
+
+        System.out.println("eneter here " + firstParticipant.getParticipantId());
+        System.out.println("eneter here " + secondParticipant.getParticipantId());
 
         responseData.put("roomID", roomDetails.getRoomId());
 

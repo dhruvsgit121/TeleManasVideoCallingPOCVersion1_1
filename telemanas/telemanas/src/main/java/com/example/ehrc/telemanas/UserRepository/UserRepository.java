@@ -11,8 +11,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-//    Optional<User> findById(Long id);
-
     @Query(value = "SELECT * FROM user WHERE user_id = :user_id AND user_role = :user_role", nativeQuery = true)
     Optional<User> findUserByIDAndRole(@Param("user_id") Long user_id, @Param("user_role") String user_role);
 

@@ -37,61 +37,67 @@ public class JWTTokenService {
     private String jitsiFullDomain;
 
 
-    public Map<String, Object> generateUserJWTTokenData(String doctorName, String doctorEmail, String doctorPhoneNumber, String patientName, String patientEmail, String patientPhoneNumber, String roomID) {
+//    public Map<String, Object> generateUserJWTTokenData(String doctorName, String doctorEmail, String doctorPhoneNumber, String patientName, String patientEmail, String patientPhoneNumber, String roomID) {
+//
+//        String randomDoctorUserID = doctorName;//videoCallingUtilities.generateRandomString(10);
+//        String randomPatientUserID = patientName;//videoCallingUtilities.generateRandomString(10);
+//        String randomRoomID = roomID;//videoCallingUtilities.generateRandomString(10);
+//        String audienceID = appID + ":" + randomRoomID;
+//
+//        System.out.println("generateUserJWTTokenData called");
+//
+//        System.out.println("*********************Doctor Details************");
+//        System.out.println(doctorName);
+//        System.out.println(doctorEmail);
+//        System.out.println(doctorPhoneNumber);
+//
+//        System.out.println("*********************Patient Details************");
+//        System.out.println(patientName);
+//        System.out.println(patientEmail);
+//        System.out.println(patientPhoneNumber);
+//
+//
+//        Map<String, Object> userTokenData = new HashMap<>();
+//
+//        String doctorJWTToken = generateDoctorJWTToken(doctorName, doctorEmail, randomDoctorUserID, randomRoomID, audienceID);
+//        userTokenData.put("doctorJWTToken", doctorJWTToken);
+//        userTokenData.put("roomID", randomRoomID);
+////        String doctorVideoConferencingURL = jitsiFullDomain + randomRoomID + "?jwt=" + doctorJWTToken + jitsiConfigSettings;
+//
+//        String doctorVideoConferencingURL = jitsiFullDomain + randomRoomID + "?jwt=" + doctorJWTToken;
+//        userTokenData.put("doctorVideoConferencingURL", doctorVideoConferencingURL);
+//
+//
+////        String shortUrl = tinyUrlService.shortenUrl(doctorVideoConferencingURL);
+////        System.out.println("Shortent URL is : " + shortUrl);
+//
+//
+//        String patientJWTToken = generatePatientJWTToken(patientName, patientEmail, randomPatientUserID, randomRoomID, audienceID);
+//        userTokenData.put("patientJWTToken", patientJWTToken);
+//
+////        String patientVideoConferencingURL = jitsiFullDomain + randomRoomID + "?jwt=" + patientJWTToken + jitsiConfigSettings;
+//        String patientVideoConferencingURL = jitsiFullDomain + randomRoomID + "?jwt=" + patientJWTToken;
+//        userTokenData.put("patientVideoConferencingURL", patientVideoConferencingURL);
+//
+//        //smsService.sendTestSms(patientPhoneNumber, patientVideoConferencingURL);
+//
+//        return userTokenData;
+//    }
 
-        String randomDoctorUserID = doctorName;//videoCallingUtilities.generateRandomString(10);
-        String randomPatientUserID = patientName;//videoCallingUtilities.generateRandomString(10);
-        String randomRoomID = roomID;//videoCallingUtilities.generateRandomString(10);
-        String audienceID = appID + ":" + randomRoomID;
 
-        System.out.println("generateUserJWTTokenData called");
-
-        System.out.println("*********************Doctor Details************");
-        System.out.println(doctorName);
-        System.out.println(doctorEmail);
-        System.out.println(doctorPhoneNumber);
-
-        System.out.println("*********************Patient Details************");
-        System.out.println(patientName);
-        System.out.println(patientEmail);
-        System.out.println(patientPhoneNumber);
-
-
-        Map<String, Object> userTokenData = new HashMap<>();
-
-        String doctorJWTToken = generateDoctorJWTToken(doctorName, doctorEmail, randomDoctorUserID, randomRoomID, audienceID);
-        userTokenData.put("doctorJWTToken", doctorJWTToken);
-        userTokenData.put("roomID", randomRoomID);
-//        String doctorVideoConferencingURL = jitsiFullDomain + randomRoomID + "?jwt=" + doctorJWTToken + jitsiConfigSettings;
-
-        String doctorVideoConferencingURL = jitsiFullDomain + randomRoomID + "?jwt=" + doctorJWTToken;
-        userTokenData.put("doctorVideoConferencingURL", doctorVideoConferencingURL);
-
-
-//        String shortUrl = tinyUrlService.shortenUrl(doctorVideoConferencingURL);
-//        System.out.println("Shortent URL is : " + shortUrl);
-
-
-        String patientJWTToken = generatePatientJWTToken(patientName, patientEmail, randomPatientUserID, randomRoomID, audienceID);
-        userTokenData.put("patientJWTToken", patientJWTToken);
-
-//        String patientVideoConferencingURL = jitsiFullDomain + randomRoomID + "?jwt=" + patientJWTToken + jitsiConfigSettings;
-        String patientVideoConferencingURL = jitsiFullDomain + randomRoomID + "?jwt=" + patientJWTToken;
-        userTokenData.put("patientVideoConferencingURL", patientVideoConferencingURL);
-
-        //smsService.sendTestSms(patientPhoneNumber, patientVideoConferencingURL);
-
-        return userTokenData;
+    public String generateJWTToken(String userName, String userEmailID, String roomID, boolean isModerator) {
+        String audienceID = appID + ":" + roomID;
+        return generateJWTToken(userName, userEmailID, userName, roomID, audienceID, isModerator);
     }
 
 
-    public String generateDoctorJWTToken(String userName, String userEmailID, String userID, String roomID, String audienceID) {
-        return generateJWTToken(userName, userEmailID, userID, roomID, audienceID, true);
-    }
-
-    public String generatePatientJWTToken(String userName, String userEmailID, String userID, String roomID, String audienceID) {
-        return generateJWTToken(userName, userEmailID, userID, roomID, audienceID, false);
-    }
+//    public String generateDoctorJWTToken(String userName, String userEmailID, String userID, String roomID, String audienceID) {
+//        return generateJWTToken(userName, userEmailID, userID, roomID, audienceID, true);
+//    }
+//
+//    public String generatePatientJWTToken(String userName, String userEmailID, String userID, String roomID, String audienceID) {
+//        return generateJWTToken(userName, userEmailID, userID, roomID, audienceID, false);
+//    }
 
 
     public String generateJWTToken(String userName, String userEmailID, String userID, String roomID, String audienceID, Boolean isModerator) {
