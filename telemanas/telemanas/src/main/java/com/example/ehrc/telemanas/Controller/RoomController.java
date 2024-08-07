@@ -6,29 +6,22 @@ import com.example.ehrc.telemanas.DTO.CreateRoomDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.Participant;
 import com.example.ehrc.telemanas.Model.Room;
-//import com.example.ehrc.telemanas.Model.User;
 import com.example.ehrc.telemanas.Model.User;
 import com.example.ehrc.telemanas.Service.JWTTokenService;
 import com.example.ehrc.telemanas.Service.ParticipantService;
 import com.example.ehrc.telemanas.Service.RoomService;
-//import com.example.ehrc.telemanas.Service.UserService;
 import com.example.ehrc.telemanas.Service.UserService;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-//import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-//import javax.swing.text.html.Option;
 import javax.validation.Valid;
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.*;
-//import java.util.Optional;
-//import java.util.Set;
+
 
 @RestController
 @RequestMapping("/rooms")
@@ -166,7 +159,7 @@ public class RoomController {
 
         User firstUser = userService.getUserByID(firstParticipant.getParticipantId());
 
-        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP.toString())) || (roomDetailsRequest.getIsMHP() == 0 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
+        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP.toString())) || (roomDetailsRequest.getIsMHP() != 1 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
 
             responseData.put("jwtToken", firstParticipant.getJwtToken());
             responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), firstParticipant.getJwtToken()));
@@ -196,7 +189,7 @@ public class RoomController {
 
         User firstUser = userService.getUserByID(firstParticipant.getParticipantId());
 
-        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() == 0 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
+        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() != 1 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
             firstParticipant.setJoinDate(videoCallingUtilities.getDateTimeWithOffset(0));
             participantService.saveParticipant(firstParticipant);
         } else {
@@ -227,7 +220,7 @@ public class RoomController {
 
         User firstUser = userService.getUserByID(firstParticipant.getParticipantId());
 
-        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() == 0 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
+        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP)) || (roomDetailsRequest.getIsMHP()  != 1 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
             firstParticipant.setLeftDate(videoCallingUtilities.getDateTimeWithOffset(0));
             participantService.saveParticipant(firstParticipant);
         } else {

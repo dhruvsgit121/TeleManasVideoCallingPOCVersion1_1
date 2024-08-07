@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,7 +27,7 @@ public class RoomService {
     }
 
 
-//    public List<User> saveAllUsers(List<User> user) throws SQLException {
-//        return userRepository.saveAll(user);
-//    }
+    public List<Room> getRoomListWithExpirationdate(LocalDateTime expirationDate){
+        return roomRepository.findRoomListWithExpirationDate(expirationDate);
+    }
 }
