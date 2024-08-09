@@ -41,8 +41,6 @@ public class UserController {
             System.out.println(ex);
             System.out.println("message is : " + ex.getMessage());
         }
-
-
         return new ResponseEntity(createdUsers, HttpStatus.CREATED);
     }
 }

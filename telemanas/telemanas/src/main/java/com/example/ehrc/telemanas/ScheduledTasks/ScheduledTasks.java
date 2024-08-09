@@ -3,7 +3,6 @@ package com.example.ehrc.telemanas.ScheduledTasks;
 
 import com.example.ehrc.telemanas.Model.Room;
 import com.example.ehrc.telemanas.Service.RoomService;
-import com.example.ehrc.telemanas.UserRepository.RoomRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,28 +18,20 @@ public class ScheduledTasks {
     @Value("${jwt.RoomJWTValidityOffSet}")
     private Long roomJWTValidityOffSet;
 
-
-//    @Value("${jwt.SchedulerTimeDuration}")
-//    private Long roomSchedulerDuration;
-
-//    jwt.SchedulerTimeDuration
-
     @Autowired
     private RoomService roomService;
 
     @Autowired
     private VideoCallingUtilities videoCallingUtilities;
 
-
-    @Scheduled(fixedRate = 10 * 1000)
-    public void runTaskEveryFiveSeconds() {
-
-        System.out.println("Task executed every " + roomJWTValidityOffSet + " seconds");
+    //Time set for 10 seconds
+    @Scheduled(fixedRate = 60 * 1000)
+    public void invalidateExpiredRooms() {
 
         LocalDateTime expirationDate = videoCallingUtilities.getDateTimeWithOffset(roomJWTValidityOffSet);
-        System.out.println(expirationDate);
-
         List<Room> roomList = roomService.getRoomListWithExpirationdate(expirationDate);
+
+        System.out.println("Number of rooms deactivated from scheduler are : " + roomList.size());
 
         if (roomList.size() > 0) {
             for (Room room : roomList) {

@@ -1,11 +1,9 @@
 package com.example.ehrc.telemanas.UserRepository;
 
 import com.example.ehrc.telemanas.Model.Participant;
-import com.example.ehrc.telemanas.Model.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,4 +15,5 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
 
     @Query(value = "SELECT p.serial_id FROM participant p JOIN room r ON p.room_id = r.serial_id WHERE r.room_short_code = :roomShortCode", nativeQuery = true)
     List<Long> findParticipantsSerialIDsWith(@Param("roomShortCode") String roomShortCode);
+
 }

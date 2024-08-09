@@ -7,16 +7,14 @@ import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.Participant;
 import com.example.ehrc.telemanas.Model.Room;
 import com.example.ehrc.telemanas.Model.User;
-import com.example.ehrc.telemanas.Service.JWTTokenService;
-import com.example.ehrc.telemanas.Service.ParticipantService;
-import com.example.ehrc.telemanas.Service.RoomService;
-import com.example.ehrc.telemanas.Service.UserService;
+import com.example.ehrc.telemanas.Service.*;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -30,6 +28,9 @@ public class RoomController {
     @Value("${jwt.expirationOffSet}")
     private int expirationOffset;
 
+    @Value("${sms.patientMessageURL}")
+    private String patientMessageURL;
+
     @Autowired
     private VideoCallingUtilities videoCallingUtilities;
 
@@ -42,31 +43,17 @@ public class RoomController {
     @Autowired
     private ParticipantService participantService;
 
+    @Value("${jwt.RoomJWTValidityOffSet}")
+    private Long roomJWTValidityOffSet;
 
     @Autowired
     private JWTTokenService jwtTokenService;
 
-//    @PostMapping("/createroom")
-//    public ResponseEntity<Room> createVideoCallingRoom() {
-//
-//        String roomID = videoCallingUtilities.generateRandomString(20);
-//        String roomShortCode = videoCallingUtilities.generateRandomString(20);
-//
-//        Room roomData = new Room(roomID, videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomShortCode);
-//        Room savedRoomData = roomService.saveRoom(roomData);
-//
-//        return new ResponseEntity(savedRoomData, HttpStatus.OK);
-//    }
+    @Autowired
+    private SSEService sseService;
 
-
-//    @PostMapping("/createvideocallingroom")
-//    public ResponseEntity<String> createVideoCallingRoomWithRequest(@RequestBody CreateRoomDTO createRoomData) {
-//
-//        System.out.println("request parameters are MHP ID is : " + createRoomData.getMhpID() + " patient id is  : " + createRoomData.getPatientId());
-//
-//
-//        return new ResponseEntity<>("Success", HttpStatus.OK);
-//    }
+    @Autowired
+    private SMSService smsService;
 
 
     @PostMapping("/createroom")
@@ -95,35 +82,36 @@ public class RoomController {
             throw new ValidationMessagesException("Patient ID with this role does not exist.");
         }
 
-
-        LocalDateTime expiryDate = videoCallingUtilities.getDateTimeWithOffset(1800);
+        LocalDateTime expiryDate = videoCallingUtilities.getDateTimeWithOffset(roomJWTValidityOffSet);
 
         System.out.println("Exppiration time is : " + expiryDate);
-
         System.out.println("Room code list is : " + participantService.getRoomShortCodeWith(createRoomData.getMhpID(), createRoomData.getPatientId(), expiryDate));
 
         ArrayList<String> roomShortCodesList = new ArrayList<>(participantService.getRoomShortCodeWith(createRoomData.getMhpID(), createRoomData.getPatientId(), expiryDate));
 
-
+        System.out.println("MHP user name is : " + extractedMPHUser.getUserName());
         System.out.println("roomShortCodesList : " + roomShortCodesList);
 
-        //In case we have Already Room ID then we won't create it And will return the already existing ROOM CODE...
+        //In case we have Already Room ID then we won't create it...
+        //Will return the already existing ROOM CODE...
         if (roomShortCodesList.size() > 0) {
             Map<String, Object> responseMap = new HashMap<>();
-            responseMap.put("roomCode", roomShortCodesList.get(0));
+            String roomShortCode = roomShortCodesList.get(0);
+            responseMap.put("roomCode", roomShortCode);
+            sendLinkMesaageToPatient(extractedPatientUser.getContactNumber(), roomShortCode);
+            System.out.println("roomShortCodesList : " + roomShortCodesList);
             return new ResponseEntity(responseMap, HttpStatus.OK);
         }
 
-
+        //In case we don't have existing Room ID...
+        //We will create and return the NEW ROOM CODE...
         String roomID = videoCallingUtilities.generateRandomString(20);
         String roomShortCode = videoCallingUtilities.generateRandomString(20);
 
         Room roomData = new Room(roomID, videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomShortCode);
 
-
         String doctorJWTToken = jwtTokenService.generateJWTToken(extractedMPHUser.getUserName(), extractedMPHUser.getUserEmail(), roomID, true);
         String patientJWTToken = jwtTokenService.generateJWTToken(extractedPatientUser.getUserName(), extractedPatientUser.getUserEmail(), roomID, false);
-
 
         Participant mhpUser = new Participant(null, null, doctorJWTToken, createRoomData.getMhpID());
         Participant patientUser = new Participant(null, null, patientJWTToken, createRoomData.getPatientId());
@@ -136,19 +124,29 @@ public class RoomController {
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("roomCode", savedRoomData.getRoomShortCode());
 
+        sendLinkMesaageToPatient(extractedPatientUser.getContactNumber(), savedRoomData.getRoomShortCode());
+
         return new ResponseEntity(responseMap, HttpStatus.OK);
     }
+
+
+    public void sendLinkMesaageToPatient(String patientNumber, String roomShortCode) {
+        String messageText = patientMessageURL + roomShortCode;
+        System.out.println("Message to send is : " + messageText);
+        //smsService.sendTestSms(patientNumber, messageText);
+    }
+
 
     @PostMapping("/getroomdetails")
     public ResponseEntity<Map<String, Object>> getVideoRoomDetails(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
 
 //        Map<String, Object> roomResponseData = new HashMap<>();
 
-        System.out.println("roomShortCode : " + roomDetailsRequest);
+//        System.out.println("roomShortCode : " + roomDetailsRequest);
 
         Room roomDetails = roomService.getRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
 
-        if (!roomDetails.isActive() || roomDetails.getParticipants().size() != 2) {
+        if (roomDetails == null || !roomDetails.isActive() || roomDetails.getParticipants().size() != 2) {
             throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
         }
 
@@ -159,23 +157,31 @@ public class RoomController {
         Participant firstParticipant = participantsList.get(0);
         Participant secondParticipant = participantsList.get(1);
 
-        System.out.println("eneter here " + firstParticipant.getParticipantId());
-        System.out.println("eneter here " + secondParticipant.getParticipantId());
+//        System.out.println("eneter here " + firstParticipant.getParticipantId());
+//        System.out.println("eneter here " + secondParticipant.getParticipantId());
 
         responseData.put("roomID", roomDetails.getRoomId());
 
         User firstUser = userService.getUserByID(firstParticipant.getParticipantId());
+        User secondUser = userService.getUserByID(secondParticipant.getParticipantId());
 
-        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP.toString())) || (roomDetailsRequest.getIsMHP() != 1 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
-
+        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() != 1 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
             responseData.put("jwtToken", firstParticipant.getJwtToken());
             responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), firstParticipant.getJwtToken()));
         } else {
-
             responseData.put("jwtToken", secondParticipant.getJwtToken());
             responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), secondParticipant.getJwtToken()));
-
         }
+
+        if (roomDetailsRequest.getIsMHP() != 1) {
+            System.out.println("entered in the loop!!!");
+            //User is a patient, who is joining the call...
+            Long clientID = firstUser.getUserRole().equals(User.UserRole.MHP) ? firstUser.getUserId() : secondUser.getUserId();
+            sseService.sendCustomMessage(clientID + "", "Hello patient joined the call...");
+        }
+
+        System.out.println("Response data from the /getroomdetails API is : " + responseData);
+
         return new ResponseEntity(responseData, HttpStatus.OK);
     }
 
@@ -191,24 +197,15 @@ public class RoomController {
             throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
         }
 
-        Participant firstParticipant = participantService.getParticipantByID(participantsList.get(0));
-        Participant secondParticipant = participantService.getParticipantByID(participantsList.get(1));
+        //Setting the Join Date of the user...
+        Participant requestedParticipant = videoCallingUtilities.getRequestedUserAsPerRequest(roomDetailsRequest, participantsList);
+        requestedParticipant.setJoinDate(videoCallingUtilities.getDateTimeWithOffset(0));
 
-        User firstUser = userService.getUserByID(firstParticipant.getParticipantId());
-
-        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() != 1 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
-            firstParticipant.setJoinDate(videoCallingUtilities.getDateTimeWithOffset(0));
-            participantService.saveParticipant(firstParticipant);
-        } else {
-            secondParticipant.setJoinDate(videoCallingUtilities.getDateTimeWithOffset(0));
-            participantService.saveParticipant(secondParticipant);
-        }
+        participantService.saveParticipant(requestedParticipant);
 
         responseData.put("message", "success");
         return new ResponseEntity(responseData, HttpStatus.OK);
     }
-
-
 
 
     @PostMapping("/exitroom")
@@ -222,18 +219,11 @@ public class RoomController {
             throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
         }
 
-        Participant firstParticipant = participantService.getParticipantByID(participantsList.get(0));
-        Participant secondParticipant = participantService.getParticipantByID(participantsList.get(1));
+        //Setting the Left Date of the user...
+        Participant requestedParticipant = videoCallingUtilities.getRequestedUserAsPerRequest(roomDetailsRequest, participantsList);
+        requestedParticipant.setLeftDate(videoCallingUtilities.getDateTimeWithOffset(0));
 
-        User firstUser = userService.getUserByID(firstParticipant.getParticipantId());
-
-        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP)) || (roomDetailsRequest.getIsMHP()  != 1 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
-            firstParticipant.setLeftDate(videoCallingUtilities.getDateTimeWithOffset(0));
-            participantService.saveParticipant(firstParticipant);
-        } else {
-            secondParticipant.setLeftDate(videoCallingUtilities.getDateTimeWithOffset(0));
-            participantService.saveParticipant(secondParticipant);
-        }
+        participantService.saveParticipant(requestedParticipant);
 
         responseData.put("message", "success");
         return new ResponseEntity(responseData, HttpStatus.OK);

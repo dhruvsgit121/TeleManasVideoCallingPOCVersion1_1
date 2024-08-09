@@ -23,11 +23,4 @@ public class ValidationMessagesExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleResourceNotFound(ValidationMessagesException ex) {
         return videoCallingUtilities.getErrorMessageResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
-
-
-
-
-
-
-
 }
