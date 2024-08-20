@@ -52,7 +52,8 @@ public class JWTTokenService {
 
         // Use JwtBuilder to construct a JWT token
         String token = Jwts.builder()
-                .setClaims(claims).claim("role", "participant")
+                .setClaims(claims)s
+//                .claim("role", "participant")
                 .signWith(SignatureAlgorithm.HS256, signingKey).setHeaderParam("typ", "JWT")
                 .compact();
         return token;
@@ -78,11 +79,11 @@ public class JWTTokenService {
     private Map<String, Object> createContext(String username, String userID, String userEmail, Boolean isModerator) {
         Map<String, Object> context = new HashMap<>();
         Map<String, Object> user = new HashMap<>();
-        user.put("moderator", isModerator);
+//        user.put("moderator", isModerator);
         user.put("name", username);
         user.put("id", userID);
         user.put("email", userEmail);
-//        user.put("affiliation", isModerator ? "owner" : "member");
+        user.put("affiliation", isModerator ? "owner" : "member");
 //        "affiliation": "owner"
         context.put("user", user);
 //        context.put("group", isModerator ? "moderator" : "viewer");
