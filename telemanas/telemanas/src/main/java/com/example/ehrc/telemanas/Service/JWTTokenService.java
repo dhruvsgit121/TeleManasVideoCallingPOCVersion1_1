@@ -52,7 +52,7 @@ public class JWTTokenService {
 
         // Use JwtBuilder to construct a JWT token
         String token = Jwts.builder()
-                .setClaims(claims)s
+                .setClaims(claims)
 //                .claim("role", "participant")
                 .signWith(SignatureAlgorithm.HS256, signingKey).setHeaderParam("typ", "JWT")
                 .compact();

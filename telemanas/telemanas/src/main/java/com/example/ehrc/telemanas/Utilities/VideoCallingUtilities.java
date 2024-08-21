@@ -31,9 +31,16 @@ public class VideoCallingUtilities {
     @Autowired
     private UserService userService;
 
-    public ResponseEntity<Map<String, Object>> getErrorMessageResponseEntity(String errorMessage, HttpStatusCode statusCode) {
+//    public ResponseEntity<Map<String, Object>> getErrorMessageResponseEntity(String errorMessage, HttpStatusCode statusCode) {
+//        Map<String, Object> errorResponse = new HashMap<>();
+//        errorResponse.put("errorMessage", errorMessage);
+//        return new ResponseEntity<>(errorResponse, statusCode);
+//    }
+
+    public ResponseEntity<Map<String, Object>> getErrorResponseMessageEntity(String errorMessage, HttpStatusCode statusCode) {
         Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("errorMessage", errorMessage);
+        errorResponse.put(VideoCallingAPIConstants.errorMessageValue, errorMessage);
+        errorResponse.put(VideoCallingAPIConstants.isErrorFlagValue, true);
         return new ResponseEntity<>(errorResponse, statusCode);
     }
 

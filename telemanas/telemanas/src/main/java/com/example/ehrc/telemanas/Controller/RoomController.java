@@ -9,6 +9,7 @@ import com.example.ehrc.telemanas.Model.Room;
 import com.example.ehrc.telemanas.Model.User;
 import com.example.ehrc.telemanas.Service.*;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-import javax.validation.Valid;
+//import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.*;
 
