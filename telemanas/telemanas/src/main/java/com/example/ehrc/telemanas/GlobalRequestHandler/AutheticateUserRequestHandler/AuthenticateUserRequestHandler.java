@@ -35,14 +35,8 @@ public class AuthenticateUserRequestHandler {
                 userData.getUserUuid() +
                 "\"}";
 
-        // Create headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
-        headers.set("loggedin", userData.getLoggedInId());
-        // Optionally set authorization or other headers
-        headers.set("Authorization", "Bearer " + userData.getBearerToken());
-        // Create the request entity
-        HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
+        //Create HTTP Request Entity...
+        HttpEntity<String> requestEntity = createHttpRequestEntity(userData, payload);
 
         // Make the POST request
         ResponseEntity<Map<String, Object>> response = videoCallingAPIRequestHandler.makePostRequest(VideoCallingAPIConstants.authenticatePatientURL, requestEntity);
@@ -66,6 +60,61 @@ public class AuthenticateUserRequestHandler {
                 return videoCallingUtilities.getErrorResponseMessageEntity(response.getBody().get("message").toString(), HttpStatusCode.valueOf(responseCode));
             }
         }
-        return videoCallingUtilities.getErrorResponseMessageEntity(null, HttpStatus.FORBIDDEN);
+        return videoCallingUtilities.getGlobalErrorResponseMessageEntity(null);
     }
+
+
+    public ResponseEntity<Map<String, Object>> autheticateMHPData(AuthenticateUserDTO userData) {
+
+        if (videoCallingAPIRequestHandler == null)
+            videoCallingAPIRequestHandler = new VideoCallingAPIRequestHandler();
+
+        if (videoCallingUtilities == null)
+            videoCallingUtilities = new VideoCallingUtilities();
+
+        String payload = "{\r\n    \"userName\": \"" +
+                userData.getMhpUserName() +
+                "\"\r\n}";
+
+        //Create HTTP Request Entity...
+        HttpEntity<String> requestEntity = createHttpRequestEntity(userData, payload);//new HttpEntity<>(payload, headers);
+
+        // Make the POST request
+        ResponseEntity<Map<String, Object>> response = videoCallingAPIRequestHandler.makePostRequest(VideoCallingAPIConstants.getUserDetailsURL, requestEntity);
+
+        Map<String, Object> parsedResponseData = null;
+
+        System.out.println("response.getBody() in authenticate MHP data is= " + response.getBody());
+
+
+        if (response.getBody().containsKey("code") && response.getBody().containsKey("message")) {
+            int responseCode = (int) response.getBody().get("code");
+            String responseMessage = response.getBody().get("message").toString();
+            if (responseCode == 200 && responseMessage.equals("SUCCESS")) {
+                if (response.getBody().containsKey("payload")) {
+                    parsedResponseData = (Map<String, Object>)response.getBody().get("payload");
+                }
+                return new ResponseEntity<>(parsedResponseData, HttpStatus.OK);
+            } else {
+                return videoCallingUtilities.getErrorResponseMessageEntity(response.getBody().get("message").toString(), HttpStatusCode.valueOf(responseCode));
+            }
+        }
+        return videoCallingUtilities.getGlobalErrorResponseMessageEntity(null);
+    }
+
+
+    public HttpEntity<String> createHttpRequestEntity(AuthenticateUserDTO userData, String payload){
+
+        // Create headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        headers.set("loggedin", userData.getLoggedInId());
+        // Optionally set authorization or other headers
+        headers.set("Authorization", "Bearer " + userData.getBearerToken());
+        // Create the request entity
+        HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
+
+        return requestEntity;
+    }
+
 }

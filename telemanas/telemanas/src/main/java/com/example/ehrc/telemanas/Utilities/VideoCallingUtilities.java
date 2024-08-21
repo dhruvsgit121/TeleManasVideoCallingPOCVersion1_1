@@ -8,6 +8,7 @@ import com.example.ehrc.telemanas.Service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,18 @@ public class VideoCallingUtilities {
         errorResponse.put(VideoCallingAPIConstants.isErrorFlagValue, true);
         return new ResponseEntity<>(errorResponse, statusCode);
     }
+
+
+
+    public ResponseEntity<Map<String, Object>> getGlobalErrorResponseMessageEntity(String errorMessage) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        String responseErrorMessage =  (!errorMessage.equals(null)) ? errorMessage : "Some error occurred.";
+        errorResponse.put(VideoCallingAPIConstants.errorMessageValue, responseErrorMessage);
+        errorResponse.put(VideoCallingAPIConstants.isErrorFlagValue, true);
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+
+
 
     public static long getExpirationTimeStamp(int timeStampOffset) {
         return Instant.now().plusSeconds(timeStampOffset).getEpochSecond();

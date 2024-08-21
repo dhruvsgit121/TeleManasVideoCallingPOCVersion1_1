@@ -10,9 +10,12 @@ import java.util.Map;
 public class AuthenticateUserFactory {
 
     public ResponseEntity<Map<String, Object>> authenticateUser(String userType, AuthenticateUserDTO userData) {
-
         AuthenticateUser user;
-        user = new AuthenticatePatient();
+        if (userType.equals("patient")) {
+            user = new AuthenticatePatient();
+        } else {
+            user = new AuthenticateMHP();
+        }
         return user.authenticateUser(userData);
     }
 

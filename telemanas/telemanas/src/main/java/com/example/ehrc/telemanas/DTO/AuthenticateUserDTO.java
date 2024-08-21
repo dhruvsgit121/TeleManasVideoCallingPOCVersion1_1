@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-//import javax.validation.constraints.NEWotNull;
-
 @Getter
 @Setter
 public class AuthenticateUserDTO {
@@ -26,6 +24,9 @@ public class AuthenticateUserDTO {
 
     @NotNull(message = "UUID cannot be null. Please enter UUID to proceed.")
     private String userUuid;
+
+    @NotNull(message = "MHP Username cannot be null. Please enter MHP Username to proceed.")
+    private String mhpUserName;
 
     private String bearerToken;
 
