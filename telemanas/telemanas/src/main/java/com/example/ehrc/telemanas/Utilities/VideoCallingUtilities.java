@@ -39,7 +39,9 @@ public class VideoCallingUtilities {
 
     public ResponseEntity<Map<String, Object>> getErrorResponseMessageEntity(String errorMessage, HttpStatusCode statusCode) {
         Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put(VideoCallingAPIConstants.errorMessageValue, errorMessage);
+        String responseErrorMessage =  (!errorMessage.equals(null)) ? errorMessage : "Some error occurred.";
+//        HttpStatusCode responseErrorStatusCode =  statusCode. ? errorMessage : "Some error occured.";
+        errorResponse.put(VideoCallingAPIConstants.errorMessageValue, responseErrorMessage);
         errorResponse.put(VideoCallingAPIConstants.isErrorFlagValue, true);
         return new ResponseEntity<>(errorResponse, statusCode);
     }

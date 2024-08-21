@@ -1,31 +1,19 @@
 package com.example.ehrc.telemanas.Controller;
 
-//import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUser;
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
-//import com.example.ehrc.telemanas.DTO.CreateRoomDTO;
 import com.example.ehrc.telemanas.GlobalRequestHandler.VideoCallingAPIRequestHandler;
-//import com.example.ehrc.telemanas.Service.PostRequestService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.validation.FieldError;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-//import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-//import org.springframework.web.bind.annotation.RequestBody;
-//import org.springframework.web.bind.annotation.RestController;
 
 
-
-//import javax.validation.Valid;
-//import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -41,14 +29,20 @@ public class EYAPIController {
     private AuthenticateUserFactory authenticateUserFactory;
 
     @RequestMapping("/gethelloworld")
-    public Map<String, Object> getHelloWorld(@Valid @RequestBody AuthenticateUserDTO userDTOData,
+    public ResponseEntity<Map<String, Object>> getHelloWorld(@Valid @RequestBody AuthenticateUserDTO userDTOData,
                                              @RequestHeader(value = "BearerToken", required = true) String bearerToken,
                                              @RequestHeader(value = "loggedin", required = true) String loggedIn
                                              ) {
 
-        System.out.println("Bearer JWT token is : " + bearerToken);
+        userDTOData.setBearerToken(bearerToken);
+        userDTOData.setLoggedInId(loggedIn);
 
-        System.out.println("loggedIn is : " + loggedIn);
+        System.out.println("User data to be sent to api is : " + userDTOData );
+
+
+        ResponseEntity<Map<String, Object>> response = authenticateUserFactory.authenticateUser("patient", userDTOData);
+
+        System.out.println("REquest data is : " + response);
 
 
 //        System.out.println("userDTOData data is User UUID is : " + userDTOData.getUserUuid());
@@ -81,9 +75,9 @@ public class EYAPIController {
 //
 //        ArrayList responseData = (ArrayList) responseBody.get("payload");
 
-        Map<String, Object> map = new HashMap<>();
+//        Map<String, Object> map = new HashMap<>();
 
-        return map;
+        return response;
 
         //new ResponseEntity<>(map, HttpStatus.OK);
 
