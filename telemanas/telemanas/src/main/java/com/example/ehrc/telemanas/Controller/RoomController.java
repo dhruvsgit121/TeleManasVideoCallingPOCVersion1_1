@@ -50,8 +50,8 @@ public class RoomController {
 //    @Autowired
 //    private JWTTokenService jwtTokenService;
 //
-//    @Autowired
-//    private SSEService sseService;
+    @Autowired
+    private SSEService sseService;
 //
 //    @Autowired
 //    private SMSService smsService;
@@ -145,8 +145,6 @@ public class RoomController {
     @PostMapping("/getroomdetails")
     public ResponseEntity<Map<String, Object>> getVideoRoomDetails(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
 
-
-
         Room roomDetails = roomService.getRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
 
         if (roomDetails == null || !roomDetails.isActive() || roomDetails.getParticipants().size() != 2) {
@@ -160,28 +158,27 @@ public class RoomController {
         Participant firstParticipant = participantsList.get(0);
         Participant secondParticipant = participantsList.get(1);
 
+        System.out.println("first participant data is :" + firstParticipant.getParticipantId());
+        System.out.println("Second participant data is :" + secondParticipant.getParticipantId());
 
         responseData.put("roomID", roomDetails.getRoomId());
 
-//        User firstUser = userService.getUserByID(firstParticipant.getParticipantId());
-//        User secondUser = userService.getUserByID(secondParticipant.getParticipantId());
+        if ((roomDetailsRequest.getIsMHP() == 1 && firstParticipant.getUserRole().equals(Participant.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() != 1 && firstParticipant.getUserRole().equals(Participant.UserRole.PATIENT))) {
+            responseData.put("jwtToken", firstParticipant.getJwtToken());
+            responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), firstParticipant.getJwtToken()));
+        } else {
+            responseData.put("jwtToken", secondParticipant.getJwtToken());
+            responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), secondParticipant.getJwtToken()));
+        }
 //
-//        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() != 1 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
-//            responseData.put("jwtToken", firstParticipant.getJwtToken());
-//            responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), firstParticipant.getJwtToken()));
-//        } else {
-//            responseData.put("jwtToken", secondParticipant.getJwtToken());
-//            responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), secondParticipant.getJwtToken()));
-//        }
+        if (roomDetailsRequest.getIsMHP() != 1) {
+            System.out.println("entered in the loop!!!");
+            //User is a patient, who is joining the call...
+            String clientID = firstParticipant.getUserRole().equals(Participant.UserRole.MHP) ? firstParticipant.getParticipantId() : secondParticipant.getParticipantId() ;
+            sseService.sendCustomMessage(clientID + "", "Hello patient joined the call...");
+        }
 //
-//        if (roomDetailsRequest.getIsMHP() != 1) {
-//            System.out.println("entered in the loop!!!");
-//            //User is a patient, who is joining the call...
-//            Long clientID = firstUser.getUserRole().equals(User.UserRole.MHP) ? firstUser.getUserId() : secondUser.getUserId();
-//            sseService.sendCustomMessage(clientID + "", "Hello patient joined the call...");
-//        }
-//
-//        System.out.println("Response data from the /getroomdetails API is : " + responseData);
+        System.out.println("Response data from the /getroomdetails API is : " + responseData);
 
         return new ResponseEntity(responseData, HttpStatus.OK);
     }

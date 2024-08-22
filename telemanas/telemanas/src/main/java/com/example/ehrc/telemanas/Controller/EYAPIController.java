@@ -82,10 +82,10 @@ public class EYAPIController {
 
         //Checking for Authentication of Patient Data...
         ResponseEntity<Map<String, Object>> PatientResponseData = authenticateUserFactory.authenticateUser("patient", userDTOData);
-
         if (PatientResponseData.getStatusCode() != HttpStatus.OK)
             return PatientResponseData;
 
+        //Parsing the Map data to EYUserDataModal Data Modal...
         EYUserDataModal userDataModal = null;
         if (PatientResponseData.hasBody())
             userDataModal = new EYUserDataModal(PatientResponseData.getBody());
@@ -99,17 +99,16 @@ public class EYAPIController {
         if (videoCallRoomData.getStatusCode() != HttpStatus.OK)
             return videoCallRoomData;
 
-        System.out.println("Reposne data from video call generation is : " + videoCallRoomData.getBody());
+        System.out.println("Reponse data from video call generation is : " + videoCallRoomData.getBody());
         System.out.println("Entered in existing room maps with room id " + videoCallRoomData.getBody());
 
         //Decrypting Mobile Number of The Patient...
         //ResponseEntity<Map<String, Object>> dencryptMobileData = authenticateUserFactory.decryptUserPhoneNumber(userDTOData, userDataModal.getMobileNumber());
-//        if (MHPResponseData.getStatusCode() != HttpStatus.OK)
-//            return response;
+        //if (MHPResponseData.getStatusCode() != HttpStatus.OK)
+        //return response;
 
         //System.out.println("Response after mobile decryption is : " + dencryptMobileData.hasBody());
-
-//        System.out.println("Encrypted mobile number is : " + userDataModal.getEncryptedMobileNumber());
+        //System.out.println("Encrypted mobile number is : " + userDataModal.getEncryptedMobileNumber());
 
         return videoCallRoomData;
     }
@@ -118,15 +117,8 @@ public class EYAPIController {
 
         LocalDateTime expiryDate = videoCallingUtilities.getDateTimeWithOffset(roomJWTValidityOffSet);
 
-        //System.out.println("Exppiration time is : " + expiryDate);
-        //System.out.println("Room code list is : " + participantService.getRoomShortCodeWith(createRoomData.getMhpID(), createRoomData.getPatientId(), expiryDate));
-
-        //System.out.println("Room code list is for telemanas id  : " +  userDTOData.getTelemanasId() + " getMhpUserName : " + userDTOData.getMhpUserName() + " expiryDate : " + expiryDate);
-
-       //userDTOData
         ArrayList<String> roomShortCodesList = new ArrayList<>(participantService.getRoomShortCodeWith(userDTOData.getMhpUserName(), userDTOData.getTelemanasId(), expiryDate));
 
-        //System.out.println("MHP user name is : " + extractedMPHUser.getUserName());
         System.out.println("roomShortCodesList : " + roomShortCodesList);
 
         //In case we have Already Room ID then we won't create it...
@@ -150,9 +142,9 @@ public class EYAPIController {
 
         String doctorJWTToken = jwtTokenService.generateJWTToken(userDTOData.getMhpUserName(), "dummyMHPemailid", roomID, true);
         String patientJWTToken = jwtTokenService.generateJWTToken(userDTOData.getTelemanasId(), "dummyPatientemailid", roomID, false);
-//
-        Participant mhpUser = new Participant(null, null, doctorJWTToken, userDTOData.getMhpUserName());
-        Participant patientUser = new Participant(null, null, patientJWTToken, userDTOData.getTelemanasId());
+
+        Participant mhpUser = new Participant(null, null, doctorJWTToken, userDTOData.getMhpUserName(), true, Participant.UserRole.MHP);
+        Participant patientUser = new Participant(null, null, patientJWTToken, userDTOData.getTelemanasId(), false, Participant.UserRole.PATIENT);
 
         roomData.addParticipant(mhpUser);
         roomData.addParticipant(patientUser);
