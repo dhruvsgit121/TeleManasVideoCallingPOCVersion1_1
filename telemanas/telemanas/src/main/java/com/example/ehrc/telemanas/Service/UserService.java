@@ -1,34 +1,34 @@
-package com.example.ehrc.telemanas.Service;
+//package com.example.ehrc.telemanas.Service;
 
-import com.example.ehrc.telemanas.Model.User;
-import com.example.ehrc.telemanas.UserRepository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+//import com.example.ehrc.telemanas.Model.User;
+//import com.example.ehrc.telemanas.UserRepository.UserRepository;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Service;
+//
+//import java.sql.SQLException;
+//import java.util.List;
+//import java.util.Optional;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
+//@Service
+//public class UserService {
 
-@Service
-public class UserService {
+//    @Autowired
+//    private UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+//    public User saveUser(User user){
+//        return userRepository.save(user);
+//    }
 
-    public User saveUser(User user){
-        return userRepository.save(user);
-    }
+//    public List<User> saveAllUsers(List<User> user) throws SQLException {
+//        return userRepository.saveAll(user);
+//    }
 
-    public List<User> saveAllUsers(List<User> user) throws SQLException {
-        return userRepository.saveAll(user);
-    }
+//    public Optional<User>getUserByID(long userID, String userRole){
+//        return userRepository.findUserByIDAndRole(userID, userRole);
+//    }
 
-    public Optional<User>getUserByID(long userID, String userRole){
-        return userRepository.findUserByIDAndRole(userID, userRole);
-    }
+//    public User getUserByID(long userID){
+//        return userRepository.getReferenceById(userID);
+//    }
 
-    public User getUserByID(long userID){
-        return userRepository.getReferenceById(userID);
-    }
-
-}
+//}

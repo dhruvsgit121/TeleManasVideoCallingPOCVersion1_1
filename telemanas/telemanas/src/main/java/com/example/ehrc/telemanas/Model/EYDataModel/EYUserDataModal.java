@@ -13,7 +13,8 @@ public class EYUserDataModal {
     private String patientName;
     private String age;
     private String telemanasId;
-
+    private String encryptedMobileNumber;
+    private String mobileNumber;
 
     @Override
     public String toString() {
@@ -21,8 +22,18 @@ public class EYUserDataModal {
                 "patientName='" + patientName + '\'' +
                 ", age='" + age + '\'' +
                 ", telemanasId='" + telemanasId + '\'' +
+                ", encryptedMobileNumber='" + encryptedMobileNumber + '\'' +
+                ", mobileNumber='" + mobileNumber + '\'' +
                 '}';
     }
+    //    @Override
+//    public String toString() {
+//        return "EYUserDataModal{" +
+//                "patientName='" + patientName + '\'' +
+//                ", age='" + age + '\'' +
+//                ", telemanasId='" + telemanasId + '\'' +
+//                '}';
+//    }
 
     public EYUserDataModal(Map<String, Object> EYUserData) {
 
@@ -36,6 +47,12 @@ public class EYUserDataModal {
 
         if (EYUserData.containsKey("telemanasId"))
             this.telemanasId = EYUserData.get("telemanasId").toString();
+
+        if (EYUserData.containsKey("phone"))
+            this.encryptedMobileNumber = EYUserData.get("phone").toString();
+
+//        if (EYUserData.containsKey("telemanasId"))
+//            this.telemanasId = EYUserData.get("telemanasId").toString();
 
     }
 }

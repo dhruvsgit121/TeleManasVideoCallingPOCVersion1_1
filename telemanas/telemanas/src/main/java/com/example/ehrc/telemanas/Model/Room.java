@@ -22,8 +22,10 @@ public class Room {
     private Long serialId;
 
     @Column(nullable = false, unique = true, length = 20)
-
     private String roomId;
+
+    @Column(nullable = false, unique = true, length = 20)
+    private String videoId;
 
     private LocalDateTime creationDate;
 
@@ -37,14 +39,22 @@ public class Room {
     @JsonManagedReference
     private Set<Participant> participants = new HashSet<>();
 
-
-    public Room(String roomId, LocalDateTime creationDate, LocalDateTime expirationDate, boolean isActive, String roomShortCode) {
+    public Room(String roomId, String videoId, LocalDateTime creationDate, LocalDateTime expirationDate, boolean isActive, String roomShortCode) {
         this.roomId = roomId;
+        this.videoId = videoId;
         this.creationDate = creationDate;
         this.expirationDate = expirationDate;
         this.isActive = isActive;
         this.roomShortCode = roomShortCode;
     }
+
+    //    public Room(String roomId, LocalDateTime creationDate, LocalDateTime expirationDate, boolean isActive, String roomShortCode) {
+//        this.roomId = roomId;
+//        this.creationDate = creationDate;
+//        this.expirationDate = expirationDate;
+//        this.isActive = isActive;
+//        this.roomShortCode = roomShortCode;
+//    }
 
 
     // Utility method to add a book to the author

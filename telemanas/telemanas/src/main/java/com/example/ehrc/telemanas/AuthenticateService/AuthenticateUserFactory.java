@@ -19,4 +19,9 @@ public class AuthenticateUserFactory {
         return user.authenticateUser(userData);
     }
 
+    public ResponseEntity<Map<String, Object>> decryptUserPhoneNumber(AuthenticateUserDTO userData, String encryptedMobileNumber) {
+        AuthenticatePatient user = new AuthenticatePatient();
+        return user.decryptMobileNumber(userData, encryptedMobileNumber);
+    }
+
 }

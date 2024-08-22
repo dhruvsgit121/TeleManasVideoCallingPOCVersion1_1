@@ -30,7 +30,7 @@ public class Participant {
     @Column(length = 1024)
     private String jwtToken;
 
-    private Long participantId;
+    private String participantId;
 
     @ManyToOne
     @JoinColumn(name = "room_id")
@@ -45,10 +45,17 @@ public class Participant {
         this.jwtToken = jwtToken;
     }
 
-    public Participant(LocalDateTime joinDate, LocalDateTime leftDate, String jwtToken, Long participantId) {
+    public Participant(LocalDateTime joinDate, LocalDateTime leftDate, String jwtToken, String participantId) {
         this.joinDate = joinDate;
         this.leftDate = leftDate;
         this.jwtToken = jwtToken;
         this.participantId = participantId;
     }
+
+    //    public Participant(LocalDateTime joinDate, LocalDateTime leftDate, String jwtToken, Long participantId) {
+//        this.joinDate = joinDate;
+//        this.leftDate = leftDate;
+//        this.jwtToken = jwtToken;
+//        this.participantId = participantId;
+//    }
 }

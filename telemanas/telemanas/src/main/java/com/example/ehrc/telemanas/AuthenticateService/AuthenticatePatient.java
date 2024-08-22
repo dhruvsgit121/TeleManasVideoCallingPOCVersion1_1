@@ -25,4 +25,15 @@ public class AuthenticatePatient implements AuthenticateUser {
 
         return authenticateUserRequestHandler.autheticateUserData(userData);
     }
+
+    public ResponseEntity<Map<String, Object>> decryptMobileNumber(AuthenticateUserDTO userData, String encryptedMobileNumber) {
+
+        if (authenticateUserRequestHandler == null) {
+            authenticateUserRequestHandler = new AuthenticateUserRequestHandler();
+        }
+
+        return authenticateUserRequestHandler.decryptPatientMobileNumber(userData, encryptedMobileNumber);
+    }
+
+
 }

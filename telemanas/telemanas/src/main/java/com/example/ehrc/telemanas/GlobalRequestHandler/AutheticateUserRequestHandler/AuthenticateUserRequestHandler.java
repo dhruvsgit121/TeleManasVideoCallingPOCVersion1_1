@@ -103,6 +103,47 @@ public class AuthenticateUserRequestHandler {
     }
 
 
+
+
+    public ResponseEntity<Map<String, Object>> decryptPatientMobileNumber(AuthenticateUserDTO userData, String encryptedMobileNumber) {
+
+        if (videoCallingAPIRequestHandler == null)
+            videoCallingAPIRequestHandler = new VideoCallingAPIRequestHandler();
+
+        if (videoCallingUtilities == null)
+            videoCallingUtilities = new VideoCallingUtilities();
+
+        String payload = "{\r\n    \"requestPhoneNo\": \"" +
+                encryptedMobileNumber +
+                "\"\r\n}";
+
+        //Create HTTP Request Entity...
+        HttpEntity<String> requestEntity = createHttpRequestEntity(userData, payload);//new HttpEntity<>(payload, headers);
+
+        // Make the POST request
+        ResponseEntity<Map<String, Object>> response = videoCallingAPIRequestHandler.makePostRequest(VideoCallingAPIConstants.decryptPatientMobileNumberURL, requestEntity);
+
+        Map<String, Object> parsedResponseData = null;
+
+        System.out.println("response.getBody() in Encrypt Mobile Number is = " + response.getBody());
+
+
+//        if (response.getBody().containsKey("code") && response.getBody().containsKey("message")) {
+//            int responseCode = (int) response.getBody().get("code");
+//            String responseMessage = response.getBody().get("message").toString();
+//            if (responseCode == 200 && responseMessage.equals("SUCCESS")) {
+//                if (response.getBody().containsKey("payload")) {
+//                    parsedResponseData = (Map<String, Object>)response.getBody().get("payload");
+//                }
+//                return new ResponseEntity<>(parsedResponseData, HttpStatus.OK);
+//            } else {
+//                return videoCallingUtilities.getErrorResponseMessageEntity(response.getBody().get("message").toString(), HttpStatusCode.valueOf(responseCode));
+//            }
+//        }
+        return videoCallingUtilities.getGlobalErrorResponseMessageEntity(null);
+    }
+
+
     public HttpEntity<String> createHttpRequestEntity(AuthenticateUserDTO userData, String payload){
 
         // Create headers

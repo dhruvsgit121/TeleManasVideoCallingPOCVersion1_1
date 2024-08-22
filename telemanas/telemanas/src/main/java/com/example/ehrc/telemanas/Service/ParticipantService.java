@@ -23,7 +23,11 @@ public class ParticipantService {
         return participantRepository.save(participant);
     }
 
-    public List<String> getRoomShortCodeWith(Long MHPId, Long patientID, LocalDateTime expirationDate){
+//    public List<String> getRoomShortCodeWith(Long MHPId, Long patientID, LocalDateTime expirationDate){
+//        return participantRepository.findRoomShortCodeWith(MHPId, patientID, expirationDate);
+//    }
+
+    public List<String> getRoomShortCodeWith(String MHPId, String patientID, LocalDateTime expirationDate){
         return participantRepository.findRoomShortCodeWith(MHPId, patientID, expirationDate);
     }
 

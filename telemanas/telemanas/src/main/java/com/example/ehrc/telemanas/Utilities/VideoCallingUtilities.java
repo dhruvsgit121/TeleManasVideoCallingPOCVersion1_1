@@ -2,9 +2,7 @@ package com.example.ehrc.telemanas.Utilities;
 
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.Participant;
-import com.example.ehrc.telemanas.Model.User;
 import com.example.ehrc.telemanas.Service.ParticipantService;
-import com.example.ehrc.telemanas.Service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,8 +27,8 @@ public class VideoCallingUtilities {
     @Autowired
     private ParticipantService participantService;
 
-    @Autowired
-    private UserService userService;
+//    @Autowired
+//    private UserService userService;
 
 //    public ResponseEntity<Map<String, Object>> getErrorMessageResponseEntity(String errorMessage, HttpStatusCode statusCode) {
 //        Map<String, Object> errorResponse = new HashMap<>();
@@ -47,6 +45,12 @@ public class VideoCallingUtilities {
         return new ResponseEntity<>(errorResponse, statusCode);
     }
 
+
+    public Map<String, Object> getSuccessResponseMap() {
+        Map<String, Object> successResponseMap = new HashMap<>();
+        successResponseMap.put(VideoCallingAPIConstants.isErrorFlagValue, false);
+        return successResponseMap;
+    }
 
 
     public ResponseEntity<Map<String, Object>> getGlobalErrorResponseMessageEntity(String errorMessage) {
@@ -88,11 +92,11 @@ public class VideoCallingUtilities {
         Participant firstParticipant = participantService.getParticipantByID(participantsList.get(0));
         Participant secondParticipant = participantService.getParticipantByID(participantsList.get(1));
 
-        User firstUser = userService.getUserByID(firstParticipant.getParticipantId());
-
-        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP)) || (roomDetailsRequest.getIsMHP()  != 1 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
-            return firstParticipant;
-        }
+//        User firstUser = userService.getUserByID(firstParticipant.getParticipantId());
+//
+//        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP)) || (roomDetailsRequest.getIsMHP()  != 1 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
+//            return firstParticipant;
+//        }
         return secondParticipant;
     }
 
