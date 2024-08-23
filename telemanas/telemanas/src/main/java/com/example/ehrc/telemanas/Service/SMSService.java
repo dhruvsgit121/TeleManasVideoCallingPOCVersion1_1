@@ -40,11 +40,15 @@ public class SMSService {
 
     public void sendTestSms(String toPhoneNumber, String textBody) {
         System.out.println("message send to : " + toPhoneNumber + " with text : " + textBody);
-        Message.creator(
-                new PhoneNumber(toPhoneNumber),
-                new PhoneNumber(twilioPhoneNumber),
-                textBody
-        ).create();
-        System.out.println("SMS Send to the user...");
+        try {
+            Message.creator(
+                    new PhoneNumber(toPhoneNumber),
+                    new PhoneNumber(twilioPhoneNumber),
+                    textBody
+            ).create();
+            System.out.println("SMS Send to the user...");
+        } catch (Exception exception) {
+            System.out.println(exception.getLocalizedMessage());
+        }
     }
 }

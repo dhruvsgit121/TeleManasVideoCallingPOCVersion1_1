@@ -2,7 +2,7 @@ package com.example.ehrc.telemanas.ControllerAdvice;
 
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
-import org.apache.coyote.BadRequestException;
+//import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

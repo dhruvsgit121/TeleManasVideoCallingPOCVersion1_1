@@ -8,7 +8,8 @@ public class VideoCallingAPIConstants {
     public static String authenticatePatientURL = "patients/get-patient-details";
     public static String getUserDetailsURL = "user/get-userDetails-by-userName";
 
-    public static String decryptPatientMobileNumberURL = "commonservice/common/decrypt-phone-for-ameyo-to-original";
+    public static String decryptPatientMobileNumberURL = "commonservice/common/decrypt-phone-for-iiitb-to-original";
 
+//    /commonservice/common/decrypt-phone-for-iiitb-to-original
 //    decrypt-phone-for-ameyo-to-original
 }

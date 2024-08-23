@@ -1,9 +1,12 @@
 package com.example.ehrc.telemanas.Controller;
 
 
+import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.CustomException.ValidationMessagesException;
+import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.CreateRoomDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
+import com.example.ehrc.telemanas.Model.EYDataModel.EYUserDataModal;
 import com.example.ehrc.telemanas.Model.Participant;
 import com.example.ehrc.telemanas.Model.Room;
 //import com.example.ehrc.telemanas.Model.User;
@@ -26,6 +29,9 @@ import java.util.*;
 @RequestMapping("/rooms")
 public class RoomController {
 
+    @Autowired
+    private AuthenticateUserFactory authenticateUserFactory;
+
     @Value("${jwt.expirationOffSet}")
     private int expirationOffset;
 
@@ -47,18 +53,18 @@ public class RoomController {
     @Value("${jwt.RoomJWTValidityOffSet}")
     private Long roomJWTValidityOffSet;
 
-//    @Autowired
-//    private JWTTokenService jwtTokenService;
-//
+    @Autowired
+    private JWTTokenService jwtTokenService;
+    //
     @Autowired
     private SSEService sseService;
 //
-//    @Autowired
-//    private SMSService smsService;
+    @Autowired
+    private SMSService smsService;
 
 
-    @PostMapping("/createroom")
-    public ResponseEntity<Room> createVideoCallingRoomDummy(@Valid @RequestBody CreateRoomDTO createRoomData) {
+//    @PostMapping("/createroom")
+//    public ResponseEntity<Room> createVideoCallingRoomDummy(@Valid @RequestBody CreateRoomDTO createRoomData) {
 
         /*if (createRoomData.getPatientId() == null) {
             throw new ValidationMessagesException("Patient ID cannot be null.");
@@ -130,15 +136,18 @@ public class RoomController {
 
 */
 
-        Map<String, Object> responseMap = new HashMap<>();
-        return new ResponseEntity(responseMap, HttpStatus.OK);
-    }
+//        Map<String, Object> responseMap = new HashMap<>();
+//        return new ResponseEntity(responseMap, HttpStatus.OK);
+//    }
 
 
     public void sendLinkMesaageToPatient(String patientNumber, String roomShortCode) {
         String messageText = patientMessageURL + roomShortCode;
+        String registeredMobileNumber = "+91" + patientNumber;
         System.out.println("Message to send is : " + messageText);
-        //smsService.sendTestSms(patientNumber, messageText);
+
+        //To be commented out to send SMS to the Patient...
+        //smsService.sendTestSms(registeredMobileNumber, messageText);
     }
 
 
@@ -174,7 +183,7 @@ public class RoomController {
         if (roomDetailsRequest.getIsMHP() != 1) {
             System.out.println("entered in the loop!!!");
             //User is a patient, who is joining the call...
-            String clientID = firstParticipant.getUserRole().equals(Participant.UserRole.MHP) ? firstParticipant.getParticipantId() : secondParticipant.getParticipantId() ;
+            String clientID = firstParticipant.getUserRole().equals(Participant.UserRole.MHP) ? firstParticipant.getParticipantId() : secondParticipant.getParticipantId();
             sseService.sendCustomMessage(clientID + "", "Hello patient joined the call...");
         }
 //
@@ -226,4 +235,110 @@ public class RoomController {
         responseData.put("message", "success");
         return new ResponseEntity(responseData, HttpStatus.OK);
     }
+
+
+    @RequestMapping("/createroom")
+    public ResponseEntity<Map<String, Object>> createRoomWith(@Valid @RequestBody AuthenticateUserDTO userDTOData,
+                                                             @RequestHeader(value = "BearerToken") String bearerToken,
+                                                             @RequestHeader(value = "loggedin") String loggedIn
+    ) {
+
+        userDTOData.setBearerToken(bearerToken);
+        userDTOData.setLoggedInId(loggedIn);
+
+        System.out.println("User data to be sent to api is : " + userDTOData);
+
+        //Checking for Authentication of Patient Data...
+        ResponseEntity<Map<String, Object>> PatientResponseData = authenticateUserFactory.authenticateUser("patient", userDTOData);
+        if (PatientResponseData.getStatusCode() != HttpStatus.OK)
+            return PatientResponseData;
+
+        //Parsing the Map data to EYUserDataModal Data Modal...
+        EYUserDataModal userDataModal = null;
+        if (PatientResponseData.hasBody())
+            userDataModal = new EYUserDataModal(PatientResponseData.getBody());
+
+        //Checking for Authentication of MHP...
+        ResponseEntity<Map<String, Object>> MHPResponseData = authenticateUserFactory.authenticateUser("mhp", userDTOData);
+        if (MHPResponseData.getStatusCode() != HttpStatus.OK)
+            return MHPResponseData;
+
+
+
+        //Decrypting Mobile Number of The Patient...
+        ResponseEntity<Map<String, Object>> decryptMobileData = authenticateUserFactory.decryptUserPhoneNumber(userDTOData, userDataModal.getEncryptedMobileNumber());
+        if (decryptMobileData.getStatusCode() != HttpStatus.OK)
+            return decryptMobileData;
+
+        System.out.println("Data Recieved is in mobile decrypt is : " + decryptMobileData.getBody());
+
+        if(decryptMobileData.hasBody()){
+            Map<String, Object> encryptMobileNumberResponseData = decryptMobileData.getBody();
+            userDataModal.setMobileNumber((String) encryptMobileNumberResponseData.get("responsePhoneNo"));
+        }
+
+
+
+        ResponseEntity<Map<String, Object>> videoCallRoomData = createRoom(userDTOData, userDataModal);
+        if (videoCallRoomData.getStatusCode() != HttpStatus.OK)
+            return videoCallRoomData;
+
+        System.out.println("Reponse data from video call generation is : " + videoCallRoomData.getBody());
+        System.out.println("Entered in existing room maps with room id " + videoCallRoomData.getBody());
+
+//        System.out.println("Response after mobile decryption is : " + dencryptMobileData.hasBody());
+        System.out.println("User mobile number is : " + userDataModal.getMobileNumber());
+
+        return videoCallRoomData;
+    }
+
+    public ResponseEntity<Map<String, Object>> createRoom(AuthenticateUserDTO userDTOData, EYUserDataModal userDataModal ) {
+
+        LocalDateTime expiryDate = videoCallingUtilities.getDateTimeWithOffset(roomJWTValidityOffSet);
+
+        ArrayList<String> roomShortCodesList = new ArrayList<>(participantService.getRoomShortCodeWith(userDTOData.getMhpUserName(), userDTOData.getTelemanasId(), expiryDate));
+
+        System.out.println("roomShortCodesList : " + roomShortCodesList);
+
+        System.out.println("roomShortCodesList : " + userDataModal.getMobileNumber());
+
+        //In case we have Already Room ID then we won't create it...
+        //Will return the already existing ROOM CODE...
+        if (roomShortCodesList.size() > 0) {
+            Map<String, Object> responseMap = videoCallingUtilities.getSuccessResponseMap();
+            String roomShortCode = roomShortCodesList.get(0);
+            responseMap.put("roomCode", roomShortCode);
+            System.out.println("Entered in existing room maps with room id " + roomShortCode);
+            sendLinkMesaageToPatient(userDataModal.getMobileNumber(), roomShortCode);
+            return new ResponseEntity(responseMap, HttpStatus.OK);
+        }
+
+        //In case we don't have existing Room ID...
+        //We will create and return the NEW ROOM CODE...
+        String roomID = videoCallingUtilities.generateRandomString(20);
+        String roomShortCode = videoCallingUtilities.generateRandomString(20);
+        String videoID = videoCallingUtilities.generateRandomString(20);
+
+        Room roomData = new Room(roomID, videoID, videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomShortCode);
+
+        String doctorJWTToken = jwtTokenService.generateJWTToken(userDTOData.getMhpUserName(), "dummyMHPemailid", roomID, true);
+        String patientJWTToken = jwtTokenService.generateJWTToken(userDTOData.getTelemanasId(), "dummyPatientemailid", roomID, false);
+
+        Participant mhpUser = new Participant(null, null, doctorJWTToken, userDTOData.getMhpUserName(), true, Participant.UserRole.MHP);
+        Participant patientUser = new Participant(null, null, patientJWTToken, userDTOData.getTelemanasId(), false, Participant.UserRole.PATIENT);
+
+        roomData.addParticipant(mhpUser);
+        roomData.addParticipant(patientUser);
+
+        Room savedRoomData = roomService.saveRoom(roomData);
+
+        Map<String, Object> responseMap = videoCallingUtilities.getSuccessResponseMap();
+        responseMap.put("roomCode", savedRoomData.getRoomShortCode());
+
+        sendLinkMesaageToPatient(userDataModal.getMobileNumber(), savedRoomData.getRoomShortCode());
+
+        return new ResponseEntity(responseMap, HttpStatus.OK);
+    }
+
+
 }

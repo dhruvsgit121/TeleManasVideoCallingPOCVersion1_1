@@ -5,6 +5,7 @@ import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.GlobalRequestHandler.VideoCallingAPIRequestHandler;
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
+//import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -92,7 +93,7 @@ public class AuthenticateUserRequestHandler {
             String responseMessage = response.getBody().get("message").toString();
             if (responseCode == 200 && responseMessage.equals("SUCCESS")) {
                 if (response.getBody().containsKey("payload")) {
-                    parsedResponseData = (Map<String, Object>)response.getBody().get("payload");
+                    parsedResponseData = (Map<String, Object>) response.getBody().get("payload");
                 }
                 return new ResponseEntity<>(parsedResponseData, HttpStatus.OK);
             } else {
@@ -101,8 +102,6 @@ public class AuthenticateUserRequestHandler {
         }
         return videoCallingUtilities.getGlobalErrorResponseMessageEntity(null);
     }
-
-
 
 
     public ResponseEntity<Map<String, Object>> decryptPatientMobileNumber(AuthenticateUserDTO userData, String encryptedMobileNumber) {
@@ -117,6 +116,8 @@ public class AuthenticateUserRequestHandler {
                 encryptedMobileNumber +
                 "\"\r\n}";
 
+//        System.out.println("Payload sent is : " + payload);
+
         //Create HTTP Request Entity...
         HttpEntity<String> requestEntity = createHttpRequestEntity(userData, payload);//new HttpEntity<>(payload, headers);
 
@@ -127,24 +128,21 @@ public class AuthenticateUserRequestHandler {
 
         System.out.println("response.getBody() in Encrypt Mobile Number is = " + response.getBody());
 
-
-//        if (response.getBody().containsKey("code") && response.getBody().containsKey("message")) {
-//            int responseCode = (int) response.getBody().get("code");
-//            String responseMessage = response.getBody().get("message").toString();
-//            if (responseCode == 200 && responseMessage.equals("SUCCESS")) {
-//                if (response.getBody().containsKey("payload")) {
-//                    parsedResponseData = (Map<String, Object>)response.getBody().get("payload");
-//                }
-//                return new ResponseEntity<>(parsedResponseData, HttpStatus.OK);
-//            } else {
-//                return videoCallingUtilities.getErrorResponseMessageEntity(response.getBody().get("message").toString(), HttpStatusCode.valueOf(responseCode));
-//            }
-//        }
+        if (response.getStatusCode() == HttpStatus.OK) {
+            if(response.getBody().containsKey("code")){
+                int responseCode = (int)response.getBody().get("code");
+                return videoCallingUtilities.getErrorResponseMessageEntity(response.getBody().get("message").toString(), HttpStatusCode.valueOf(responseCode));
+            }else{
+                parsedResponseData = response.getBody();
+                System.out.println("Entered in this with data being : " + parsedResponseData);
+                return new ResponseEntity<>(parsedResponseData, HttpStatus.OK);
+            }
+        }
         return videoCallingUtilities.getGlobalErrorResponseMessageEntity(null);
     }
 
 
-    public HttpEntity<String> createHttpRequestEntity(AuthenticateUserDTO userData, String payload){
+    public HttpEntity<String> createHttpRequestEntity(AuthenticateUserDTO userData, String payload) {
 
         // Create headers
         HttpHeaders headers = new HttpHeaders();
