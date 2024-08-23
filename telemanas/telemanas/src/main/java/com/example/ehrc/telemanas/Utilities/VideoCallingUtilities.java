@@ -92,11 +92,11 @@ public class VideoCallingUtilities {
         Participant firstParticipant = participantService.getParticipantByID(participantsList.get(0));
         Participant secondParticipant = participantService.getParticipantByID(participantsList.get(1));
 
-//        User firstUser = userService.getUserByID(firstParticipant.getParticipantId());
-//
-//        if ((roomDetailsRequest.getIsMHP() == 1 && firstUser.getUserRole().equals(User.UserRole.MHP)) || (roomDetailsRequest.getIsMHP()  != 1 && firstUser.getUserRole().equals(User.UserRole.PATIENT))) {
-//            return firstParticipant;
-//        }
+        if((firstParticipant.getUserRole().equals(Participant.UserRole.MHP) && roomDetailsRequest.getIsMHP() == 1) ||
+                (firstParticipant.getUserRole().equals(Participant.UserRole.PATIENT) && roomDetailsRequest.getIsMHP() == 0) ){
+            return firstParticipant;
+        }
+
         return secondParticipant;
     }
 

@@ -47,6 +47,21 @@ public class Participant {
     // This is the foreign key column
     private Room room;
 
+
+    @Override
+    public String toString() {
+        return "Participant{" +
+                "serialId=" + serialId +
+                ", joinDate=" + joinDate +
+                ", leftDate=" + leftDate +
+                ", jwtToken='" + jwtToken + '\'' +
+                ", participantId='" + participantId + '\'' +
+                ", isOrganiser=" + isOrganiser +
+                ", userRole=" + userRole +
+                ", room=" + room +
+                '}';
+    }
+
     public Participant(LocalDateTime joinDate, LocalDateTime leftDate, String jwtToken, String participantId, UserRole userRole) {
         this.joinDate = joinDate;
         this.leftDate = leftDate;
