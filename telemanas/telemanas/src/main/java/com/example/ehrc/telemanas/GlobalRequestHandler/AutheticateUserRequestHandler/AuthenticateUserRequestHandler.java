@@ -5,8 +5,6 @@ import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.GlobalRequestHandler.VideoCallingAPIRequestHandler;
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
-//import jdk.swing.interop.SwingInterOpUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +14,10 @@ import java.util.Map;
 @Service
 public class AuthenticateUserRequestHandler {
 
-    @Autowired
-    private VideoCallingAPIRequestHandler videoCallingAPIRequestHandler;
-
-    @Autowired
-    private VideoCallingUtilities videoCallingUtilities;
+    private final VideoCallingAPIRequestHandler videoCallingAPIRequestHandler = new VideoCallingAPIRequestHandler();
+    private final VideoCallingUtilities videoCallingUtilities = new VideoCallingUtilities();;
 
     public ResponseEntity<Map<String, Object>> autheticateUserData(AuthenticateUserDTO userData) {
-
-        if (videoCallingAPIRequestHandler == null)
-            videoCallingAPIRequestHandler = new VideoCallingAPIRequestHandler();
-
-        if (videoCallingUtilities == null)
-            videoCallingUtilities = new VideoCallingUtilities();
 
         String payload = "{\"telemanasId\":\"" +
                 userData.getTelemanasId() +
@@ -67,12 +56,6 @@ public class AuthenticateUserRequestHandler {
 
     public ResponseEntity<Map<String, Object>> autheticateMHPData(AuthenticateUserDTO userData) {
 
-        if (videoCallingAPIRequestHandler == null)
-            videoCallingAPIRequestHandler = new VideoCallingAPIRequestHandler();
-
-        if (videoCallingUtilities == null)
-            videoCallingUtilities = new VideoCallingUtilities();
-
         String payload = "{\r\n    \"userName\": \"" +
                 userData.getMhpUserName() +
                 "\"\r\n}";
@@ -106,17 +89,9 @@ public class AuthenticateUserRequestHandler {
 
     public ResponseEntity<Map<String, Object>> decryptPatientMobileNumber(AuthenticateUserDTO userData, String encryptedMobileNumber) {
 
-        if (videoCallingAPIRequestHandler == null)
-            videoCallingAPIRequestHandler = new VideoCallingAPIRequestHandler();
-
-        if (videoCallingUtilities == null)
-            videoCallingUtilities = new VideoCallingUtilities();
-
         String payload = "{\r\n    \"requestPhoneNo\": \"" +
                 encryptedMobileNumber +
                 "\"\r\n}";
-
-//        System.out.println("Payload sent is : " + payload);
 
         //Create HTTP Request Entity...
         HttpEntity<String> requestEntity = createHttpRequestEntity(userData, payload);//new HttpEntity<>(payload, headers);
