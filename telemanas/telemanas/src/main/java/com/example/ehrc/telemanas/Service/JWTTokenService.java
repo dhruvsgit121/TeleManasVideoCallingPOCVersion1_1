@@ -53,7 +53,6 @@ public class JWTTokenService {
         // Use JwtBuilder to construct a JWT token
         String token = Jwts.builder()
                 .setClaims(claims)
-//                .claim("role", "participant")
                 .signWith(SignatureAlgorithm.HS256, signingKey).setHeaderParam("typ", "JWT")
                 .compact();
         return token;
@@ -69,33 +68,17 @@ public class JWTTokenService {
         claims.put("room", roomID); // Room ID for the Jitsi conference
         claims.put("nbf", videoCallingUtilities.getCurrentTimeStamp()); // Not Before time in seconds
         claims.put("exp", videoCallingUtilities.getExpirationTimeStamp(expirationOffset)); // Expiry time in milliseconds (1 hour)
-//        "moderator": true
-        //claims.put("moderator", isModerator);
-        //claims.put("role", isModerator ? "moderator" : "participant");
         return claims;
     }
-
 
     private Map<String, Object> createContext(String username, String userID, String userEmail, Boolean isModerator) {
         Map<String, Object> context = new HashMap<>();
         Map<String, Object> user = new HashMap<>();
-//        user.put("moderator", isModerator);
         user.put("name", username);
         user.put("id", userID);
         user.put("email", userEmail);
         user.put("affiliation", isModerator ? "owner" : "member");
-//        "affiliation": "owner"
         context.put("user", user);
-//        context.put("group", isModerator ? "moderator" : "viewer");
-//        roles: ['moderator']  // Assign the moderator role
-
-//        ArrayList<String> roles = new ArrayList<>();
-//        roles.add(isModerator ? "moderator" : "participant");
-//
-//        context.put("affiliation", isModerator ? "owner" : "member");
-//        context.put("role", roles);
         return context;
     }
-
-
 }
