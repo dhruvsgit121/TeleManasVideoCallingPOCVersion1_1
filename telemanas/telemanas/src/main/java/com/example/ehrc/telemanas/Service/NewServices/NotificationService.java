@@ -58,6 +58,4 @@ public class NotificationService {
             System.out.println(exception.getLocalizedMessage());
         }
     }
-
-
 }

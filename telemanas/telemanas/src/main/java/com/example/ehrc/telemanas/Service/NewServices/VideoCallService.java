@@ -1,8 +1,8 @@
 package com.example.ehrc.telemanas.Service.NewServices;
 
-
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
+import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.EYDataModel.EYUserDataModal;
 import com.example.ehrc.telemanas.Service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,19 @@ public class VideoCallService {
 
     @Autowired
     private RoomService roomService;
+
+
+    public ResponseEntity<Map<String, Object>> startVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
+        return roomService.startVideoCall(roomDetailsRequest);
+    }
+
+    public ResponseEntity<Map<String, Object>> leaveVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
+        return roomService.exitRoom(roomDetailsRequest);
+    }
+
+    public ResponseEntity<Map<String, Object>> JoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
+        return roomService.joinRoom(roomDetailsRequest);
+    }
 
     public ResponseEntity<Map<String, Object>> createMeetingLink(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
 
@@ -49,7 +62,7 @@ public class VideoCallService {
         return videoCallRoomData;
     }
 
-    private void sendMessageAfterParsingVideoCallRoomData(ResponseEntity<Map<String, Object>> videoCallRoomData, EYUserDataModal userDataModal){
+    private void sendMessageAfterParsingVideoCallRoomData(ResponseEntity<Map<String, Object>> videoCallRoomData, EYUserDataModal userDataModal) {
         if (videoCallRoomData.hasBody()) {
             String roomShortCode = videoCallRoomData.getBody().get("roomCode").toString();
             sendLinkToPatient(userDataModal.getMobileNumber(), roomShortCode);

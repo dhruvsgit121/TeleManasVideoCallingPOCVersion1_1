@@ -1,6 +1,6 @@
 package com.example.ehrc.telemanas.Service;
 
-import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
+//import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.CustomException.ValidationMessagesException;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
@@ -27,12 +27,9 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
 
-//    private final NotificationService smsService;
+    @Autowired
+    private SSEService sseService;
 
-//    @Autowired
-//    private JWTTokenService jwtTokenService;
-
-//    @Autowired
     private final JWTTokenService jwtTokenService;
 
     @Autowired
@@ -40,7 +37,6 @@ public class RoomService {
 
     @Autowired
     public RoomService(JWTTokenService jwtTokenService) {
-//        this.smsService = smsService;
         this.jwtTokenService = jwtTokenService;
     }
 
@@ -50,9 +46,6 @@ public class RoomService {
 
     @Value("${jwt.expirationOffSet}")
     private int expirationOffset;
-
-//    @Value("${sms.patientMessageURL}")
-//    private String patientMessageURL;
 
     @Autowired
     private VideoCallingUtilities videoCallingUtilities;
@@ -69,26 +62,81 @@ public class RoomService {
         return roomRepository.findRoomListWithExpirationDate(expirationDate);
     }
 
-
     //####################################### Methods for Room Creation #####################################
 
-    public ResponseEntity<Map<String, Object>> decryptPatientMobileNumber(AuthenticateUserFactory authenticateUserFactory, AuthenticateUserDTO userDTOData, EYUserDataModal userDataModal) {
+//    public ResponseEntity<Map<String, Object>> decryptPatientMobileNumber(AuthenticateUserFactory authenticateUserFactory, AuthenticateUserDTO userDTOData, EYUserDataModal userDataModal) {
+//
+//        //Decrypting Mobile Number of The Patient...
+//        ResponseEntity<Map<String, Object>> decryptMobileData = authenticateUserFactory.decryptUserPhoneNumber(userDTOData, userDataModal.getEncryptedMobileNumber());
+//        if (decryptMobileData.getStatusCode() != HttpStatus.OK)
+//            return decryptMobileData;
+//
+//        System.out.println("Data Recieved is in mobile decrypt is : " + decryptMobileData.getBody());
+//
+//        if (decryptMobileData.hasBody()) {
+//            Map<String, Object> encryptMobileNumberResponseData = decryptMobileData.getBody();
+//            userDataModal.setMobileNumber((String) encryptMobileNumberResponseData.get("responsePhoneNo"));
+//        }
+//
+//        return null;
+//    }
 
-        //Decrypting Mobile Number of The Patient...
-        ResponseEntity<Map<String, Object>> decryptMobileData = authenticateUserFactory.decryptUserPhoneNumber(userDTOData, userDataModal.getEncryptedMobileNumber());
-        if (decryptMobileData.getStatusCode() != HttpStatus.OK)
-            return decryptMobileData;
 
-        System.out.println("Data Recieved is in mobile decrypt is : " + decryptMobileData.getBody());
+    public ResponseEntity<Map<String, Object>> startVideoCall(RoomDetailsRequestDTO roomDetailsRequest){
 
-        if (decryptMobileData.hasBody()) {
-            Map<String, Object> encryptMobileNumberResponseData = decryptMobileData.getBody();
-            userDataModal.setMobileNumber((String) encryptMobileNumberResponseData.get("responsePhoneNo"));
+        Map<String, Object> roomServiceRequestData = generateVideoRoomDetailsResponseEntity(roomDetailsRequest);
+        System.out.println("roomServiceRequestData" + roomServiceRequestData);
+
+        if (roomServiceRequestData.containsKey("clientID")) {
+            //User is a patient, who is joining the call...
+            String clientID = roomServiceRequestData.get("clientID").toString();
+            sseService.sendCustomMessage(clientID + "", "Hello patient joined the call...");
         }
 
-        return null;
+        return new ResponseEntity(roomServiceRequestData, HttpStatus.OK);
     }
 
+
+    public ResponseEntity<Map<String, Object>> joinRoom(RoomDetailsRequestDTO roomDetailsRequest){
+
+        Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();//new HashMap<>();
+        ArrayList<Long> participantsList = new ArrayList(participantService.getParticipantsListWith(roomDetailsRequest.getRoomShortCode()));
+        System.out.println("Participant list is : " + participantsList);
+
+        if (participantsList.size() != 2) {
+            throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
+        }
+
+        //Setting the Join Date of the user...
+        Participant requestedParticipant = videoCallingUtilities.getRequestedUserAsPerRequest(roomDetailsRequest, participantsList);
+        requestedParticipant.setJoinDate(videoCallingUtilities.getDateTimeWithOffset(0));
+
+        participantService.saveParticipant(requestedParticipant);
+
+        responseData.put("message", "success");
+        return new ResponseEntity(responseData, HttpStatus.OK);
+    }
+
+
+    public ResponseEntity<Map<String, Object>> exitRoom(RoomDetailsRequestDTO roomDetailsRequest){
+
+        Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
+
+        ArrayList<Long> participantsList = new ArrayList(participantService.getParticipantsListWith(roomDetailsRequest.getRoomShortCode()));
+
+        if (participantsList.size() != 2) {
+            throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
+        }
+
+        //Setting the Left Date of the user...
+        Participant requestedParticipant = videoCallingUtilities.getRequestedUserAsPerRequest(roomDetailsRequest, participantsList);
+        requestedParticipant.setLeftDate(videoCallingUtilities.getDateTimeWithOffset(0));
+
+        participantService.saveParticipant(requestedParticipant);
+
+        responseData.put("message", "success");
+        return new ResponseEntity(responseData, HttpStatus.OK);
+    }
 
 
     public ResponseEntity<Map<String, Object>> processAlreadyExistedRoom(ArrayList<String> roomShortCodesList) {
