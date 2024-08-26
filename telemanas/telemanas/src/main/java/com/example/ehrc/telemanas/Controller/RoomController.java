@@ -131,11 +131,14 @@ public class RoomController {
 
     @RequestMapping("/createroom")
     public ResponseEntity<Map<String, Object>> createRoomWith(@Valid @RequestBody AuthenticateUserDTO userDTOData,
-                                                             @RequestHeader(value = "BearerToken") String bearerToken,
-                                                             @RequestHeader(value = "loggedin") String loggedIn
+                                                              @RequestHeader("Authorization") String bearerToken,
+//                                                             @RequestHeader(value = "BearerToken") String bearerToken,
+                                                             @RequestHeader(value = "Loggedin") String loggedIn
     ) {
 
-        userDTOData.setBearerToken(bearerToken);
+        String token = bearerToken.substring(7);
+
+        userDTOData.setBearerToken(token);
         userDTOData.setLoggedInId(loggedIn);
 
         System.out.println("User data to be sent to api is : " + userDTOData);

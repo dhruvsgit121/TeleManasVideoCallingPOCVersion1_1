@@ -57,16 +57,9 @@ public class Room {
 //    }
 
 
-    // Utility method to add a book to the author
+    // Utility method to add a participant...
     public void addParticipant(Participant participant) {
         participants.add(participant);
         participant.setRoom(this);
     }
-
-    // Utility method to remove a book from the author
-    public void removeParticipant(Participant participant) {
-        participants.remove(participant);
-        participant.setRoom(null);
-    }
-
 }
