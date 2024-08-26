@@ -44,22 +44,20 @@ public class VideoCallService {
             return patientMobileDecryptionResponseData;
         }
 
-        System.out.println("Mobile decrypted number is : " + userDataModal.getMobileNumber());
-
         ResponseEntity<Map<String, Object>> videoCallRoomData = roomService.createRoom(userDTOData, userDataModal, roomService);
+        sendMessageAfterParsingVideoCallRoomData(videoCallRoomData, userDataModal);
+        return videoCallRoomData;
+    }
 
-        System.out.println("respons edata is : " + videoCallRoomData.getBody());
-
+    private void sendMessageAfterParsingVideoCallRoomData(ResponseEntity<Map<String, Object>> videoCallRoomData, EYUserDataModal userDataModal){
         if (videoCallRoomData.hasBody()) {
             String roomShortCode = videoCallRoomData.getBody().get("roomCode").toString();
             sendLinkToPatient(userDataModal.getMobileNumber(), roomShortCode);
         }
-
-        return videoCallRoomData;
     }
 
 
-    public void sendLinkToPatient(String patientNumber, String roomShortCode) {
+    private void sendLinkToPatient(String patientNumber, String roomShortCode) {
 
         String registeredMobileNumber = "+91" + patientNumber;
 
@@ -68,7 +66,7 @@ public class VideoCallService {
     }
 
 
-    public ResponseEntity<Map<String, Object>> decryptPatientMobileNumber(AuthenticateUserFactory authenticateUserFactory, AuthenticateUserDTO userDTOData, EYUserDataModal userDataModal) {
+    private ResponseEntity<Map<String, Object>> decryptPatientMobileNumber(AuthenticateUserFactory authenticateUserFactory, AuthenticateUserDTO userDTOData, EYUserDataModal userDataModal) {
 
         //Decrypting Mobile Number of The Patient...
         ResponseEntity<Map<String, Object>> decryptMobileData = authenticateUserFactory.decryptUserPhoneNumber(userDTOData, userDataModal.getEncryptedMobileNumber());
@@ -87,8 +85,7 @@ public class VideoCallService {
 
 
     //Method to Validate Participants (Patient and MHP)...
-    public ResponseEntity<Map<String, Object>> validateParticipants(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
+    private ResponseEntity<Map<String, Object>> validateParticipants(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
         return authenticationService.autheticateParticipantsData(userDTOData, authenticateUserFactory);
     }
-
 }
