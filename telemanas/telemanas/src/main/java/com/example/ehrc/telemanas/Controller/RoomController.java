@@ -9,6 +9,7 @@ import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.Participant;
 //import com.example.ehrc.telemanas.Model.Room;
 import com.example.ehrc.telemanas.Service.*;
+import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,9 @@ public class RoomController {
 
     @Autowired
     private ParticipantService participantService;
+
+    @Autowired
+    private VideoCallService videoCallService;
 
 //    @Value("${jwt.RoomJWTValidityOffSet}")
 //    private Long roomJWTValidityOffSet;
@@ -146,7 +150,9 @@ public class RoomController {
 
         System.out.println("User data to be sent to api is : " + userDTOData);
 
-        return roomService.createRequestedRoom(userDTOData, authenticateUserFactory, roomService, participantService);
+        return videoCallService.createMeetingLink(userDTOData, authenticateUserFactory);
+
+        //return roomService.createRequestedRoom(userDTOData, authenticateUserFactory, roomService, participantService);
 
 //        EYUserDataModal userDataModal = null;
 //        if (PatientResponseData.hasBody())

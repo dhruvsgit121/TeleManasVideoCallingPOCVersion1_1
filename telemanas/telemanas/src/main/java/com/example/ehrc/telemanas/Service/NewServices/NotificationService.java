@@ -1,4 +1,4 @@
-package com.example.ehrc.telemanas.Service;
+package com.example.ehrc.telemanas.Service.NewServices;
 
 import com.twilio.Twilio;
 import com.twilio.exception.ApiException;
@@ -9,15 +9,18 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class SMSService {
+public class NotificationService {
 
     private final String authToken;
     private final String accountSid;
     private final String twilioPhoneNumber;
 
-    public SMSService(@Value("${twilio.auth.token}") String authToken,
-                      @Value("${twilio.account.sid}") String accountSid,
-                      @Value("${twilio.phone.number}") String twilioPhoneNumber) {
+    @Value("${sms.patientMessageURL}")
+    private String patientMeetingLinkBaseURL;
+
+    public NotificationService(@Value("${twilio.auth.token}") String authToken,
+                               @Value("${twilio.account.sid}") String accountSid,
+                               @Value("${twilio.phone.number}") String twilioPhoneNumber) {
         this.authToken = authToken;
         this.accountSid = accountSid;
         this.twilioPhoneNumber = twilioPhoneNumber;
@@ -39,16 +42,22 @@ public class SMSService {
     }
 
     public void sendTestSms(String toPhoneNumber, String textBody) {
-        System.out.println("message send to : " + toPhoneNumber + " with text : " + textBody);
+
+        String messageTextBody = patientMeetingLinkBaseURL + textBody;
+
+        System.out.println("message send to : " + toPhoneNumber + " with text : " + messageTextBody);
+
         try {
             Message.creator(
                     new PhoneNumber(toPhoneNumber),
                     new PhoneNumber(twilioPhoneNumber),
-                    textBody
+                    messageTextBody
             ).create();
             System.out.println("SMS Send to the user...");
         } catch (Exception exception) {
             System.out.println(exception.getLocalizedMessage());
         }
     }
+
+
 }
