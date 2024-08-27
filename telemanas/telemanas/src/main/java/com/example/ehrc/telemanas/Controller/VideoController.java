@@ -37,6 +37,11 @@ public class VideoController {
 //    @Autowired
 //    private SSEService sseService;
 
+    @GetMapping("/helloworld")
+    public String getVideoRoomDetails() {
+        return "videoCallService.startVideoCall(roomDetailsRequest)";
+    }
+
     @PostMapping("/getroomdetails")
     public ResponseEntity<Map<String, Object>> getVideoRoomDetails(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
         return videoCallService.startVideoCall(roomDetailsRequest);
