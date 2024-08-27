@@ -10,15 +10,10 @@ import java.util.Map;
 public class AuthenticateMHP implements AuthenticateUser{
 
     @Autowired
-    private AuthenticateUserRequestHandler authenticateUserRequestHandler;
+    private final AuthenticateUserRequestHandler authenticateUserRequestHandler = new AuthenticateUserRequestHandler();
 
     @Override
     public ResponseEntity<Map<String, Object>> authenticateUser(AuthenticateUserDTO userData) {
-
-        if (authenticateUserRequestHandler == null) {
-            authenticateUserRequestHandler = new AuthenticateUserRequestHandler();
-        }
-
-        return authenticateUserRequestHandler.autheticateMHPData(userData);
+        return authenticateUserRequestHandler.authenticateMHPData(userData);
     }
 }

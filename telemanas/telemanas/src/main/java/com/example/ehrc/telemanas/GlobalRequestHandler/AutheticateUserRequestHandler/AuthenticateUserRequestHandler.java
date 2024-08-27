@@ -15,9 +15,9 @@ import java.util.Map;
 public class AuthenticateUserRequestHandler {
 
     private final VideoCallingAPIRequestHandler videoCallingAPIRequestHandler = new VideoCallingAPIRequestHandler();
-    private final VideoCallingUtilities videoCallingUtilities = new VideoCallingUtilities();;
+    private final VideoCallingUtilities videoCallingUtilities = new VideoCallingUtilities();
 
-    public ResponseEntity<Map<String, Object>> autheticateUserData(AuthenticateUserDTO userData) {
+    public ResponseEntity<Map<String, Object>> authenticateUserData(AuthenticateUserDTO userData) {
 
         String payload = "{\"telemanasId\":\"" +
                 userData.getTelemanasId() +
@@ -54,7 +54,7 @@ public class AuthenticateUserRequestHandler {
     }
 
 
-    public ResponseEntity<Map<String, Object>> autheticateMHPData(AuthenticateUserDTO userData) {
+    public ResponseEntity<Map<String, Object>> authenticateMHPData(AuthenticateUserDTO userData) {
 
         String payload = "{\r\n    \"userName\": \"" +
                 userData.getMhpUserName() +
