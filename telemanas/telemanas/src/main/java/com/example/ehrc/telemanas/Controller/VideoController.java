@@ -80,6 +80,8 @@ public class VideoController {
     ) {
         String token = bearerToken.substring(7);
 
+        System.out.println("method called");
+
         //Adjusting The UserDTOData...
         userDTOData.setBearerToken(token);
         userDTOData.setLoggedInId(loggedIn);
