@@ -1,5 +1,6 @@
 package com.example.ehrc.telemanas.GlobalRequestHandler;
 
+import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -12,9 +13,9 @@ import java.util.Map;
 @Service
 public class VideoCallingAPIRequestHandler {
 
-    @Value("${videocalling.api.eybase.url}")
+//    @Value("${videocalling.api.eybase.url}")
     //private String EYAPIBaseURl = "https://telemanas-test.iiitb.ac.in/v3/";
-    private String EYAPIBaseURl = "https://telemanas-preprod.iiitb.ac.in/v3/";
+//    private String EYAPIBaseURl = "https://telemanas-preprod.iiitb.ac.in/v3/";
 
 
     @Autowired
@@ -25,7 +26,7 @@ public class VideoCallingAPIRequestHandler {
         if (globalRequestHandler == null)
             globalRequestHandler = new GlobalRequestHandler();
 
-        String requestURL = EYAPIBaseURl + apiURlPath;
+        String requestURL = VideoCallingAPIConstants.eyAPIBaseURL + apiURlPath;
 
         // Make the POST request
         ResponseEntity<Map<String, Object>> responseEntity = globalRequestHandler.makePostRequest(requestURL, requestEntity);
