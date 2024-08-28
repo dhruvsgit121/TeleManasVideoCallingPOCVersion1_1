@@ -238,6 +238,7 @@ public class RoomService {
         if (roomDetailsRequest.getIsMHP() != 1) {
             String clientID = firstParticipant.getUserRole().equals(Participant.UserRole.MHP) ? firstParticipant.getParticipantId() : secondParticipant.getParticipantId();
             responseData.put("clientID", clientID);
+            responseData.put("MHPRegistrationNumber", "MHP1234NHNOPA");
         }
     }
 }
