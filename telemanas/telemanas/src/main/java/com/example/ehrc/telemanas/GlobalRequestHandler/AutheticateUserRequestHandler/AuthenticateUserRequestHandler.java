@@ -70,15 +70,26 @@ public class AuthenticateUserRequestHandler {
 
         System.out.println("response.getBody() in authenticate MHP data is= " + response.getBody());
 
+        System.out.println("Entered here");
 
         if (response.getBody().containsKey("code") && response.getBody().containsKey("message")) {
             int responseCode = (int) response.getBody().get("code");
             String responseMessage = response.getBody().get("message").toString();
-            if (responseCode == 200 && responseMessage.equals("SUCCESS")) {
-                if (response.getBody().containsKey("payload")) {
-                    parsedResponseData = (Map<String, Object>) response.getBody().get("payload");
+            if (responseCode == 200 ) {
+//                && responseMessage.equals("SUCCESS")
+                if(responseMessage.equals("SUCCESS")){
+                    if (response.getBody().containsKey("payload")) {
+                        parsedResponseData = (Map<String, Object>) response.getBody().get("payload");
+                    }
+                    return new ResponseEntity<>(parsedResponseData, HttpStatus.OK);
+                }else{
+                    ResponseEntity<Map<String, Object>> responseEntity = videoCallingUtilities.getErrorResponseMessageEntity(responseMessage, HttpStatus.SEE_OTHER);
+                    return  responseEntity;
                 }
-                return new ResponseEntity<>(parsedResponseData, HttpStatus.OK);
+//                if (response.getBody().containsKey("payload")) {
+//                    parsedResponseData = (Map<String, Object>) response.getBody().get("payload");
+//                }
+//                return new ResponseEntity<>(parsedResponseData, HttpStatus.OK);
             } else {
                 return videoCallingUtilities.getErrorResponseMessageEntity(response.getBody().get("message").toString(), HttpStatusCode.valueOf(responseCode));
             }
