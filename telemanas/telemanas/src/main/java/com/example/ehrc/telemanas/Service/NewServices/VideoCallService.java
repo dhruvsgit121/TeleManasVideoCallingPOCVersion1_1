@@ -4,12 +4,15 @@ import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.EYDataModel.EYUserDataModal;
+import com.example.ehrc.telemanas.Model.Participant;
+import com.example.ehrc.telemanas.Service.ParticipantService;
 import com.example.ehrc.telemanas.Service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -19,15 +22,23 @@ public class VideoCallService {
     private AuthenticationService authenticationService;
 
     @Autowired
+    private ParticipantService participantService;
+
+    @Autowired
     private NotificationService notificationService;
 
     @Autowired
     private RoomService roomService;
 
-
     public ResponseEntity<Map<String, Object>> startVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
         return roomService.startVideoCall(roomDetailsRequest);
     }
+
+    public ResponseEntity<Map<String, Object>> getPatientJoinRoomStatusdata(String roomShortCode) {
+        return participantService.getPatientJoinData(roomShortCode);
+    }
+
+
 
     public ResponseEntity<Map<String, Object>> leaveVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
         return roomService.exitRoom(roomDetailsRequest);
@@ -36,6 +47,23 @@ public class VideoCallService {
     public ResponseEntity<Map<String, Object>> JoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
         return roomService.joinRoom(roomDetailsRequest);
     }
+
+
+    public void saveIsActiveRoomOnJoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
+
+        System.out.println("Method called!!!");
+
+        List<Long> participantIDsList = participantService.getPatientParticipant(roomDetailsRequest.getRoomShortCode());
+
+        System.out.println("participantIDsList is " + participantIDsList.size());
+
+        if(participantIDsList.size() == 1){
+            Participant participant = participantService.getParticipantByID(participantIDsList.get(0));
+            participant.setHasJoinedRoom(true);
+            participantService.saveParticipant(participant);
+        }
+    }
+
 
     public ResponseEntity<Map<String, Object>> createMeetingLink(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
 

@@ -44,7 +44,16 @@ public class VideoController {
 
     @PostMapping("/getroomdetails")
     public ResponseEntity<Map<String, Object>> getVideoRoomDetails(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
+
+        if (roomDetailsRequest.getIsMHP() == 0)
+            videoCallService.saveIsActiveRoomOnJoinVideoCall(roomDetailsRequest);
+
         return videoCallService.startVideoCall(roomDetailsRequest);
+    }
+
+    @GetMapping("/getpatientjoinflag")
+    public ResponseEntity<Map<String, Object>> getPatientRoomJoinDetails(@RequestParam String roomShortCode) {
+        return videoCallService.getPatientJoinRoomStatusdata(roomShortCode);
     }
 
 
@@ -80,8 +89,8 @@ public class VideoController {
 
     @RequestMapping("/createroom")
     public ResponseEntity<Map<String, Object>> createRoom(@Valid @RequestBody AuthenticateUserDTO userDTOData,
-                                                              @RequestHeader("Authorization") String bearerToken,
-                                                              @RequestHeader(value = "Loggedin") String loggedIn
+                                                          @RequestHeader("Authorization") String bearerToken,
+                                                          @RequestHeader(value = "Loggedin") String loggedIn
     ) {
         String token = bearerToken.substring(7);
 

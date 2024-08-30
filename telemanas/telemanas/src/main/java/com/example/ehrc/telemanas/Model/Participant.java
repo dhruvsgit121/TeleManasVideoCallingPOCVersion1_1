@@ -37,6 +37,8 @@ public class Participant {
 
     private boolean isOrganiser;
 
+    private boolean hasJoinedRoom;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole userRole;

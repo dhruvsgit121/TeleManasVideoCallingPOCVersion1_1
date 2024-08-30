@@ -17,4 +17,7 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
     @Query(value = "SELECT p.serial_id FROM participant p JOIN room r ON p.room_id = r.serial_id WHERE r.room_short_code = :roomShortCode", nativeQuery = true)
     List<Long> findParticipantsSerialIDsWith(@Param("roomShortCode") String roomShortCode);
 
+    @Query(value = "SELECT p.serial_id FROM participant p JOIN room r ON p.room_id = r.serial_id WHERE r.room_short_code = :roomShortCode AND p.is_organiser = FALSE", nativeQuery = true)
+    List<Long>  getPatientWithShortCode(@Param("roomShortCode") String roomShortCode);
+
 }
