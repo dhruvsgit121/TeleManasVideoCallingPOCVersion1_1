@@ -20,7 +20,7 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 System.out.println("configuratioj calling");
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:4207, http://172.16.127.6:4209, http://172.16.128.118:8090, http://13.232.157.83, *") // Example origin
+                        .allowedOrigins("http://localhost:4207, http://172.16.127.6:4209, http://172.16.128.118:8090, http://13.232.157.83, https://telemanas-preprod.iiitb.ac.in/, https://telemanas-test.iiitb.ac.in/, http://35.154.66.77:443  , *") // Example origin
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "FETCH", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);

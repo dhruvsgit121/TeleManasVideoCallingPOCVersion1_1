@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class EYUserDataModal {
+public class PatientDataModal {
 
     private String patientName;
     private String age;
@@ -35,7 +35,7 @@ public class EYUserDataModal {
 //                '}';
 //    }
 
-    public EYUserDataModal(Map<String, Object> EYUserData) {
+    public PatientDataModal(Map<String, Object> EYUserData) {
 
         System.out.println("Enetered here in this loop");
 

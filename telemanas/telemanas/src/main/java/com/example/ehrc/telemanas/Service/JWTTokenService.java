@@ -37,12 +37,12 @@ public class JWTTokenService {
     private String jitsiFullDomain;
 
 
-    public String generateJWTToken(String userName, String userEmailID, String roomID, boolean isModerator) {
+    public String generateJWTToken(String userName, String userID, String userEmailID, String roomID, boolean isModerator) {
         String audienceID = appID + ":" + roomID;
-        return generateJWTToken(userName, userEmailID, userName, roomID, audienceID, isModerator);
+        return generateJWTToken(userName, userEmailID, userID, roomID, audienceID, isModerator);
     }
 
-    public String generateJWTToken(String userName, String userEmailID, String userID, String roomID, String audienceID, Boolean isModerator) {
+    private String generateJWTToken(String userName, String userEmailID, String userID, String roomID, String audienceID, Boolean isModerator) {
 
         Map<String, Object> claims = getUserClaims(audienceID, roomID, isModerator);
         claims.put("context", createContext(userName, userID, userEmailID, isModerator));

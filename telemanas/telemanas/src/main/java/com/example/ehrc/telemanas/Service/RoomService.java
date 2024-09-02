@@ -4,7 +4,8 @@ package com.example.ehrc.telemanas.Service;
 import com.example.ehrc.telemanas.CustomException.ValidationMessagesException;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
-import com.example.ehrc.telemanas.Model.EYDataModel.EYUserDataModal;
+import com.example.ehrc.telemanas.Model.EYDataModel.MHPDataModal;
+import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
 import com.example.ehrc.telemanas.Model.Participant;
 import com.example.ehrc.telemanas.Model.Room;
 import com.example.ehrc.telemanas.UserRepository.RoomRepository;
@@ -154,18 +155,22 @@ public class RoomService {
     }
 
 
-    public ResponseEntity<Map<String, Object>> createRoom(AuthenticateUserDTO userDTOData, EYUserDataModal userDataModal, RoomService roomService) {
+    public ResponseEntity<Map<String, Object>> createRoom(AuthenticateUserDTO userDTOData, PatientDataModal patientDataModal, MHPDataModal mhpDataModal, RoomService roomService) {
 
         LocalDateTime expiryDate = videoCallingUtilities.getDateTimeWithOffset(roomJWTValidityOffSet);
 
         ArrayList<String> roomShortCodesList = new ArrayList<>(participantService.getRoomShortCodeWith(userDTOData.getMhpUserName(), userDTOData.getTelemanasId(), expiryDate));
 
         System.out.println("roomShortCodesList : " + roomShortCodesList);
-        System.out.println("roomShortCodesList : " + userDataModal.getMobileNumber());
+        System.out.println("roomShortCodesList : " + patientDataModal.getMobileNumber());
 
+
+        //Code for checking existing room code
         ResponseEntity<Map<String, Object>> alreadyExistedRoomResponseData = processAlreadyExistedRoom(roomShortCodesList);
-        if (alreadyExistedRoomResponseData != null)
-            return alreadyExistedRoomResponseData;
+//        if (alreadyExistedRoomResponseData != null)
+//            return alreadyExistedRoomResponseData;
+        //Code for checking existing room code
+
 
         //In case we don't have existing Room ID...
         //We will create and return the NEW ROOM CODE...
@@ -173,19 +178,29 @@ public class RoomService {
         String roomShortCode = videoCallingUtilities.generateRandomString(20);
         String videoID = videoCallingUtilities.generateRandomString(20);
 
-        return processNewlyCreatedRoom(userDTOData, roomService, jwtTokenService, expirationOffset, roomShortCode, roomID, videoID);
+        return processNewlyCreatedRoom(userDTOData, patientDataModal, mhpDataModal, roomService, jwtTokenService, expirationOffset, roomShortCode, roomID, videoID);
     }
 
 
-    public ResponseEntity<Map<String, Object>> processNewlyCreatedRoom(AuthenticateUserDTO userDTOData, RoomService roomService, JWTTokenService jwtTokenService, long expirationOffset, String roomShortCode, String roomID, String videoID) {
+    public ResponseEntity<Map<String, Object>> processNewlyCreatedRoom(AuthenticateUserDTO userDTOData, PatientDataModal patientDataModal, MHPDataModal mhpDataModal, RoomService roomService, JWTTokenService jwtTokenService, long expirationOffset, String roomShortCode, String roomID, String videoID) {
 
         Room roomData = new Room(roomID, videoID, videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomShortCode);
 
-        String doctorJWTToken = jwtTokenService.generateJWTToken(userDTOData.getMhpUserName(), "dummyMHPemailid", roomID, true);
-        String patientJWTToken = jwtTokenService.generateJWTToken(userDTOData.getTelemanasId(), "dummyPatientemailid", roomID, false);
+        String doctorJWTToken = jwtTokenService.generateJWTToken(mhpDataModal.getMhpName(), userDTOData.getMhpUserName(), "dummyMHPemailid", roomID, true);
+        String patientJWTToken = jwtTokenService.generateJWTToken(patientDataModal.getPatientName(), userDTOData.getTelemanasId(), "dummyPatientemailid", roomID, false);
 
-        Participant mhpUser = new Participant(null, null, doctorJWTToken, userDTOData.getMhpUserName(), true, Participant.UserRole.MHP);
-        Participant patientUser = new Participant(null, null, patientJWTToken, userDTOData.getTelemanasId(), false, Participant.UserRole.PATIENT);
+        System.out.println("Data before saving : " + mhpDataModal.getMhpName());
+        System.out.println("Data before saving : " + patientDataModal.getPatientName());
+
+        Participant mhpUser = new Participant(null, null, doctorJWTToken, userDTOData.getMhpUserName(), true, Participant.UserRole.MHP, mhpDataModal.getMhpName());
+        Participant patientUser = new Participant(null, null, patientJWTToken, userDTOData.getTelemanasId(), false, Participant.UserRole.PATIENT, patientDataModal.getPatientName());
+
+
+//        Participant mhpUser = new Participant(null, null, doctorJWTToken, userDTOData.getMhpUserName(), true, Participant.UserRole.MHP);
+//        Participant patientUser = new Participant(null, null, patientJWTToken, userDTOData.getTelemanasId(), false, Participant.UserRole.PATIENT);
+
+
+
 
         roomData.addParticipant(mhpUser);
         roomData.addParticipant(patientUser);
@@ -229,9 +244,11 @@ public class RoomService {
 
         if ((roomDetailsRequest.getIsMHP() == 1 && firstParticipant.getUserRole().equals(Participant.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() != 1 && firstParticipant.getUserRole().equals(Participant.UserRole.PATIENT))) {
             responseData.put("jwtToken", firstParticipant.getJwtToken());
+            responseData.put("userName", firstParticipant.getUserName());
             responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), firstParticipant.getJwtToken()));
         } else {
             responseData.put("jwtToken", secondParticipant.getJwtToken());
+            responseData.put("userName", secondParticipant.getUserName());
             responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), secondParticipant.getJwtToken()));
         }
 

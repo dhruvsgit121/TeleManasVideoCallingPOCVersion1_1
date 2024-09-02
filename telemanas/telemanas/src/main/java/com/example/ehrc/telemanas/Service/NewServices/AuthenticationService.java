@@ -12,17 +12,32 @@ import java.util.Map;
 @Service
 public class AuthenticationService {
 
-    public ResponseEntity<Map<String, Object>> autheticateParticipantsData(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
+    public ResponseEntity<Map<String, Object>> autheticateMHPData(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
 
-        //Checking for Authentication of Patient Data...
-        ResponseEntity<Map<String, Object>> PatientResponseData = authenticateUserFactory.authenticateUser("patient", userDTOData);
-        if (PatientResponseData.getStatusCode() != HttpStatus.OK)
-            return PatientResponseData;
+//        //Checking for Authentication of Patient Data...
+//        ResponseEntity<Map<String, Object>> PatientResponseData = authenticateUserFactory.authenticateUser("patient", userDTOData);
+//        if (PatientResponseData.getStatusCode() != HttpStatus.OK)
+//            return PatientResponseData;
 
         //Checking for Authentication of MHP...
         ResponseEntity<Map<String, Object>> MHPResponseData = authenticateUserFactory.authenticateUser("mhp", userDTOData);
-        if (MHPResponseData.getStatusCode() != HttpStatus.OK)
-            return MHPResponseData;
+//        if (MHPResponseData.getStatusCode() != HttpStatus.OK)
+//            return MHPResponseData;
+
+        return MHPResponseData;
+    }
+
+    public ResponseEntity<Map<String, Object>> autheticatePatientData(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
+
+        //Checking for Authentication of Patient Data...
+        ResponseEntity<Map<String, Object>> PatientResponseData = authenticateUserFactory.authenticateUser("patient", userDTOData);
+//        if (PatientResponseData.getStatusCode() != HttpStatus.OK)
+//            return PatientResponseData;
+
+//        //Checking for Authentication of MHP...
+//        ResponseEntity<Map<String, Object>> MHPResponseData = authenticateUserFactory.authenticateUser("mhp", userDTOData);
+//        if (MHPResponseData.getStatusCode() != HttpStatus.OK)
+//            return MHPResponseData;
 
         return PatientResponseData;
     }
