@@ -1,6 +1,7 @@
 package com.example.ehrc.telemanas.Service;
 
 //import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
+
 import com.example.ehrc.telemanas.CustomException.ValidationMessagesException;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
@@ -83,7 +84,7 @@ public class RoomService {
 //    }
 
 
-    public ResponseEntity<Map<String, Object>> startVideoCall(RoomDetailsRequestDTO roomDetailsRequest){
+    public ResponseEntity<Map<String, Object>> startVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
 
         Map<String, Object> roomServiceRequestData = generateVideoRoomDetailsResponseEntity(roomDetailsRequest);
         System.out.println("roomServiceRequestData" + roomServiceRequestData);
@@ -98,7 +99,7 @@ public class RoomService {
     }
 
 
-    public ResponseEntity<Map<String, Object>> joinRoom(RoomDetailsRequestDTO roomDetailsRequest){
+    public ResponseEntity<Map<String, Object>> joinRoom(RoomDetailsRequestDTO roomDetailsRequest) {
 
         Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();//new HashMap<>();
         ArrayList<Long> participantsList = new ArrayList(participantService.getParticipantsListWith(roomDetailsRequest.getRoomShortCode()));
@@ -119,7 +120,7 @@ public class RoomService {
     }
 
 
-    public ResponseEntity<Map<String, Object>> exitRoom(RoomDetailsRequestDTO roomDetailsRequest){
+    public ResponseEntity<Map<String, Object>> exitRoom(RoomDetailsRequestDTO roomDetailsRequest) {
 
         Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
 
@@ -149,9 +150,23 @@ public class RoomService {
             String roomShortCode = roomShortCodesList.get(0);
             responseMap.put("roomCode", roomShortCode);
             System.out.println("Entered in existing room maps with room id " + roomShortCode);
+
+            List<Long> participantsList = participantService.getParticipantsListWith(roomShortCode);
+            System.out.println("Data out put is : " + participantsList);
+            setJoinedRoomFlag(participantsList);
             return new ResponseEntity(responseMap, HttpStatus.OK);
         }
         return null;
+    }
+
+
+    private void setJoinedRoomFlag(List<Long> participantsList) {
+        for (Long participantId : participantsList){
+            System.out.println("enter is  this room number with id :" + participantId);
+            Participant participant = participantService.getParticipantByID(participantId);
+            participant.setHasJoinedRoom(false);
+            participantService.saveParticipant(participant);
+        }
     }
 
 
@@ -167,8 +182,8 @@ public class RoomService {
 
         //Code for checking existing room code
         ResponseEntity<Map<String, Object>> alreadyExistedRoomResponseData = processAlreadyExistedRoom(roomShortCodesList);
-//        if (alreadyExistedRoomResponseData != null)
-//            return alreadyExistedRoomResponseData;
+        if (alreadyExistedRoomResponseData != null)
+            return alreadyExistedRoomResponseData;
         //Code for checking existing room code
 
 
@@ -198,8 +213,6 @@ public class RoomService {
 
 //        Participant mhpUser = new Participant(null, null, doctorJWTToken, userDTOData.getMhpUserName(), true, Participant.UserRole.MHP);
 //        Participant patientUser = new Participant(null, null, patientJWTToken, userDTOData.getTelemanasId(), false, Participant.UserRole.PATIENT);
-
-
 
 
         roomData.addParticipant(mhpUser);
@@ -245,10 +258,16 @@ public class RoomService {
         if ((roomDetailsRequest.getIsMHP() == 1 && firstParticipant.getUserRole().equals(Participant.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() != 1 && firstParticipant.getUserRole().equals(Participant.UserRole.PATIENT))) {
             responseData.put("jwtToken", firstParticipant.getJwtToken());
             responseData.put("userName", firstParticipant.getUserName());
+            responseData.put("participatingUserName", secondParticipant.getUserName());
+            responseData.put("userId", firstParticipant.getParticipantId());
+            responseData.put("participatingUserId", secondParticipant.getParticipantId());
             responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), firstParticipant.getJwtToken()));
         } else {
             responseData.put("jwtToken", secondParticipant.getJwtToken());
             responseData.put("userName", secondParticipant.getUserName());
+            responseData.put("participatingUserName", firstParticipant.getUserName());
+            responseData.put("userId", secondParticipant.getParticipantId());
+            responseData.put("participatingUserId", firstParticipant.getParticipantId());
             responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), secondParticipant.getJwtToken()));
         }
 
