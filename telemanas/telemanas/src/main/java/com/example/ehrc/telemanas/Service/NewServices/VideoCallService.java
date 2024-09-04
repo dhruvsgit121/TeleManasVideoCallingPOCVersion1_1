@@ -44,7 +44,9 @@ public class VideoCallService {
     }
 
     public ResponseEntity<Map<String, Object>> getPatientJoinRoomStatusdata(String roomShortCode) {
-        return participantService.getPatientJoinData(roomShortCode);
+        //return participantService.getPatientJoinData(roomShortCode);
+//     return updatedParticipantService.getPatientJoinData(roomShortCode);
+        return updatedRoomService.getPatientJoinData(roomShortCode);
     }
 
 
