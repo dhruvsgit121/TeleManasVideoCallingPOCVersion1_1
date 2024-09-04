@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface UpdatedAuthenticatedUserRepository extends JpaRepository<UpdatedAuthenticatedUser, Long> {
 
-    @Query(value = "SELECT * FROM updated_autheticated_user WHERE participant_id = :participantId", nativeQuery = true)
+    @Query(value = "SELECT * FROM updated_authenticated_user WHERE participant_id = :participantId", nativeQuery = true)
     UpdatedAuthenticatedUser findAuthenticatedUser(@Param("participantId") String userID);
 
 }

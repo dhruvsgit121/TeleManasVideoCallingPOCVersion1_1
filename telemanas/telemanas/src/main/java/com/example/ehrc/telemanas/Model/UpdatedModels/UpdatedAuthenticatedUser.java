@@ -2,14 +2,19 @@ package com.example.ehrc.telemanas.Model.UpdatedModels;
 
 import com.example.ehrc.telemanas.Model.Participant;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
+
+@Getter
+@Setter
 
 @Entity
-@Table(name = "Updated_autheticated_user")
+@Table(name = "Updated_authenticated_user")
 public class UpdatedAuthenticatedUser implements Serializable {
 
     public enum UserRole {
@@ -47,7 +52,7 @@ public class UpdatedAuthenticatedUser implements Serializable {
     }
 
     @OneToMany(mappedBy = "authenticatedUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UpdatedParticipant> updatedParticipants = new HashSet<>();
+    private List<UpdatedParticipant> updatedParticipants = new ArrayList<>();
 
     // Utility method to add a participant...
     public void setAuthenticatedUser(UpdatedParticipant authenticatedParticipant) {

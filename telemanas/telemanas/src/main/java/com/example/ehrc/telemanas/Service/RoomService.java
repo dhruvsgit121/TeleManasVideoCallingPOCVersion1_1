@@ -173,7 +173,7 @@ public class RoomService {
 
 
     private void setJoinedRoomFlag(List<Long> participantsList) {
-        for (Long participantId : participantsList){
+        for (Long participantId : participantsList) {
             System.out.println("enter is  this room number with id :" + participantId);
             Participant participant = participantService.getParticipantByID(participantId);
             participant.setHasJoinedRoom(false);
@@ -243,7 +243,7 @@ public class RoomService {
     }
 
 
-    public void saveNewRoomData( String roomShortCode, String roomID, String videoID, Participant mhpUser, Participant patientUser, PatientDataModal patientDataModal){
+    public void saveNewRoomData(String roomShortCode, String roomID, String videoID, Participant mhpUser, Participant patientUser, PatientDataModal patientDataModal) {
 
         UpdatedRoom updatedRoomData = new UpdatedRoom(roomID, videoID, videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomShortCode);
 
@@ -253,17 +253,22 @@ public class RoomService {
 
         //Created The Patient Authenticated User Data Modal...
         UpdatedAuthenticatedUser patientAuthenticatedUser = updatedAuthenticatedUserRepository.findAuthenticatedUser(patientUser.getParticipantId());
-        if(patientAuthenticatedUser == null){
+        if (patientAuthenticatedUser == null) {
             patientAuthenticatedUser = new UpdatedAuthenticatedUser(Participant.UserRole.PATIENT, patientUser.getUserName(), patientUser.getParticipantId(), patientDataModal.getEncryptedMobileNumber());
             updatedAuthenticatedUserRepository.save(patientAuthenticatedUser);
         }
 
         //Created The MHP Authenticated User Data Modal...
         UpdatedAuthenticatedUser mhpAuthenticatedUser = updatedAuthenticatedUserRepository.findAuthenticatedUser(mhpUser.getParticipantId());
-        if(mhpAuthenticatedUser == null){
+        if (mhpAuthenticatedUser == null) {
             mhpAuthenticatedUser = new UpdatedAuthenticatedUser(Participant.UserRole.MHP, mhpUser.getUserName(), mhpUser.getParticipantId(), "");
             updatedAuthenticatedUserRepository.save(mhpAuthenticatedUser);
         }
+
+
+        //Deactivate the Currently Active rooms for the Users....
+        deactivateActiveRoomsForCurrentUser(mhpUser, patientUser);
+
 
         //Setting the Authenticated User Data for Patient & MHP...
         mhpParticipantUser.setAuthenticatedUser(mhpAuthenticatedUser);
@@ -278,6 +283,31 @@ public class RoomService {
 
     }
 
+
+    public void deactivateActiveRoomsForCurrentUser(Participant mhpUser, Participant patientUser) {
+
+        List<UpdatedRoom> activeRoomsList = updatedRoomRepository.findAllActiveRoomLists();
+
+        for (UpdatedRoom room : activeRoomsList) {
+
+            ArrayList<UpdatedParticipant> participants = new ArrayList<>(room.getParticipants());
+
+            if (participants.size() == 2) {
+
+                UpdatedParticipant firstParticipant = participants.get(0);
+                UpdatedParticipant secondParticipant = participants.get(1);
+
+                String firstParticipantUserID = firstParticipant.getAuthenticatedUser().getParticipantId();
+                String secondParticipantUserID = secondParticipant.getAuthenticatedUser().getParticipantId();
+
+                if ((firstParticipantUserID.equals(mhpUser.getParticipantId()) && secondParticipantUserID.equals(patientUser.getParticipantId()) || ((firstParticipantUserID.equals(patientUser.getParticipantId()) && secondParticipantUserID.equals(mhpUser.getParticipantId()))))) {
+                    UpdatedRoom currentRoom = updatedRoomRepository.getReferenceById(room.getSerialId());
+                    currentRoom.setActive(false);
+                    updatedRoomRepository.save(currentRoom);
+                }
+            }
+        }
+    }
 
 
     public Map<String, Object> generateVideoRoomDetailsResponseEntity(RoomDetailsRequestDTO roomDetailsRequest) {

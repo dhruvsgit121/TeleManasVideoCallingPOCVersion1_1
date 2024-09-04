@@ -8,17 +8,24 @@ import jakarta.persistence.Table;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 //import java.util.HashSet;
 //import java.util.Set;
 
 //import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 //import lombok.Getter;
 //import lombok.NoArgsConstructor;
 //import lombok.Setter;
 
+
+@Getter
+@Setter
 
 @Entity
 @Table(name = "updated_room")
@@ -55,7 +62,7 @@ public class UpdatedRoom implements Serializable {
     private String roomShortCode;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UpdatedParticipant> participants = new HashSet<>();
+    private List<UpdatedParticipant> participants = new ArrayList<>();
 
 //    public Set<UpdatedParticipant> getParticipants() {
 //        return participants;
@@ -64,6 +71,10 @@ public class UpdatedRoom implements Serializable {
 //    public void setParticipants(Set<UpdatedParticipant> participants) {
 //        this.participants = participants;
 //    }
+
+
+    public UpdatedRoom() {
+    }
 
     public UpdatedRoom(String roomId, String videoId, LocalDateTime creationDate, LocalDateTime expirationDate, boolean isActive, String roomShortCode) {
         this.roomId = roomId;

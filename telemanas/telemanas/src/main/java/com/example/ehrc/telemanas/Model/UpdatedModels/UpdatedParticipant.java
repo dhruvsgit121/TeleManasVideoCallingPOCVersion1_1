@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "updated_participant")
 
-public class UpdatedParticipant {
+public class  UpdatedParticipant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +49,14 @@ public class UpdatedParticipant {
         this.jwtToken = jwtToken;
         this.isOrganiser = isOrganiser;
         this.hasJoinedRoom = hasJoinedRoom;
+    }
+
+    public UpdatedParticipant() {
+//        this.joinDate = joinDate;
+//        this.leftDate = leftDate;
+//        this.jwtToken = jwtToken;
+//        this.isOrganiser = isOrganiser;
+//        this.hasJoinedRoom = hasJoinedRoom;
     }
 
     public UpdatedParticipant(Participant participant) {
