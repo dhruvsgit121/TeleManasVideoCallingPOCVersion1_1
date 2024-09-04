@@ -9,9 +9,11 @@ import com.example.ehrc.telemanas.Model.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
 import com.example.ehrc.telemanas.Model.Participant;
 import com.example.ehrc.telemanas.Model.Room;
+import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedAuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
 import com.example.ehrc.telemanas.UserRepository.RoomRepository;
+import com.example.ehrc.telemanas.UserRepository.UpdatedAuthenticatedUserRepository;
 import com.example.ehrc.telemanas.UserRepository.UpdatedParticipantRepository;
 import com.example.ehrc.telemanas.UserRepository.UpdatedRoomRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
@@ -32,6 +34,9 @@ public class RoomService {
 
     @Autowired
     private UpdatedRoomRepository updatedRoomRepository;
+
+    @Autowired
+    private UpdatedAuthenticatedUserRepository updatedAuthenticatedUserRepository;
 
     @Autowired
     private UpdatedParticipantRepository updatedParticipantRepository;
@@ -228,7 +233,7 @@ public class RoomService {
         Room savedRoomData = roomService.saveRoom(roomData);
 
 
-        saveNewRoomData(roomShortCode, roomID, videoID, mhpUser, patientUser);
+        saveNewRoomData(roomShortCode, roomID, videoID, mhpUser, patientUser, patientDataModal);
 
 
         Map<String, Object> responseMap = videoCallingUtilities.getSuccessResponseMap();
@@ -238,22 +243,37 @@ public class RoomService {
     }
 
 
-    public void saveNewRoomData( String roomShortCode, String roomID, String videoID, Participant mhpUser, Participant patientUser){
+    public void saveNewRoomData( String roomShortCode, String roomID, String videoID, Participant mhpUser, Participant patientUser, PatientDataModal patientDataModal){
 
         UpdatedRoom updatedRoomData = new UpdatedRoom(roomID, videoID, videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomShortCode);
 
-        UpdatedParticipant mhp = new UpdatedParticipant(mhpUser.getJoinDate(), mhpUser.getLeftDate(), mhpUser.getJwtToken(), mhpUser.getParticipantId(), mhpUser.isOrganiser(), mhpUser.isHasJoinedRoom(), mhpUser.getUserRole(), mhpUser.getUserName());
-        UpdatedParticipant patient = new UpdatedParticipant(patientUser.getJoinDate(), patientUser.getLeftDate(), patientUser.getJwtToken(), patientUser.getParticipantId(), patientUser.isOrganiser(), patientUser.isHasJoinedRoom(), patientUser.getUserRole(), patientUser.getUserName());
+        UpdatedParticipant mhpParticipantUser = new UpdatedParticipant(mhpUser);//new UpdatedParticipant(mhpUser.getJoinDate(), mhpUser.getLeftDate(), mhpUser.getJwtToken(), mhpUser.getParticipantId(), mhpUser.isOrganiser(), mhpUser.isHasJoinedRoom(), mhpUser.getUserRole(), mhpUser.getUserName());
+        UpdatedParticipant patientParticipantUser = new UpdatedParticipant(patientUser);//new UpdatedParticipant(patientUser.getJoinDate(), patientUser.getLeftDate(), patientUser.getJwtToken(), patientUser.getParticipantId(), patientUser.isOrganiser(), patientUser.isHasJoinedRoom(), patientUser.getUserRole(), patientUser.getUserName());
 
-//        updatedParticipantRepository.save(mhp);
-//        updatedParticipantRepository.save(patient);
 
-//        Set<UpdatedParticipant> participantsList = new HashSet<>();
-//        participantsList.add(mhp);
-//        participantsList.add(patient);
-//        updatedRoomData.setParticipants(participantsList);
-        updatedRoomData.addParticipant(mhp);
-        updatedRoomData.addParticipant(patient);
+        //Created The Patient Authenticated User Data Modal...
+        UpdatedAuthenticatedUser patientAuthenticatedUser = updatedAuthenticatedUserRepository.findAuthenticatedUser(patientUser.getParticipantId());
+        if(patientAuthenticatedUser == null){
+            patientAuthenticatedUser = new UpdatedAuthenticatedUser(Participant.UserRole.PATIENT, patientUser.getUserName(), patientUser.getParticipantId(), patientDataModal.getEncryptedMobileNumber());
+            updatedAuthenticatedUserRepository.save(patientAuthenticatedUser);
+        }
+
+        //Created The MHP Authenticated User Data Modal...
+        UpdatedAuthenticatedUser mhpAuthenticatedUser = updatedAuthenticatedUserRepository.findAuthenticatedUser(mhpUser.getParticipantId());
+        if(mhpAuthenticatedUser == null){
+            mhpAuthenticatedUser = new UpdatedAuthenticatedUser(Participant.UserRole.MHP, mhpUser.getUserName(), mhpUser.getParticipantId(), "");
+            updatedAuthenticatedUserRepository.save(mhpAuthenticatedUser);
+        }
+
+        //Setting the Authenticated User Data for Patient & MHP...
+        mhpParticipantUser.setAuthenticatedUser(mhpAuthenticatedUser);
+        patientParticipantUser.setAuthenticatedUser(patientAuthenticatedUser);
+
+        //Adding the Participants Data for Patient & MHP...
+        updatedRoomData.addParticipant(mhpParticipantUser);
+        updatedRoomData.addParticipant(patientParticipantUser);
+
+        //Updating Room Data For the for Patient & MHP...
         updatedRoomRepository.save(updatedRoomData);
 
     }
