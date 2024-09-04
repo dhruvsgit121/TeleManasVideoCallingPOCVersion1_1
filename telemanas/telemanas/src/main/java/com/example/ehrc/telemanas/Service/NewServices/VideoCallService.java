@@ -1,20 +1,25 @@
 package com.example.ehrc.telemanas.Service.NewServices;
 
+import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUser;
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
 import com.example.ehrc.telemanas.Model.Participant;
+import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedAuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
 import com.example.ehrc.telemanas.Service.ParticipantService;
 import com.example.ehrc.telemanas.Service.RoomService;
+import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
+import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,12 +48,9 @@ public class VideoCallService {
         return roomService.startVideoCall(roomDetailsRequest);
     }
 
-    public ResponseEntity<Map<String, Object>> getPatientJoinRoomStatusdata(String roomShortCode) {
-        //return participantService.getPatientJoinData(roomShortCode);
-//     return updatedParticipantService.getPatientJoinData(roomShortCode);
+    public ResponseEntity<Map<String, Object>> getPatientJoinRoomStatusData(String roomShortCode) {
         return updatedRoomService.getPatientJoinData(roomShortCode);
     }
-
 
 
     public ResponseEntity<Map<String, Object>> leaveVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
@@ -64,13 +66,13 @@ public class VideoCallService {
 
         UpdatedRoom updatedRoom = updatedRoomService.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());//participantService.getPatientParticipant(roomDetailsRequest.getRoomShortCode());
 
-        if(updatedRoom.getParticipants().size() == 2){
+        if (updatedRoom.getParticipants().size() == 2) {
 
             UpdatedParticipant firstParticipant = updatedRoom.getParticipants().get(0);
             UpdatedParticipant secondParticipant = updatedRoom.getParticipants().get(1);
 
             //Update the Has Joined Room Flag for Patient to TRUE...
-            UpdatedParticipant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(Participant.UserRole.PATIENT) ? firstParticipant: secondParticipant;
+            UpdatedParticipant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(Participant.UserRole.PATIENT) ? firstParticipant : secondParticipant;
             patientParticipantData.setHasJoinedRoom(true);
             updatedParticipantService.saveUpdatedParticipantData(patientParticipantData);
         }
@@ -90,7 +92,6 @@ public class VideoCallService {
         PatientDataModal patientUserDataModal = null;
         if (patientAuthenticationResponseData.hasBody())
             patientUserDataModal = new PatientDataModal(patientAuthenticationResponseData.getBody());
-
 
 
         ResponseEntity<Map<String, Object>> MHPAuthenticationResponseData = validateMHPData(userDTOData, authenticateUserFactory);//authenticationService.autheticateParticipantsData(userDTOData, authenticateUserFactory);
@@ -120,21 +121,23 @@ public class VideoCallService {
     private void sendMessageAfterParsingVideoCallRoomData(ResponseEntity<Map<String, Object>> videoCallRoomData, PatientDataModal userDataModal) {
         if (videoCallRoomData.hasBody()) {
             String roomShortCode = videoCallRoomData.getBody().get("roomCode").toString();
-            sendLinkToPatient(userDataModal.getMobileNumber(), roomShortCode);
+            sendSMSToPatient(userDataModal.getMobileNumber(), roomShortCode);
         }
     }
 
 
+    public void sendSMSToPatient(String mobileNumber, String roomShortCode){
+        sendLinkToPatient(mobileNumber, roomShortCode);
+    }
+
     private void sendLinkToPatient(String patientNumber, String roomShortCode) {
-
         String registeredMobileNumber = "+91" + patientNumber;
-
         //To be commented out to send SMS to the Patient...
         notificationService.sendTestSms(registeredMobileNumber, roomShortCode);
     }
 
 
-    private ResponseEntity<Map<String, Object>> decryptPatientMobileNumber(AuthenticateUserFactory authenticateUserFactory, AuthenticateUserDTO userDTOData, PatientDataModal userDataModal) {
+    public ResponseEntity<Map<String, Object>> decryptPatientMobileNumber(AuthenticateUserFactory authenticateUserFactory, AuthenticateUserDTO userDTOData, PatientDataModal userDataModal) {
 
         //Decrypting Mobile Number of The Patient...
         ResponseEntity<Map<String, Object>> decryptMobileData = authenticateUserFactory.decryptUserPhoneNumber(userDTOData, userDataModal.getEncryptedMobileNumber());
@@ -149,6 +152,59 @@ public class VideoCallService {
         }
 
         return null;
+    }
+
+
+    public ResponseEntity<Map<String, Object>> decryptPatientMobileNumberForResendSMS(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory, String roomShortCode) {
+
+        UpdatedRoom roomData = updatedRoomService.findRoomDetailsWith(roomShortCode);
+
+//        System.out.println("room is  = " + roomData);
+
+//        if(roomData == null)
+//            System.out.println("room data is null!!1");
+
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put(VideoCallingAPIConstants.isErrorFlagValue, false);
+
+        if (roomData == null || roomData.getParticipants().size() != 2) {
+            responseData.put(VideoCallingAPIConstants.isErrorFlagValue, true);
+            responseData.put(VideoCallingAPIConstants.errorMessageValue, "Room you requested didn't exists.");
+            return new ResponseEntity<>(responseData, HttpStatus.SEE_OTHER);
+        }
+
+
+        if (!roomData.isActive()) {
+            responseData.put(VideoCallingAPIConstants.isErrorFlagValue, true);
+            responseData.put(VideoCallingAPIConstants.errorMessageValue, "Room you requested is not active. Please try again.");
+            return new ResponseEntity<>(responseData, HttpStatus.SEE_OTHER);
+        }
+
+        UpdatedAuthenticatedUser patientData = roomData.getParticipants().get(0).getAuthenticatedUser().getUserRole().equals(Participant.UserRole.PATIENT) ? roomData.getParticipants().get(0).getAuthenticatedUser() : roomData.getParticipants().get(1).getAuthenticatedUser();
+
+        String encryptedPhoneNumber = patientData.getDecryptedMobileNumber();
+
+        //Decrypting Mobile Number of The Patient...
+        ResponseEntity<Map<String, Object>> decryptMobileData = authenticateUserFactory.decryptUserPhoneNumber(userDTOData, encryptedPhoneNumber);
+        if (decryptMobileData.getStatusCode() != HttpStatus.OK)
+            return decryptMobileData;
+
+        System.out.println("Data Recieved is in mobile decrypt is : " + decryptMobileData.getBody());
+
+        String errorMessage = "Some error Occurred. Please try again later.";
+
+        if(decryptMobileData.hasBody()){
+            if(decryptMobileData.getBody().containsKey("responsePhoneNo")){
+                String mobileNumber = decryptMobileData.getBody().get("responsePhoneNo").toString();
+                sendSMSToPatient(mobileNumber, roomShortCode);
+                return new ResponseEntity<>(responseData, HttpStatus.OK);
+            }
+            if(decryptMobileData.getBody().containsKey("message") && decryptMobileData.getBody().get("message") != null){
+                errorMessage = decryptMobileData.getBody().get("message").toString();
+            }
+        }
+        responseData.put(VideoCallingAPIConstants.errorMessageValue, errorMessage);
+        return new ResponseEntity<>(responseData, HttpStatus.SEE_OTHER);
     }
 
 

@@ -56,6 +56,8 @@ public class NotificationService {
             System.out.println("SMS Send to the user...");
         } catch (Exception exception) {
             System.out.println(exception.getLocalizedMessage());
+            System.out.println("Eneterded in catch block");
+            System.out.println(exception);
         }
     }
 }

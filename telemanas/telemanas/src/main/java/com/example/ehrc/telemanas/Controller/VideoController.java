@@ -7,8 +7,10 @@ import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Service.*;
 import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
+import com.twilio.http.Response;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,9 +47,7 @@ public class VideoController {
     @PostMapping("/getroomdetails")
     public ResponseEntity<Map<String, Object>> getVideoRoomDetails(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
 
-
-        System.out.println("roomDetailsRequest is : " + roomDetailsRequest.getRoomShortCode() + " : : "  +roomDetailsRequest.getIsMHP());
-
+        //Setting the "hasJoined" Flag for Patient to TRUE...
         if (roomDetailsRequest.getIsMHP() == 0)
             videoCallService.saveIsActiveRoomOnJoinVideoCall(roomDetailsRequest);
 
@@ -56,31 +56,33 @@ public class VideoController {
 
     @GetMapping("/getpatientjoinflag")
     public ResponseEntity<Map<String, Object>> getPatientRoomJoinDetails(@RequestParam String roomShortCode) {
-        return videoCallService.getPatientJoinRoomStatusdata(roomShortCode);
+        return videoCallService.getPatientJoinRoomStatusData(roomShortCode);
     }
+
+
+    @RequestMapping("/resendlink")
+    public ResponseEntity<Map<String, Object>> resendMeetingLink(@Valid @RequestBody AuthenticateUserDTO userDTOData,
+                                                          @RequestHeader("Authorization") String bearerToken,
+                                                          @RequestHeader(value = "Loggedin") String loggedIn) {
+
+        System.out.println("Method called with : " + userDTOData.getRoomShortCode());
+
+        Map<String, Object> data = new HashMap<>();
+
+        String token = bearerToken.substring(7);
+
+        //Adjusting The UserDTOData...
+        userDTOData.setBearerToken(token);
+        userDTOData.setLoggedInId(loggedIn);
+
+        return videoCallService.decryptPatientMobileNumberForResendSMS(userDTOData, authenticateUserFactory, userDTOData.getRoomShortCode());
+    }
+
 
 
     @PostMapping("/joinroom")
     public ResponseEntity<Map<String, Object>> setJoinRoomTime(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
-
         return videoCallService.JoinVideoCall(roomDetailsRequest);
-
-//        Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();//new HashMap<>();
-//        ArrayList<Long> participantsList = new ArrayList(participantService.getParticipantsListWith(roomDetailsRequest.getRoomShortCode()));
-//        System.out.println("Participant list is : " + participantsList);
-//
-//        if (participantsList.size() != 2) {
-//            throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
-//        }
-//
-//        //Setting the Join Date of the user...
-//        Participant requestedParticipant = videoCallingUtilities.getRequestedUserAsPerRequest(roomDetailsRequest, participantsList);
-//        requestedParticipant.setJoinDate(videoCallingUtilities.getDateTimeWithOffset(0));
-//
-//        participantService.saveParticipant(requestedParticipant);
-//
-//        responseData.put("message", "success");
-//        return new ResponseEntity(responseData, HttpStatus.OK);
     }
 
 

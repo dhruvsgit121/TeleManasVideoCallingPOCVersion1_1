@@ -35,4 +35,6 @@ public class AuthenticateUserDTO {
     private String bearerToken;
 
     private String loggedInId;
+
+    private String roomShortCode;
 }
