@@ -2,6 +2,8 @@ package com.example.ehrc.telemanas.Utilities;
 
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.Participant;
+import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
+import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
 import com.example.ehrc.telemanas.Service.ParticipantService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +99,19 @@ public class VideoCallingUtilities {
             return firstParticipant;
         }
 
+        return secondParticipant;
+    }
+
+
+    public UpdatedParticipant getRequestedUpdatedUserAsPerRequest(UpdatedRoom roomData, RoomDetailsRequestDTO roomDetailsRequest) {
+
+        UpdatedParticipant firstParticipant = roomData.getParticipants().get(0);
+        UpdatedParticipant secondParticipant = roomData.getParticipants().get(1);
+
+        if((firstParticipant.getAuthenticatedUser().getUserRole().equals(Participant.UserRole.MHP) && roomDetailsRequest.getIsMHP() == 1) ||
+                (firstParticipant.getAuthenticatedUser().getUserRole().equals(Participant.UserRole.PATIENT) && roomDetailsRequest.getIsMHP() == 0) ){
+            return firstParticipant;
+        }
         return secondParticipant;
     }
 

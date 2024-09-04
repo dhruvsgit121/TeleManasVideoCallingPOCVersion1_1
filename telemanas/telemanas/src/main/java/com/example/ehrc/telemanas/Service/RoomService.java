@@ -107,6 +107,7 @@ public class RoomService {
         Map<String, Object> roomServiceRequestData = generateVideoRoomDetailsResponseEntity(roomDetailsRequest);
         System.out.println("roomServiceRequestData" + roomServiceRequestData);
 
+
         if (roomServiceRequestData.containsKey("clientID")) {
             //User is a patient, who is joining the call...
             String clientID = roomServiceRequestData.get("clientID").toString();
@@ -119,19 +120,18 @@ public class RoomService {
 
     public ResponseEntity<Map<String, Object>> joinRoom(RoomDetailsRequestDTO roomDetailsRequest) {
 
-        Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();//new HashMap<>();
-        ArrayList<Long> participantsList = new ArrayList(participantService.getParticipantsListWith(roomDetailsRequest.getRoomShortCode()));
-        System.out.println("Participant list is : " + participantsList);
+        Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
 
-        if (participantsList.size() != 2) {
+        UpdatedRoom roomData = updatedRoomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
+
+        if (roomData == null || roomData.getParticipants().size() != 2) {
             throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
         }
 
         //Setting the Join Date of the user...
-        Participant requestedParticipant = videoCallingUtilities.getRequestedUserAsPerRequest(roomDetailsRequest, participantsList);
+        UpdatedParticipant requestedParticipant = videoCallingUtilities.getRequestedUpdatedUserAsPerRequest(roomData, roomDetailsRequest);
         requestedParticipant.setJoinDate(videoCallingUtilities.getDateTimeWithOffset(0));
-
-        participantService.saveParticipant(requestedParticipant);
+        updatedParticipantRepository.save(requestedParticipant);
 
         responseData.put("message", "success");
         return new ResponseEntity(responseData, HttpStatus.OK);
@@ -142,20 +142,32 @@ public class RoomService {
 
         Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
 
-        ArrayList<Long> participantsList = new ArrayList(participantService.getParticipantsListWith(roomDetailsRequest.getRoomShortCode()));
+        UpdatedRoom roomData = updatedRoomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
 
-        if (participantsList.size() != 2) {
+
+//        ArrayList<Long> participantsList = new ArrayList(participantService.getParticipantsListWith(roomDetailsRequest.getRoomShortCode()));
+
+        if (roomData == null || roomData.getParticipants().size() != 2) {
             throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
         }
 
-        //Setting the Left Date of the user...
-        Participant requestedParticipant = videoCallingUtilities.getRequestedUserAsPerRequest(roomDetailsRequest, participantsList);
-        requestedParticipant.setLeftDate(videoCallingUtilities.getDateTimeWithOffset(0));
 
-        participantService.saveParticipant(requestedParticipant);
+        //Setting the Join Date of the user...
+        UpdatedParticipant requestedParticipant = videoCallingUtilities.getRequestedUpdatedUserAsPerRequest(roomData, roomDetailsRequest);
+        requestedParticipant.setLeftDate(videoCallingUtilities.getDateTimeWithOffset(0));
+        updatedParticipantRepository.save(requestedParticipant);
 
         responseData.put("message", "success");
         return new ResponseEntity(responseData, HttpStatus.OK);
+
+        //Setting the Left Date of the user...
+//        Participant requestedParticipant = videoCallingUtilities.getRequestedUserAsPerRequest(roomDetailsRequest, participantsList);
+//        requestedParticipant.setLeftDate(videoCallingUtilities.getDateTimeWithOffset(0));
+//
+//        participantService.saveParticipant(requestedParticipant);
+//
+//        responseData.put("message", "success");
+//        return new ResponseEntity(responseData, HttpStatus.OK);
     }
 
 
