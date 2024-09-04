@@ -2,6 +2,7 @@ package com.example.ehrc.telemanas.ScheduledTasks;
 
 
 import com.example.ehrc.telemanas.Model.Room;
+import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
 import com.example.ehrc.telemanas.Service.RoomService;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +29,15 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = 60 * 1000)
     public void invalidateExpiredRooms() {
 
-        LocalDateTime expirationDate = videoCallingUtilities.getDateTimeWithOffset(roomJWTValidityOffSet);
-        List<Room> roomList = roomService.getRoomListWithExpirationdate(expirationDate);
+        LocalDateTime expirationDate = videoCallingUtilities.getDateTimeWithOffset(0);
+        List<UpdatedRoom> roomsList = roomService.getUpdatedRoomListWithExpirationdate(expirationDate);
 
-        System.out.println("Number of rooms deactivated from scheduler are : " + roomList.size());
+        System.out.println("Number of rooms deactivated from scheduler are : " + roomsList.size());
 
-        if (roomList.size() > 0) {
-            for (Room room : roomList) {
+        if (roomsList.size() > 0) {
+            for (UpdatedRoom room : roomsList) {
                 room.setActive(false);
-                roomService.saveRoom(room);
+                roomService.saveUpdatedRoom(room);
             }
         }
     }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface UpdatedRoomRepository extends JpaRepository<UpdatedRoom, Long> {
@@ -24,5 +25,8 @@ public interface UpdatedRoomRepository extends JpaRepository<UpdatedRoom, Long> 
     @Query(value = "SELECT * FROM updated_room WHERE room_short_code = :roomShortCode", nativeQuery = true)
     UpdatedRoom findRoomDetailsWith(@Param("roomShortCode") String roomShortCode);
 
+
+    @Query(value = "SELECT * FROM updated_room WHERE expiration_date < :expirationDate AND is_active = TRUE", nativeQuery = true)
+    List<UpdatedRoom> findRoomListWithExpirationDate(@Param("expirationDate") LocalDateTime expirationDate);
 
 }

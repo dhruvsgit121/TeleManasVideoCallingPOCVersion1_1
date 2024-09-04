@@ -68,6 +68,11 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
+    public UpdatedRoom saveUpdatedRoom(UpdatedRoom room) {
+        return updatedRoomRepository.save(room);
+    }
+
+
     public Room getRoomDetailsWith(String shortCode) {
         return roomRepository.findRoomDetailsWith(shortCode);
     }
@@ -75,6 +80,10 @@ public class RoomService {
 
     public UpdatedRoom getUpdatedRoomDetailsWith(String shortCode) {
         return updatedRoomRepository.findRoomDetailsWith(shortCode);
+    }
+
+    public List<UpdatedRoom> getUpdatedRoomListWithExpirationdate(LocalDateTime expirationDate) {
+        return updatedRoomRepository.findRoomListWithExpirationDate(expirationDate);
     }
 
 
