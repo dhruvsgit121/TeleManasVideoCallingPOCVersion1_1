@@ -9,7 +9,11 @@ import com.example.ehrc.telemanas.Model.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
 import com.example.ehrc.telemanas.Model.Participant;
 import com.example.ehrc.telemanas.Model.Room;
+import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
+import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
 import com.example.ehrc.telemanas.UserRepository.RoomRepository;
+import com.example.ehrc.telemanas.UserRepository.UpdatedParticipantRepository;
+import com.example.ehrc.telemanas.UserRepository.UpdatedRoomRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,16 +22,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class RoomService {
 
     @Autowired
     private RoomRepository roomRepository;
+
+    @Autowired
+    private UpdatedRoomRepository updatedRoomRepository;
+
+    @Autowired
+    private UpdatedParticipantRepository updatedParticipantRepository;
 
     @Autowired
     private SSEService sseService;
@@ -181,9 +188,9 @@ public class RoomService {
 
 
         //Code for checking existing room code
-        ResponseEntity<Map<String, Object>> alreadyExistedRoomResponseData = processAlreadyExistedRoom(roomShortCodesList);
-        if (alreadyExistedRoomResponseData != null)
-            return alreadyExistedRoomResponseData;
+//        ResponseEntity<Map<String, Object>> alreadyExistedRoomResponseData = processAlreadyExistedRoom(roomShortCodesList);
+//        if (alreadyExistedRoomResponseData != null)
+//            return alreadyExistedRoomResponseData;
         //Code for checking existing room code
 
 
@@ -220,11 +227,37 @@ public class RoomService {
 
         Room savedRoomData = roomService.saveRoom(roomData);
 
+
+        saveNewRoomData(roomShortCode, roomID, videoID, mhpUser, patientUser);
+
+
         Map<String, Object> responseMap = videoCallingUtilities.getSuccessResponseMap();
         responseMap.put("roomCode", savedRoomData.getRoomShortCode());
 
         return new ResponseEntity(responseMap, HttpStatus.OK);
     }
+
+
+    public void saveNewRoomData( String roomShortCode, String roomID, String videoID, Participant mhpUser, Participant patientUser){
+
+        UpdatedRoom updatedRoomData = new UpdatedRoom(roomID, videoID, videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomShortCode);
+
+        UpdatedParticipant mhp = new UpdatedParticipant(mhpUser.getJoinDate(), mhpUser.getLeftDate(), mhpUser.getJwtToken(), mhpUser.getParticipantId(), mhpUser.isOrganiser(), mhpUser.isHasJoinedRoom(), mhpUser.getUserRole(), mhpUser.getUserName());
+        UpdatedParticipant patient = new UpdatedParticipant(patientUser.getJoinDate(), patientUser.getLeftDate(), patientUser.getJwtToken(), patientUser.getParticipantId(), patientUser.isOrganiser(), patientUser.isHasJoinedRoom(), patientUser.getUserRole(), patientUser.getUserName());
+
+//        updatedParticipantRepository.save(mhp);
+//        updatedParticipantRepository.save(patient);
+
+//        Set<UpdatedParticipant> participantsList = new HashSet<>();
+//        participantsList.add(mhp);
+//        participantsList.add(patient);
+//        updatedRoomData.setParticipants(participantsList);
+        updatedRoomData.addParticipant(mhp);
+        updatedRoomData.addParticipant(patient);
+        updatedRoomRepository.save(updatedRoomData);
+
+    }
+
 
 
     public Map<String, Object> generateVideoRoomDetailsResponseEntity(RoomDetailsRequestDTO roomDetailsRequest) {
