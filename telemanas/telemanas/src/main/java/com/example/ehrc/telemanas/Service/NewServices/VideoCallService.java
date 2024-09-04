@@ -6,6 +6,8 @@ import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
 import com.example.ehrc.telemanas.Model.Participant;
+import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
+import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
 import com.example.ehrc.telemanas.Service.ParticipantService;
 import com.example.ehrc.telemanas.Service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,12 @@ public class VideoCallService {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private UpdatedRoomService updatedRoomService;
+
+    @Autowired
+    private UpdatedParticipantService updatedParticipantService;
 
     @Autowired
     private RoomService roomService;
@@ -52,16 +60,17 @@ public class VideoCallService {
 
     public void saveIsActiveRoomOnJoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
 
-        System.out.println("Method called!!!");
+        UpdatedRoom updatedRoom = updatedRoomService.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());//participantService.getPatientParticipant(roomDetailsRequest.getRoomShortCode());
 
-        List<Long> participantIDsList = participantService.getPatientParticipant(roomDetailsRequest.getRoomShortCode());
+        if(updatedRoom.getParticipants().size() == 2){
 
-        System.out.println("participantIDsList is " + participantIDsList.size());
+            UpdatedParticipant firstParticipant = updatedRoom.getParticipants().get(0);
+            UpdatedParticipant secondParticipant = updatedRoom.getParticipants().get(1);
 
-        if(participantIDsList.size() == 1){
-            Participant participant = participantService.getParticipantByID(participantIDsList.get(0));
-            participant.setHasJoinedRoom(true);
-            participantService.saveParticipant(participant);
+            //Update the Has Joined Room Flag for Patient to TRUE...
+            UpdatedParticipant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(Participant.UserRole.PATIENT) ? firstParticipant: secondParticipant;
+            patientParticipantData.setHasJoinedRoom(true);
+            updatedParticipantService.saveUpdatedParticipantData(patientParticipantData);
         }
     }
 

@@ -72,6 +72,12 @@ public class RoomService {
         return roomRepository.findRoomDetailsWith(shortCode);
     }
 
+
+    public UpdatedRoom getUpdatedRoomDetailsWith(String shortCode) {
+        return updatedRoomRepository.findRoomDetailsWith(shortCode);
+    }
+
+
     public List<Room> getRoomListWithExpirationdate(LocalDateTime expirationDate) {
         return roomRepository.findRoomListWithExpirationDate(expirationDate);
     }
@@ -312,52 +318,84 @@ public class RoomService {
 
     public Map<String, Object> generateVideoRoomDetailsResponseEntity(RoomDetailsRequestDTO roomDetailsRequest) {
 
-        Room roomDetails = this.getRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
+//        Room roomDetails = this.getRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
 
-        if (roomDetails == null || !roomDetails.isActive() || roomDetails.getParticipants().size() != 2) {
+        UpdatedRoom updatedRoomDetails = this.getUpdatedRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
+
+        if (updatedRoomDetails == null || !updatedRoomDetails.isActive() || updatedRoomDetails.getParticipants().size() != 2) {
             throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
         }
 
-        ArrayList<Participant> participantsList = new ArrayList<>(roomDetails.getParticipants());
+        ArrayList<UpdatedParticipant> participantsList = new ArrayList<>(updatedRoomDetails.getParticipants());
 
         Map<String, Object> responseData = new HashMap<>();
 
-        Participant firstParticipant = participantsList.get(0);
-        Participant secondParticipant = participantsList.get(1);
+        UpdatedParticipant firstParticipant = participantsList.get(0);
+        UpdatedParticipant secondParticipant = participantsList.get(1);
 
-        System.out.println("first participant data is :" + firstParticipant.getParticipantId());
-        System.out.println("Second participant data is :" + secondParticipant.getParticipantId());
+        System.out.println("first participant data is :" + firstParticipant.getAuthenticatedUser().getParticipantId());
+        System.out.println("Second participant data is :" + secondParticipant.getAuthenticatedUser().getParticipantId());
 
-        responseData.put("roomID", roomDetails.getRoomId());
+        responseData.put("roomID", updatedRoomDetails.getRoomId());
 
-        processParticipantsJWTTokenData(roomDetailsRequest, roomDetails, firstParticipant, secondParticipant, responseData);
+        processUpdatedParticipantsJWTTokenData(roomDetailsRequest, updatedRoomDetails, firstParticipant, secondParticipant, responseData);
 
         return responseData;
     }
 
 
-    public void processParticipantsJWTTokenData(RoomDetailsRequestDTO roomDetailsRequest, Room roomDetails, Participant firstParticipant, Participant secondParticipant, Map<String, Object> responseData) {
 
-        if ((roomDetailsRequest.getIsMHP() == 1 && firstParticipant.getUserRole().equals(Participant.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() != 1 && firstParticipant.getUserRole().equals(Participant.UserRole.PATIENT))) {
+
+    public void processUpdatedParticipantsJWTTokenData(RoomDetailsRequestDTO roomDetailsRequest, UpdatedRoom roomDetails, UpdatedParticipant firstParticipant, UpdatedParticipant secondParticipant, Map<String, Object> responseData) {
+
+        if ((roomDetailsRequest.getIsMHP() == 1 && firstParticipant.getAuthenticatedUser().getUserRole().equals(Participant.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() != 1 && firstParticipant.getAuthenticatedUser().getUserRole().equals(Participant.UserRole.PATIENT))) {
             responseData.put("jwtToken", firstParticipant.getJwtToken());
-            responseData.put("userName", firstParticipant.getUserName());
-            responseData.put("participatingUserName", secondParticipant.getUserName());
-            responseData.put("userId", firstParticipant.getParticipantId());
-            responseData.put("participatingUserId", secondParticipant.getParticipantId());
+            responseData.put("userName", firstParticipant.getAuthenticatedUser().getUserName());
+            responseData.put("participatingUserName", secondParticipant.getAuthenticatedUser().getUserName());
+            responseData.put("userId", firstParticipant.getAuthenticatedUser().getParticipantId());
+            responseData.put("participatingUserId", secondParticipant.getAuthenticatedUser().getParticipantId());
             responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), firstParticipant.getJwtToken()));
         } else {
             responseData.put("jwtToken", secondParticipant.getJwtToken());
-            responseData.put("userName", secondParticipant.getUserName());
-            responseData.put("participatingUserName", firstParticipant.getUserName());
-            responseData.put("userId", secondParticipant.getParticipantId());
-            responseData.put("participatingUserId", firstParticipant.getParticipantId());
+            responseData.put("userName", secondParticipant.getAuthenticatedUser().getUserName());
+            responseData.put("participatingUserName", firstParticipant.getAuthenticatedUser().getUserName());
+            responseData.put("userId", secondParticipant.getAuthenticatedUser().getParticipantId());
+            responseData.put("participatingUserId", firstParticipant.getAuthenticatedUser().getParticipantId());
             responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), secondParticipant.getJwtToken()));
         }
 
         if (roomDetailsRequest.getIsMHP() != 1) {
-            String clientID = firstParticipant.getUserRole().equals(Participant.UserRole.MHP) ? firstParticipant.getParticipantId() : secondParticipant.getParticipantId();
+            String clientID = firstParticipant.getAuthenticatedUser().getUserRole().equals(Participant.UserRole.MHP) ? firstParticipant.getAuthenticatedUser().getParticipantId() : secondParticipant.getAuthenticatedUser().getParticipantId();
             responseData.put("clientID", clientID);
             responseData.put("MHPRegistrationNumber", "MHP1234NHNOPA");
         }
     }
+
+
+
+
+//    public void processParticipantsJWTTokenData(RoomDetailsRequestDTO roomDetailsRequest, Room roomDetails, Participant firstParticipant, Participant secondParticipant, Map<String, Object> responseData) {
+//
+//        if ((roomDetailsRequest.getIsMHP() == 1 && firstParticipant.getUserRole().equals(Participant.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() != 1 && firstParticipant.getUserRole().equals(Participant.UserRole.PATIENT))) {
+//            responseData.put("jwtToken", firstParticipant.getJwtToken());
+//            responseData.put("userName", firstParticipant.getUserName());
+//            responseData.put("participatingUserName", secondParticipant.getUserName());
+//            responseData.put("userId", firstParticipant.getParticipantId());
+//            responseData.put("participatingUserId", secondParticipant.getParticipantId());
+//            responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), firstParticipant.getJwtToken()));
+//        } else {
+//            responseData.put("jwtToken", secondParticipant.getJwtToken());
+//            responseData.put("userName", secondParticipant.getUserName());
+//            responseData.put("participatingUserName", firstParticipant.getUserName());
+//            responseData.put("userId", secondParticipant.getParticipantId());
+//            responseData.put("participatingUserId", firstParticipant.getParticipantId());
+//            responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), secondParticipant.getJwtToken()));
+//        }
+//
+//        if (roomDetailsRequest.getIsMHP() != 1) {
+//            String clientID = firstParticipant.getUserRole().equals(Participant.UserRole.MHP) ? firstParticipant.getParticipantId() : secondParticipant.getParticipantId();
+//            responseData.put("clientID", clientID);
+//            responseData.put("MHPRegistrationNumber", "MHP1234NHNOPA");
+//        }
+//    }
 }

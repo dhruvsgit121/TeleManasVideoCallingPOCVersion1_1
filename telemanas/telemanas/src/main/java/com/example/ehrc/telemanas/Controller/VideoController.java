@@ -45,6 +45,9 @@ public class VideoController {
     @PostMapping("/getroomdetails")
     public ResponseEntity<Map<String, Object>> getVideoRoomDetails(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
 
+
+        System.out.println("roomDetailsRequest is : " + roomDetailsRequest.getRoomShortCode() + " : : "  +roomDetailsRequest.getIsMHP());
+
         if (roomDetailsRequest.getIsMHP() == 0)
             videoCallService.saveIsActiveRoomOnJoinVideoCall(roomDetailsRequest);
 
