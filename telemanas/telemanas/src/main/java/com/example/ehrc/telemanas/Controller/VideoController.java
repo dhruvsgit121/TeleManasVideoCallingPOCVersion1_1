@@ -60,6 +60,12 @@ public class VideoController {
     }
 
 
+    @GetMapping("/deactivateroom")
+    public ResponseEntity<Map<String, Object>> deactivatedRequestedRoom(@RequestParam String roomShortCode) {
+        return videoCallService.deactivateRequestedRoom(roomShortCode);
+    }
+
+
     @RequestMapping("/resendlink")
     public ResponseEntity<Map<String, Object>> resendMeetingLink(@Valid @RequestBody AuthenticateUserDTO userDTOData,
                                                           @RequestHeader("Authorization") String bearerToken,

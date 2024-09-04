@@ -62,6 +62,11 @@ public class VideoCallService {
     }
 
 
+    public ResponseEntity<Map<String, Object>> deactivateRequestedRoom(String roomShortCode) {
+        return roomService.deactivateRequestedRoom(roomShortCode);
+    }
+
+
     public void saveIsActiveRoomOnJoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
 
         UpdatedRoom updatedRoom = updatedRoomService.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());//participantService.getPatientParticipant(roomDetailsRequest.getRoomShortCode());

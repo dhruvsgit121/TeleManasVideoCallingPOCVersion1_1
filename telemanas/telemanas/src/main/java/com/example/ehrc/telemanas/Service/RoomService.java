@@ -138,6 +138,25 @@ public class RoomService {
     }
 
 
+
+    public ResponseEntity<Map<String, Object>> deactivateRequestedRoom(String roomShortCode) {
+
+        UpdatedRoom requestedRoom = updatedRoomRepository.findRoomDetailsWith(roomShortCode);
+
+        if(requestedRoom == null)
+            return videoCallingUtilities.getErrorResponseMessageEntity("Room you requested does not exists.", HttpStatus.SEE_OTHER);
+
+        if(!requestedRoom.isActive())
+            return videoCallingUtilities.getErrorResponseMessageEntity("Room you requested is already expired.", HttpStatus.SEE_OTHER);
+
+        requestedRoom.setActive(false);
+        updatedRoomRepository.save(requestedRoom);
+
+        return new ResponseEntity<>(videoCallingUtilities.getSuccessResponseMap(), HttpStatus.OK);
+    }
+
+
+
     public ResponseEntity<Map<String, Object>> exitRoom(RoomDetailsRequestDTO roomDetailsRequest) {
 
         Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();

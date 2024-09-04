@@ -73,6 +73,14 @@ public class UpdatedRoom implements Serializable {
 //    }
 
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     public UpdatedRoom() {
     }
 
