@@ -48,29 +48,29 @@ public class UpdatedParticipant {
     @JoinColumn(name = "room_id", referencedColumnName = "id")
     private UpdatedRoom room;
 
-    public UpdatedRoom getRoom() {
-        return room;
-    }
-
+//    public UpdatedRoom getRoom() {
+//        return room;
+//    }
+//
     public void setRoom(UpdatedRoom room) {
         this.room = room;
     }
 
-    public Set<UpdatedRoom> getUpdatedroom() {
-        return updatedroom;
-    }
+//    public Set<UpdatedRoom> getUpdatedroom() {
+//        return updatedroom;
+//    }
+//
+//    public void setUpdatedroom(Set<UpdatedRoom> updatedroom) {
+//        this.updatedroom = updatedroom;
+//    }
 
-    public void setUpdatedroom(Set<UpdatedRoom> updatedroom) {
-        this.updatedroom = updatedroom;
-    }
-
-    @ManyToMany
-    @JoinTable(
-            name = "participant_room",
-            joinColumns = @JoinColumn(name = "participant_id"),
-            inverseJoinColumns = @JoinColumn(name = "room_id")
-    )
-    private Set<UpdatedRoom> updatedroom;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "participant_room",
+//            joinColumns = @JoinColumn(name = "participant_id"),
+//            inverseJoinColumns = @JoinColumn(name = "room_id")
+//    )
+//    private Set<UpdatedRoom> updatedroom;
 
 
 //    @ManyToOne
@@ -91,37 +91,37 @@ public class UpdatedParticipant {
         this.userName = userName;
     }
 
-    public LocalDateTime getJoinDate() {
-        return joinDate;
-    }
-
-    public void setJoinDate(LocalDateTime joinDate) {
-        this.joinDate = joinDate;
-    }
-
-    public LocalDateTime getLeftDate() {
-        return leftDate;
-    }
-
-    public void setLeftDate(LocalDateTime leftDate) {
-        this.leftDate = leftDate;
-    }
-
-    public String getJwtToken() {
-        return jwtToken;
-    }
-
-    public void setJwtToken(String jwtToken) {
-        this.jwtToken = jwtToken;
-    }
-
-    public String getParticipantId() {
-        return participantId;
-    }
-
-    public void setParticipantId(String participantId) {
-        this.participantId = participantId;
-    }
+//    public LocalDateTime getJoinDate() {
+//        return joinDate;
+//    }
+//
+//    public void setJoinDate(LocalDateTime joinDate) {
+//        this.joinDate = joinDate;
+//    }
+//
+//    public LocalDateTime getLeftDate() {
+//        return leftDate;
+//    }
+//
+//    public void setLeftDate(LocalDateTime leftDate) {
+//        this.leftDate = leftDate;
+//    }
+//
+//    public String getJwtToken() {
+//        return jwtToken;
+//    }
+//
+//    public void setJwtToken(String jwtToken) {
+//        this.jwtToken = jwtToken;
+//    }
+//
+//    public String getParticipantId() {
+//        return participantId;
+//    }
+//
+//    public void setParticipantId(String participantId) {
+//        this.participantId = participantId;
+//    }
 
     public boolean isOrganiser() {
         return isOrganiser;
@@ -131,27 +131,27 @@ public class UpdatedParticipant {
         isOrganiser = organiser;
     }
 
-    public boolean isHasJoinedRoom() {
-        return hasJoinedRoom;
-    }
-
-    public void setHasJoinedRoom(boolean hasJoinedRoom) {
-        this.hasJoinedRoom = hasJoinedRoom;
-    }
-
-    public Participant.UserRole getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(Participant.UserRole userRole) {
-        this.userRole = userRole;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+//    public boolean isHasJoinedRoom() {
+//        return hasJoinedRoom;
+//    }
+//
+//    public void setHasJoinedRoom(boolean hasJoinedRoom) {
+//        this.hasJoinedRoom = hasJoinedRoom;
+//    }
+//
+//    public Participant.UserRole getUserRole() {
+//        return userRole;
+//    }
+//
+//    public void setUserRole(Participant.UserRole userRole) {
+//        this.userRole = userRole;
+//    }
+//
+//    public String getUserName() {
+//        return userName;
+//    }
+//
+//    public void setUserName(String userName) {
+//        this.userName = userName;
+//    }
 }

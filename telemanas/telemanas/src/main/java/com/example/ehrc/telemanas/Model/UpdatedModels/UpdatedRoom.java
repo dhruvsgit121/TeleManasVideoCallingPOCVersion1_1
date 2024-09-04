@@ -2,7 +2,7 @@ package com.example.ehrc.telemanas.Model.UpdatedModels;
 
 //import com.example.ehrc.telemanas.Model.Participant;
 //import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.example.ehrc.telemanas.Model.Participant;
+//import com.example.ehrc.telemanas.Model.Participant;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -54,16 +54,16 @@ public class UpdatedRoom implements Serializable {
 
     private String roomShortCode;
 
-    @OneToMany(mappedBy = "updatedroom", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UpdatedParticipant> participants = new HashSet<>();
 
-    public Set<UpdatedParticipant> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(Set<UpdatedParticipant> participants) {
-        this.participants = participants;
-    }
+//    public Set<UpdatedParticipant> getParticipants() {
+//        return participants;
+//    }
+//
+//    public void setParticipants(Set<UpdatedParticipant> participants) {
+//        this.participants = participants;
+//    }
 
     public UpdatedRoom(String roomId, String videoId, LocalDateTime creationDate, LocalDateTime expirationDate, boolean isActive, String roomShortCode) {
         this.roomId = roomId;
