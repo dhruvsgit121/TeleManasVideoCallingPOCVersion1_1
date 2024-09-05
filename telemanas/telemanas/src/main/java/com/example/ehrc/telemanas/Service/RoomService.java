@@ -1,7 +1,5 @@
 package com.example.ehrc.telemanas.Service;
 
-//import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
-
 import com.example.ehrc.telemanas.CustomException.ValidationMessagesException;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomCreationDataDTO;
@@ -9,12 +7,9 @@ import com.example.ehrc.telemanas.DTO.RoomCreationUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
-//import com.example.ehrc.telemanas.Model.Participant;
-//import com.example.ehrc.telemanas.Model.Room;
 import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
-//import com.example.ehrc.telemanas.UserRepository.RoomRepository;
 import com.example.ehrc.telemanas.UserRepository.AuthenticatedUserRepository;
 import com.example.ehrc.telemanas.UserRepository.ParticipantRepository;
 import com.example.ehrc.telemanas.UserRepository.RoomRepository;
@@ -31,9 +26,6 @@ import java.util.*;
 @Service
 public class RoomService {
 
-//    @Autowired
-//    private RoomRepository roomRepository;
-
     @Autowired
     private RoomRepository roomRepository;
 
@@ -48,8 +40,6 @@ public class RoomService {
 
     private final JWTTokenService jwtTokenService;
 
-//    @Autowired
-//    private ParticipantService participantService;
 
     @Autowired
     public RoomService(JWTTokenService jwtTokenService) {
@@ -66,18 +56,10 @@ public class RoomService {
     @Autowired
     private VideoCallingUtilities videoCallingUtilities;
 
-//    public Room saveRoom(Room room) {
-//        return roomRepository.save(room);
-//    }
 
     public Room saveUpdatedRoom(Room room) {
         return roomRepository.save(room);
     }
-
-
-//    public Room getRoomDetailsWith(String shortCode) {
-//        return roomRepository.findRoomDetailsWith(shortCode);
-//    }
 
 
     public Room getUpdatedRoomDetailsWith(String shortCode) {
@@ -87,30 +69,6 @@ public class RoomService {
     public List<Room> getUpdatedRoomListWithExpirationdate(LocalDateTime expirationDate) {
         return roomRepository.findRoomListWithExpirationDate(expirationDate);
     }
-
-
-//    public List<Room> getRoomListWithExpirationdate(LocalDateTime expirationDate) {
-//        return roomRepository.findRoomListWithExpirationDate(expirationDate);
-//    }
-
-    //####################################### Methods for Room Creation #####################################
-
-//    public ResponseEntity<Map<String, Object>> decryptPatientMobileNumber(AuthenticateUserFactory authenticateUserFactory, AuthenticateUserDTO userDTOData, EYUserDataModal userDataModal) {
-//
-//        //Decrypting Mobile Number of The Patient...
-//        ResponseEntity<Map<String, Object>> decryptMobileData = authenticateUserFactory.decryptUserPhoneNumber(userDTOData, userDataModal.getEncryptedMobileNumber());
-//        if (decryptMobileData.getStatusCode() != HttpStatus.OK)
-//            return decryptMobileData;
-//
-//        System.out.println("Data Recieved is in mobile decrypt is : " + decryptMobileData.getBody());
-//
-//        if (decryptMobileData.hasBody()) {
-//            Map<String, Object> encryptMobileNumberResponseData = decryptMobileData.getBody();
-//            userDataModal.setMobileNumber((String) encryptMobileNumberResponseData.get("responsePhoneNo"));
-//        }
-//
-//        return null;
-//    }
 
 
     public void saveIsActiveRoomOnJoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
@@ -134,7 +92,6 @@ public class RoomService {
 
         Map<String, Object> roomServiceRequestData = generateVideoRoomDetailsResponseEntity(roomDetailsRequest);
         System.out.println("roomServiceRequestData" + roomServiceRequestData);
-
 
         if (roomServiceRequestData.containsKey("clientID")) {
             //User is a patient, who is joining the call...
@@ -204,54 +161,13 @@ public class RoomService {
 
         responseData.put("message", "success");
         return new ResponseEntity(responseData, HttpStatus.OK);
-
-        //Setting the Left Date of the user...
-//        Participant requestedParticipant = videoCallingUtilities.getRequestedUserAsPerRequest(roomDetailsRequest, participantsList);
-//        requestedParticipant.setLeftDate(videoCallingUtilities.getDateTimeWithOffset(0));
-//
-//        participantService.saveParticipant(requestedParticipant);
-//
-//        responseData.put("message", "success");
-//        return new ResponseEntity(responseData, HttpStatus.OK);
     }
-
-
-//    public ResponseEntity<Map<String, Object>> processAlreadyExistedRoom(ArrayList<String> roomShortCodesList) {
-//
-//        //In case we have Already Room ID then we won't create it...
-//        //Will return the already existing ROOM CODE...
-//        if (roomShortCodesList.size() > 0) {
-//            Map<String, Object> responseMap = videoCallingUtilities.getSuccessResponseMap();
-//            String roomShortCode = roomShortCodesList.get(0);
-//            responseMap.put("roomCode", roomShortCode);
-//            System.out.println("Entered in existing room maps with room id " + roomShortCode);
-//
-//            List<Long> participantsList = participantService.getParticipantsListWith(roomShortCode);
-//            System.out.println("Data out put is : " + participantsList);
-//            setJoinedRoomFlag(participantsList);
-//            return new ResponseEntity(responseMap, HttpStatus.OK);
-//        }
-//        return null;
-//    }
-
-
-//    private void setJoinedRoomFlag(List<Long> participantsList) {
-//        for (Long participantId : participantsList) {
-//            System.out.println("enter is  this room number with id :" + participantId);
-//            Participant participant = participantService.getParticipantByID(participantId);
-//            participant.setHasJoinedRoom(false);
-//            participantService.saveParticipant(participant);
-//        }
-//    }
 
 
     public ResponseEntity<Map<String, Object>> createRoom(AuthenticateUserDTO userDTOData, PatientDataModal patientDataModal, MHPDataModal mhpDataModal, RoomService roomService) {
 
         LocalDateTime expiryDate = videoCallingUtilities.getDateTimeWithOffset(roomJWTValidityOffSet);
 
-//        ArrayList<String> roomShortCodesList = new ArrayList<>(participantService.getRoomShortCodeWith(userDTOData.getMhpUserName(), userDTOData.getTelemanasId(), expiryDate));
-
-//        System.out.println("roomShortCodesList : " + roomShortCodesList);
         System.out.println("roomShortCodesList : " + patientDataModal.getMobileNumber());
 
 
@@ -316,10 +232,8 @@ public class RoomService {
             authenticatedUserRepository.save(mhpAuthenticatedUser);
         }
 
-
         //Deactivate the Currently Active rooms for the Users....
         deactivateActiveRoomsForCurrentUser(mhpAuthenticatedUser, patientAuthenticatedUser);
-
 
         //Setting the Authenticated User Data for Patient & MHP...
         mhpParticipantUser.setAuthenticatedUser(mhpAuthenticatedUser);
@@ -361,8 +275,6 @@ public class RoomService {
 
 
     public Map<String, Object> generateVideoRoomDetailsResponseEntity(RoomDetailsRequestDTO roomDetailsRequest) {
-
-//        Room roomDetails = this.getRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
 
         Room roomDetails = this.getUpdatedRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
 
