@@ -2,9 +2,9 @@ package com.example.ehrc.telemanas.Service.NewServices;
 
 
 //import com.example.ehrc.telemanas.Model.Participant;
-import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
+import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 //import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
-import com.example.ehrc.telemanas.UserRepository.UpdatedParticipantRepository;
+import com.example.ehrc.telemanas.UserRepository.ParticipantRepository;
 //import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.http.HttpStatus;
@@ -19,10 +19,10 @@ import org.springframework.stereotype.Service;
 public class UpdatedParticipantService {
 
     @Autowired
-    private UpdatedParticipantRepository updatedParticipantRepository;
+    private ParticipantRepository participantRepository;
 
-    public void saveUpdatedParticipantData(UpdatedParticipant participant) {
-        updatedParticipantRepository.save(participant);
+    public void saveUpdatedParticipantData(Participant participant) {
+        participantRepository.save(participant);
     }
 
 

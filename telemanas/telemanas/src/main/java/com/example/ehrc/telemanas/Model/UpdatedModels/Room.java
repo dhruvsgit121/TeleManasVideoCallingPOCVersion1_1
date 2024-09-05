@@ -26,7 +26,7 @@ import lombok.Setter;
 @Setter
 
 @Entity
-@Table(name = "room")
+//@Table(name = "room")
 public class Room implements Serializable {
 
 //    @Id
@@ -60,7 +60,7 @@ public class Room implements Serializable {
     private String roomShortCode;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UpdatedParticipant> participants = new ArrayList<>();
+    private List<Participant> participants = new ArrayList<>();
 
 //    public Set<UpdatedParticipant> getParticipants() {
 //        return participants;
@@ -94,7 +94,7 @@ public class Room implements Serializable {
 
 
     // Utility method to add a participant...
-    public void addParticipant(UpdatedParticipant participant) {
+    public void addParticipant(Participant participant) {
         participants.add(participant);
         participant.setRoom(this);
     }

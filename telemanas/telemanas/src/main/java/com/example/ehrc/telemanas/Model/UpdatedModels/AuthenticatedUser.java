@@ -17,8 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "Updated_authenticated_user")
-public class UpdatedAuthenticatedUser implements Serializable {
+//@Table(name = "Updated_authenticated_user")
+public class AuthenticatedUser implements Serializable {
 
     public enum UserRole {
         MHP,
@@ -33,7 +33,7 @@ public class UpdatedAuthenticatedUser implements Serializable {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UpdatedAuthenticatedUser.UserRole userRole;
+    private AuthenticatedUser.UserRole userRole;
 
     @Column(nullable = false)
     private String userName;
@@ -44,7 +44,7 @@ public class UpdatedAuthenticatedUser implements Serializable {
     @Column(nullable = false)
     private String decryptedMobileNumber;
 
-    public UpdatedAuthenticatedUser(UpdatedAuthenticatedUser.UserRole userRole, String userName, String participantId, String decryptedMobileNumber) {
+    public AuthenticatedUser(AuthenticatedUser.UserRole userRole, String userName, String participantId, String decryptedMobileNumber) {
         this.userRole = userRole;
         this.userName = userName;
         this.participantId = participantId;
@@ -55,11 +55,11 @@ public class UpdatedAuthenticatedUser implements Serializable {
 //    }
 
     @OneToMany(mappedBy = "authenticatedUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UpdatedParticipant> updatedParticipants = new ArrayList<>();
+    private List<Participant> participants = new ArrayList<>();
 
     // Utility method to add a participant...
-    public void setAuthenticatedUser(UpdatedParticipant authenticatedParticipant) {
-        updatedParticipants.add(authenticatedParticipant);
+    public void setAuthenticatedUser(Participant authenticatedParticipant) {
+        participants.add(authenticatedParticipant);
         authenticatedParticipant.setAuthenticatedUser(this);
     }
 }

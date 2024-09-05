@@ -2,11 +2,11 @@ package com.example.ehrc.telemanas.Service.NewServices;
 
 
 //import com.example.ehrc.telemanas.Model.Participant;
-import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedAuthenticatedUser;
-import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
+import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
+import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 //import com.example.ehrc.telemanas.Service.ParticipantService;
-import com.example.ehrc.telemanas.UserRepository.UpdatedRoomRepository;
+import com.example.ehrc.telemanas.UserRepository.RoomRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,10 +21,10 @@ import java.util.Map;
 public class UpdatedRoomService {
 
     @Autowired
-    private UpdatedRoomRepository updatedRoomRepository;
+    private RoomRepository roomRepository;
 
     public Room findRoomDetailsWith(String roomShortCode) {
-        return updatedRoomRepository.findRoomDetailsWith(roomShortCode);
+        return roomRepository.findRoomDetailsWith(roomShortCode);
     }
 
 
@@ -33,13 +33,13 @@ public class UpdatedRoomService {
         Map<String, Object> responseData = new HashMap<>();
         responseData.put(VideoCallingAPIConstants.isErrorFlagValue, false);
 
-        Room roomData = updatedRoomRepository.findRoomDetailsWith(roomShortCode);
+        Room roomData = roomRepository.findRoomDetailsWith(roomShortCode);
 
         if (roomData.getParticipants().size() == 2) {
 //            UpdatedParticipant firstParticipant = roomData.getParticipants().get(0);
 //            UpdatedParticipant secondParticipant = roomData.getParticipants().get(1);
 
-            UpdatedParticipant patientParticipantData = roomData.getParticipants().get(0).getAuthenticatedUser().getUserRole().equals(UpdatedAuthenticatedUser.UserRole.PATIENT) ? roomData.getParticipants().get(0) : roomData.getParticipants().get(1);
+            Participant patientParticipantData = roomData.getParticipants().get(0).getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) ? roomData.getParticipants().get(0) : roomData.getParticipants().get(1);
 
             if (patientParticipantData.isHasJoinedRoom()) {
                 responseData.put("joinedRoom", patientParticipantData.isHasJoinedRoom());

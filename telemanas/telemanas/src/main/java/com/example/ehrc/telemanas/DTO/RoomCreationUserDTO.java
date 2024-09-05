@@ -1,7 +1,7 @@
 package com.example.ehrc.telemanas.DTO;
 
 //import com.example.ehrc.telemanas.Model.Participant;
-import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedAuthenticatedUser;
+import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +20,7 @@ public class RoomCreationUserDTO {
     private String jwtToken;
     private Boolean isOrganiser;
 
-    private UpdatedAuthenticatedUser.UserRole userRole;
+    private AuthenticatedUser.UserRole userRole;
 
 //    public RoomCreationUserDTO(String participantID, String userName, String jwtToken, Participant.UserRole userRole) {
 //        this.participantID = participantID;
@@ -29,7 +29,7 @@ public class RoomCreationUserDTO {
 //        this.userRole = userRole;
 //    }
 
-    public RoomCreationUserDTO(String participantID, String userName, String jwtToken, Boolean isOrganiser, UpdatedAuthenticatedUser.UserRole userRole) {
+    public RoomCreationUserDTO(String participantID, String userName, String jwtToken, Boolean isOrganiser, AuthenticatedUser.UserRole userRole) {
         this.participantID = participantID;
         this.userName = userName;
         this.jwtToken = jwtToken;

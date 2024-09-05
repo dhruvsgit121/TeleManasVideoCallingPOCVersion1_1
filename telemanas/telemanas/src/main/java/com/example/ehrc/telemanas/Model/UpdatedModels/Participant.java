@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @Setter
 
 @Entity
-@Table(name = "updated_participant")
+//@Table(name = "updated_participant")
 
-public class  UpdatedParticipant {
+public class Participant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,13 +37,13 @@ public class  UpdatedParticipant {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private UpdatedAuthenticatedUser authenticatedUser ;
+    private AuthenticatedUser authenticatedUser ;
 
     public void setRoom(Room room) {
         this.room = room;
     }
 
-    public UpdatedParticipant(LocalDateTime joinDate, LocalDateTime leftDate, String jwtToken, boolean isOrganiser, boolean hasJoinedRoom) {
+    public Participant(LocalDateTime joinDate, LocalDateTime leftDate, String jwtToken, boolean isOrganiser, boolean hasJoinedRoom) {
         this.joinDate = joinDate;
         this.leftDate = leftDate;
         this.jwtToken = jwtToken;
@@ -51,7 +51,7 @@ public class  UpdatedParticipant {
         this.hasJoinedRoom = hasJoinedRoom;
     }
 
-    public UpdatedParticipant() {
+    public Participant() {
 //        this.joinDate = joinDate;
 //        this.leftDate = leftDate;
 //        this.jwtToken = jwtToken;

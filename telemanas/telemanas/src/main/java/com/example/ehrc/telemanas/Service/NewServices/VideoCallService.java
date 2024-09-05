@@ -6,8 +6,8 @@ import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
 //import com.example.ehrc.telemanas.Model.Participant;
-import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedAuthenticatedUser;
-import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
+import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
+import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 //import com.example.ehrc.telemanas.Service.ParticipantService;
 import com.example.ehrc.telemanas.Service.RoomService;
@@ -72,11 +72,11 @@ public class VideoCallService {
 
         if (room.getParticipants().size() == 2) {
 
-            UpdatedParticipant firstParticipant = room.getParticipants().get(0);
-            UpdatedParticipant secondParticipant = room.getParticipants().get(1);
+            Participant firstParticipant = room.getParticipants().get(0);
+            Participant secondParticipant = room.getParticipants().get(1);
 
             //Update the Has Joined Room Flag for Patient to TRUE...
-            UpdatedParticipant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(UpdatedAuthenticatedUser.UserRole.PATIENT) ? firstParticipant : secondParticipant;
+            Participant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) ? firstParticipant : secondParticipant;
             patientParticipantData.setHasJoinedRoom(true);
             updatedParticipantService.saveUpdatedParticipantData(patientParticipantData);
         }
@@ -184,7 +184,7 @@ public class VideoCallService {
             return new ResponseEntity<>(responseData, HttpStatus.SEE_OTHER);
         }
 
-        UpdatedAuthenticatedUser patientData = roomData.getParticipants().get(0).getAuthenticatedUser().getUserRole().equals(UpdatedAuthenticatedUser.UserRole.PATIENT) ? roomData.getParticipants().get(0).getAuthenticatedUser() : roomData.getParticipants().get(1).getAuthenticatedUser();
+        AuthenticatedUser patientData = roomData.getParticipants().get(0).getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) ? roomData.getParticipants().get(0).getAuthenticatedUser() : roomData.getParticipants().get(1).getAuthenticatedUser();
 
         String encryptedPhoneNumber = patientData.getDecryptedMobileNumber();
 
