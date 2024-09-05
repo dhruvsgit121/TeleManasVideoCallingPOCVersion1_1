@@ -207,11 +207,11 @@ public class VideoCallService {
 
     //Method to Validate Participants (Patient and MHP)...
     private ResponseEntity<Map<String, Object>> validatePatientData(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
-        return authenticationService.autheticatePatientData(userDTOData, authenticateUserFactory);
+        return authenticationService.authenticatePatientData(userDTOData, authenticateUserFactory);
     }
 
     private ResponseEntity<Map<String, Object>> validateMHPData(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
-        return authenticationService.autheticateMHPData(userDTOData, authenticateUserFactory);
+        return authenticationService.authenticateMHPData(userDTOData, authenticateUserFactory);
     }
 
 }
