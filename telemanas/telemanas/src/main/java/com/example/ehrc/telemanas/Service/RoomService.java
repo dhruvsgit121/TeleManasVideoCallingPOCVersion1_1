@@ -147,15 +147,14 @@ public class RoomService {
     }
 
 
-
     public ResponseEntity<Map<String, Object>> deactivateRequestedRoom(String roomShortCode) {
 
         UpdatedRoom requestedRoom = updatedRoomRepository.findRoomDetailsWith(roomShortCode);
 
-        if(requestedRoom == null)
+        if (requestedRoom == null)
             return videoCallingUtilities.getErrorResponseMessageEntity("Room you requested does not exists.", HttpStatus.SEE_OTHER);
 
-        if(!requestedRoom.isActive())
+        if (!requestedRoom.isActive())
             return videoCallingUtilities.getErrorResponseMessageEntity("Room you requested is already expired.", HttpStatus.SEE_OTHER);
 
         requestedRoom.setActive(false);
@@ -163,7 +162,6 @@ public class RoomService {
 
         return new ResponseEntity<>(videoCallingUtilities.getSuccessResponseMap(), HttpStatus.OK);
     }
-
 
 
     public ResponseEntity<Map<String, Object>> exitRoom(RoomDetailsRequestDTO roomDetailsRequest) {
@@ -384,25 +382,30 @@ public class RoomService {
     }
 
 
-
-
     public void processUpdatedParticipantsJWTTokenData(RoomDetailsRequestDTO roomDetailsRequest, UpdatedRoom roomDetails, UpdatedParticipant firstParticipant, UpdatedParticipant secondParticipant, Map<String, Object> responseData) {
 
+        UpdatedParticipant mainUserData, participatingUserData;
+
         if ((roomDetailsRequest.getIsMHP() == 1 && firstParticipant.getAuthenticatedUser().getUserRole().equals(Participant.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() != 1 && firstParticipant.getAuthenticatedUser().getUserRole().equals(Participant.UserRole.PATIENT))) {
-            responseData.put("jwtToken", firstParticipant.getJwtToken());
-            responseData.put("userName", firstParticipant.getAuthenticatedUser().getUserName());
-            responseData.put("participatingUserName", secondParticipant.getAuthenticatedUser().getUserName());
-            responseData.put("userId", firstParticipant.getAuthenticatedUser().getParticipantId());
-            responseData.put("participatingUserId", secondParticipant.getAuthenticatedUser().getParticipantId());
-            responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), firstParticipant.getJwtToken()));
+            mainUserData = firstParticipant;
+            participatingUserData = secondParticipant;
         } else {
-            responseData.put("jwtToken", secondParticipant.getJwtToken());
-            responseData.put("userName", secondParticipant.getAuthenticatedUser().getUserName());
-            responseData.put("participatingUserName", firstParticipant.getAuthenticatedUser().getUserName());
-            responseData.put("userId", secondParticipant.getAuthenticatedUser().getParticipantId());
-            responseData.put("participatingUserId", firstParticipant.getAuthenticatedUser().getParticipantId());
-            responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), secondParticipant.getJwtToken()));
+            mainUserData = secondParticipant;
+            participatingUserData = firstParticipant;
         }
+
+        requestedRoomDetailData(roomDetailsRequest, roomDetails, mainUserData, participatingUserData, responseData);
+    }
+
+
+    public void requestedRoomDetailData(RoomDetailsRequestDTO roomDetailsRequest, UpdatedRoom roomDetails, UpdatedParticipant firstParticipant, UpdatedParticipant secondParticipant, Map<String, Object> responseData) {
+
+        responseData.put("jwtToken", firstParticipant.getJwtToken());
+        responseData.put("userName", firstParticipant.getAuthenticatedUser().getUserName());
+        responseData.put("participatingUserName", secondParticipant.getAuthenticatedUser().getUserName());
+        responseData.put("userId", firstParticipant.getAuthenticatedUser().getParticipantId());
+        responseData.put("participatingUserId", secondParticipant.getAuthenticatedUser().getParticipantId());
+        responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), firstParticipant.getJwtToken()));
 
         if (roomDetailsRequest.getIsMHP() != 1) {
             String clientID = firstParticipant.getAuthenticatedUser().getUserRole().equals(Participant.UserRole.MHP) ? firstParticipant.getAuthenticatedUser().getParticipantId() : secondParticipant.getAuthenticatedUser().getParticipantId();
@@ -410,32 +413,4 @@ public class RoomService {
             responseData.put("MHPRegistrationNumber", "MHP1234NHNOPA");
         }
     }
-
-
-
-
-//    public void processParticipantsJWTTokenData(RoomDetailsRequestDTO roomDetailsRequest, Room roomDetails, Participant firstParticipant, Participant secondParticipant, Map<String, Object> responseData) {
-//
-//        if ((roomDetailsRequest.getIsMHP() == 1 && firstParticipant.getUserRole().equals(Participant.UserRole.MHP)) || (roomDetailsRequest.getIsMHP() != 1 && firstParticipant.getUserRole().equals(Participant.UserRole.PATIENT))) {
-//            responseData.put("jwtToken", firstParticipant.getJwtToken());
-//            responseData.put("userName", firstParticipant.getUserName());
-//            responseData.put("participatingUserName", secondParticipant.getUserName());
-//            responseData.put("userId", firstParticipant.getParticipantId());
-//            responseData.put("participatingUserId", secondParticipant.getParticipantId());
-//            responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), firstParticipant.getJwtToken()));
-//        } else {
-//            responseData.put("jwtToken", secondParticipant.getJwtToken());
-//            responseData.put("userName", secondParticipant.getUserName());
-//            responseData.put("participatingUserName", firstParticipant.getUserName());
-//            responseData.put("userId", secondParticipant.getParticipantId());
-//            responseData.put("participatingUserId", firstParticipant.getParticipantId());
-//            responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), secondParticipant.getJwtToken()));
-//        }
-//
-//        if (roomDetailsRequest.getIsMHP() != 1) {
-//            String clientID = firstParticipant.getUserRole().equals(Participant.UserRole.MHP) ? firstParticipant.getParticipantId() : secondParticipant.getParticipantId();
-//            responseData.put("clientID", clientID);
-//            responseData.put("MHPRegistrationNumber", "MHP1234NHNOPA");
-//        }
-//    }
 }
