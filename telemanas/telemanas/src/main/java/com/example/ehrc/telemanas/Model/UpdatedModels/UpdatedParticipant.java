@@ -43,7 +43,7 @@ public class  UpdatedParticipant {
         this.room = room;
     }
 
-    public UpdatedParticipant(LocalDateTime joinDate, LocalDateTime leftDate, String jwtToken, String participantId, boolean isOrganiser, boolean hasJoinedRoom, Participant.UserRole userRole, String userName) {
+    public UpdatedParticipant(LocalDateTime joinDate, LocalDateTime leftDate, String jwtToken, boolean isOrganiser, boolean hasJoinedRoom) {
         this.joinDate = joinDate;
         this.leftDate = leftDate;
         this.jwtToken = jwtToken;

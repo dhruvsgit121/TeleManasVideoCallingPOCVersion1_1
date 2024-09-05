@@ -5,6 +5,7 @@ package com.example.ehrc.telemanas.Service;
 import com.example.ehrc.telemanas.CustomException.ValidationMessagesException;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomCreationDataDTO;
+import com.example.ehrc.telemanas.DTO.RoomCreationUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
@@ -257,18 +258,18 @@ public class RoomService {
 
 
     public ResponseEntity<Map<String, Object>> processNewlyCreatedRoom(AuthenticateUserDTO userDTOData, PatientDataModal patientDataModal, MHPDataModal mhpDataModal, JWTTokenService jwtTokenService, RoomCreationDataDTO roomCreationData) {
-        
+
         String doctorJWTToken = jwtTokenService.generateJWTToken(mhpDataModal.getMhpName(), userDTOData.getMhpUserName(), "dummyMHPemailid", roomCreationData.getRoomID(), true);
         String patientJWTToken = jwtTokenService.generateJWTToken(patientDataModal.getPatientName(), userDTOData.getTelemanasId(), "dummyPatientemailid", roomCreationData.getRoomID(), false);
 
         System.out.println("Data before saving : " + mhpDataModal.getMhpName());
         System.out.println("Data before saving : " + patientDataModal.getPatientName());
 
-        Participant mhpUser = new Participant(null, null, doctorJWTToken, userDTOData.getMhpUserName(), true, Participant.UserRole.MHP, mhpDataModal.getMhpName());
-        Participant patientUser = new Participant(null, null, patientJWTToken, userDTOData.getTelemanasId(), false, Participant.UserRole.PATIENT, patientDataModal.getPatientName());
+        
+        RoomCreationUserDTO roomCreationPatientData = new RoomCreationUserDTO(userDTOData.getTelemanasId(), patientDataModal.getPatientName(), patientJWTToken, false, Participant.UserRole.PATIENT);
+        RoomCreationUserDTO roomCreationMHPData = new RoomCreationUserDTO(userDTOData.getMhpUserName(), mhpDataModal.getMhpName(), doctorJWTToken, true, Participant.UserRole.MHP);
 
-
-        UpdatedRoom savedRoomData = saveNewRoomData(roomCreationData.getRoomShortCode(), roomCreationData.getRoomID(), roomCreationData.getVideoID(), mhpUser, patientUser, patientDataModal);
+        UpdatedRoom savedRoomData = saveNewRoomData(roomCreationData, roomCreationMHPData, roomCreationPatientData, patientDataModal);
 
         Map<String, Object> responseMap = videoCallingUtilities.getSuccessResponseMap();
         responseMap.put("roomCode", savedRoomData.getRoomShortCode());
@@ -277,31 +278,30 @@ public class RoomService {
     }
 
 
-    public UpdatedRoom saveNewRoomData(String roomShortCode, String roomID, String videoID, Participant mhpUser, Participant patientUser, PatientDataModal patientDataModal) {
+    public UpdatedRoom saveNewRoomData(RoomCreationDataDTO roomCreationData, RoomCreationUserDTO roomCreationMHPData, RoomCreationUserDTO roomCreationPatientData, PatientDataModal patientDataModal) {
 
-        UpdatedRoom updatedRoomData = new UpdatedRoom(roomID, videoID, videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomShortCode);
+        UpdatedRoom updatedRoomData = new UpdatedRoom(roomCreationData.getRoomID(), roomCreationData.getVideoID(), videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomCreationData.getRoomShortCode());
 
-        UpdatedParticipant mhpParticipantUser = new UpdatedParticipant(mhpUser);//new UpdatedParticipant(mhpUser.getJoinDate(), mhpUser.getLeftDate(), mhpUser.getJwtToken(), mhpUser.getParticipantId(), mhpUser.isOrganiser(), mhpUser.isHasJoinedRoom(), mhpUser.getUserRole(), mhpUser.getUserName());
-        UpdatedParticipant patientParticipantUser = new UpdatedParticipant(patientUser);//new UpdatedParticipant(patientUser.getJoinDate(), patientUser.getLeftDate(), patientUser.getJwtToken(), patientUser.getParticipantId(), patientUser.isOrganiser(), patientUser.isHasJoinedRoom(), patientUser.getUserRole(), patientUser.getUserName());
-
+        UpdatedParticipant mhpParticipantUser = new UpdatedParticipant(null, null, roomCreationMHPData.getJwtToken(), roomCreationMHPData.getIsOrganiser(), false);
+        UpdatedParticipant patientParticipantUser = new UpdatedParticipant(null, null, roomCreationPatientData.getJwtToken(), roomCreationPatientData.getIsOrganiser(), false);
 
         //Created The Patient Authenticated User Data Modal...
-        UpdatedAuthenticatedUser patientAuthenticatedUser = updatedAuthenticatedUserRepository.findAuthenticatedUser(patientUser.getParticipantId());
+        UpdatedAuthenticatedUser patientAuthenticatedUser = updatedAuthenticatedUserRepository.findAuthenticatedUser(roomCreationPatientData.getParticipantID());
         if (patientAuthenticatedUser == null) {
-            patientAuthenticatedUser = new UpdatedAuthenticatedUser(Participant.UserRole.PATIENT, patientUser.getUserName(), patientUser.getParticipantId(), patientDataModal.getEncryptedMobileNumber());
+            patientAuthenticatedUser = new UpdatedAuthenticatedUser(Participant.UserRole.PATIENT, roomCreationPatientData.getUserName(), roomCreationPatientData.getParticipantID(), patientDataModal.getEncryptedMobileNumber());
             updatedAuthenticatedUserRepository.save(patientAuthenticatedUser);
         }
 
         //Created The MHP Authenticated User Data Modal...
-        UpdatedAuthenticatedUser mhpAuthenticatedUser = updatedAuthenticatedUserRepository.findAuthenticatedUser(mhpUser.getParticipantId());
+        UpdatedAuthenticatedUser mhpAuthenticatedUser = updatedAuthenticatedUserRepository.findAuthenticatedUser(roomCreationMHPData.getParticipantID());
         if (mhpAuthenticatedUser == null) {
-            mhpAuthenticatedUser = new UpdatedAuthenticatedUser(Participant.UserRole.MHP, mhpUser.getUserName(), mhpUser.getParticipantId(), "");
+            mhpAuthenticatedUser = new UpdatedAuthenticatedUser(Participant.UserRole.MHP, roomCreationMHPData.getUserName(), roomCreationMHPData.getParticipantID(), "");
             updatedAuthenticatedUserRepository.save(mhpAuthenticatedUser);
         }
 
 
         //Deactivate the Currently Active rooms for the Users....
-        deactivateActiveRoomsForCurrentUser(mhpUser, patientUser);
+        deactivateActiveRoomsForCurrentUser(mhpAuthenticatedUser, patientAuthenticatedUser);
 
 
         //Setting the Authenticated User Data for Patient & MHP...
@@ -317,7 +317,7 @@ public class RoomService {
     }
 
 
-    public void deactivateActiveRoomsForCurrentUser(Participant mhpUser, Participant patientUser) {
+    public void deactivateActiveRoomsForCurrentUser(UpdatedAuthenticatedUser mhpUser, UpdatedAuthenticatedUser patientUser) {
 
         List<UpdatedRoom> activeRoomsList = updatedRoomRepository.findAllActiveRoomLists();
 
