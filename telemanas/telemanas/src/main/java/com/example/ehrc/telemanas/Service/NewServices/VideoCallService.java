@@ -25,7 +25,7 @@ public class VideoCallService {
     private AuthenticationService authenticationService;
 
     @Autowired
-    private NotificationService notificationService;
+    private TwilioSMSService twilioSMSService;
 
     @Autowired
     private UpdatedRoomService updatedRoomService;
@@ -130,7 +130,7 @@ public class VideoCallService {
     private void sendLinkToPatient(String patientNumber, String roomShortCode) {
         String registeredMobileNumber = "+91" + patientNumber;
         //To be commented out to send SMS to the Patient...
-        notificationService.sendTestSms(registeredMobileNumber, roomShortCode);
+        twilioSMSService.sendTestSms(registeredMobileNumber, roomShortCode);
     }
 
 
