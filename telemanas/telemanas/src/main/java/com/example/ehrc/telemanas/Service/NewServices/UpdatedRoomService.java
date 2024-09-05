@@ -4,7 +4,7 @@ package com.example.ehrc.telemanas.Service.NewServices;
 //import com.example.ehrc.telemanas.Model.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedAuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
-import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
+import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 //import com.example.ehrc.telemanas.Service.ParticipantService;
 import com.example.ehrc.telemanas.UserRepository.UpdatedRoomRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
@@ -23,7 +23,7 @@ public class UpdatedRoomService {
     @Autowired
     private UpdatedRoomRepository updatedRoomRepository;
 
-    public UpdatedRoom findRoomDetailsWith(String roomShortCode) {
+    public Room findRoomDetailsWith(String roomShortCode) {
         return updatedRoomRepository.findRoomDetailsWith(roomShortCode);
     }
 
@@ -33,7 +33,7 @@ public class UpdatedRoomService {
         Map<String, Object> responseData = new HashMap<>();
         responseData.put(VideoCallingAPIConstants.isErrorFlagValue, false);
 
-        UpdatedRoom roomData = updatedRoomRepository.findRoomDetailsWith(roomShortCode);
+        Room roomData = updatedRoomRepository.findRoomDetailsWith(roomShortCode);
 
         if (roomData.getParticipants().size() == 2) {
 //            UpdatedParticipant firstParticipant = roomData.getParticipants().get(0);

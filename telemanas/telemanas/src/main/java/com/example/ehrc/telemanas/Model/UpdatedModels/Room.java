@@ -9,9 +9,7 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 //import java.util.HashSet;
 //import java.util.Set;
 
@@ -28,8 +26,8 @@ import lombok.Setter;
 @Setter
 
 @Entity
-@Table(name = "updated_room")
-public class UpdatedRoom implements Serializable {
+@Table(name = "room")
+public class Room implements Serializable {
 
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,10 +79,10 @@ public class UpdatedRoom implements Serializable {
         isActive = active;
     }
 
-    public UpdatedRoom() {
+    public Room() {
     }
 
-    public UpdatedRoom(String roomId, String videoId, LocalDateTime creationDate, LocalDateTime expirationDate, boolean isActive, String roomShortCode) {
+    public Room(String roomId, String videoId, LocalDateTime creationDate, LocalDateTime expirationDate, boolean isActive, String roomShortCode) {
         this.roomId = roomId;
         this.videoId = videoId;
         this.creationDate = creationDate;

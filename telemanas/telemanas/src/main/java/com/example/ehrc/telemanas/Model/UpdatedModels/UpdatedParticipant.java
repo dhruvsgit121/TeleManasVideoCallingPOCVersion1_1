@@ -32,14 +32,14 @@ public class  UpdatedParticipant {
 
     @ManyToOne
     @JoinColumn(name = "room_id", referencedColumnName = "id")
-    private UpdatedRoom room;
+    private Room room;
 
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private UpdatedAuthenticatedUser authenticatedUser ;
 
-    public void setRoom(UpdatedRoom room) {
+    public void setRoom(Room room) {
         this.room = room;
     }
 

@@ -13,7 +13,7 @@ import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
 //import com.example.ehrc.telemanas.Model.Room;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedAuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
-import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
+import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 //import com.example.ehrc.telemanas.UserRepository.RoomRepository;
 import com.example.ehrc.telemanas.UserRepository.UpdatedAuthenticatedUserRepository;
 import com.example.ehrc.telemanas.UserRepository.UpdatedParticipantRepository;
@@ -70,7 +70,7 @@ public class RoomService {
 //        return roomRepository.save(room);
 //    }
 
-    public UpdatedRoom saveUpdatedRoom(UpdatedRoom room) {
+    public Room saveUpdatedRoom(Room room) {
         return updatedRoomRepository.save(room);
     }
 
@@ -80,11 +80,11 @@ public class RoomService {
 //    }
 
 
-    public UpdatedRoom getUpdatedRoomDetailsWith(String shortCode) {
+    public Room getUpdatedRoomDetailsWith(String shortCode) {
         return updatedRoomRepository.findRoomDetailsWith(shortCode);
     }
 
-    public List<UpdatedRoom> getUpdatedRoomListWithExpirationdate(LocalDateTime expirationDate) {
+    public List<Room> getUpdatedRoomListWithExpirationdate(LocalDateTime expirationDate) {
         return updatedRoomRepository.findRoomListWithExpirationDate(expirationDate);
     }
 
@@ -133,7 +133,7 @@ public class RoomService {
 
         Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
 
-        UpdatedRoom roomData = updatedRoomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
+        Room roomData = updatedRoomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
 
         if (roomData == null || roomData.getParticipants().size() != 2) {
             throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
@@ -151,7 +151,7 @@ public class RoomService {
 
     public ResponseEntity<Map<String, Object>> deactivateRequestedRoom(String roomShortCode) {
 
-        UpdatedRoom requestedRoom = updatedRoomRepository.findRoomDetailsWith(roomShortCode);
+        Room requestedRoom = updatedRoomRepository.findRoomDetailsWith(roomShortCode);
 
         if (requestedRoom == null)
             return videoCallingUtilities.getErrorResponseMessageEntity("Room you requested does not exists.", HttpStatus.SEE_OTHER);
@@ -170,7 +170,7 @@ public class RoomService {
 
         Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
 
-        UpdatedRoom roomData = updatedRoomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
+        Room roomData = updatedRoomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
 
 
 //        ArrayList<Long> participantsList = new ArrayList(participantService.getParticipantsListWith(roomDetailsRequest.getRoomShortCode()));
@@ -269,7 +269,7 @@ public class RoomService {
         RoomCreationUserDTO roomCreationPatientData = new RoomCreationUserDTO(userDTOData.getTelemanasId(), patientDataModal.getPatientName(), patientJWTToken, false, UpdatedAuthenticatedUser.UserRole.PATIENT);
         RoomCreationUserDTO roomCreationMHPData = new RoomCreationUserDTO(userDTOData.getMhpUserName(), mhpDataModal.getMhpName(), doctorJWTToken, true, UpdatedAuthenticatedUser.UserRole.MHP);
 
-        UpdatedRoom savedRoomData = saveNewRoomData(roomCreationData, roomCreationMHPData, roomCreationPatientData, patientDataModal);
+        Room savedRoomData = saveNewRoomData(roomCreationData, roomCreationMHPData, roomCreationPatientData, patientDataModal);
 
         Map<String, Object> responseMap = videoCallingUtilities.getSuccessResponseMap();
         responseMap.put("roomCode", savedRoomData.getRoomShortCode());
@@ -278,9 +278,9 @@ public class RoomService {
     }
 
 
-    public UpdatedRoom saveNewRoomData(RoomCreationDataDTO roomCreationData, RoomCreationUserDTO roomCreationMHPData, RoomCreationUserDTO roomCreationPatientData, PatientDataModal patientDataModal) {
+    public Room saveNewRoomData(RoomCreationDataDTO roomCreationData, RoomCreationUserDTO roomCreationMHPData, RoomCreationUserDTO roomCreationPatientData, PatientDataModal patientDataModal) {
 
-        UpdatedRoom updatedRoomData = new UpdatedRoom(roomCreationData.getRoomID(), roomCreationData.getVideoID(), videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomCreationData.getRoomShortCode());
+        Room roomData = new Room(roomCreationData.getRoomID(), roomCreationData.getVideoID(), videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomCreationData.getRoomShortCode());
 
         UpdatedParticipant mhpParticipantUser = new UpdatedParticipant(null, null, roomCreationMHPData.getJwtToken(), roomCreationMHPData.getIsOrganiser(), false);
         UpdatedParticipant patientParticipantUser = new UpdatedParticipant(null, null, roomCreationPatientData.getJwtToken(), roomCreationPatientData.getIsOrganiser(), false);
@@ -309,19 +309,19 @@ public class RoomService {
         patientParticipantUser.setAuthenticatedUser(patientAuthenticatedUser);
 
         //Adding the Participants Data for Patient & MHP...
-        updatedRoomData.addParticipant(mhpParticipantUser);
-        updatedRoomData.addParticipant(patientParticipantUser);
+        roomData.addParticipant(mhpParticipantUser);
+        roomData.addParticipant(patientParticipantUser);
 
         //Updating Room Data For the for Patient & MHP...
-        return updatedRoomRepository.save(updatedRoomData);
+        return updatedRoomRepository.save(roomData);
     }
 
 
     public void deactivateActiveRoomsForCurrentUser(UpdatedAuthenticatedUser mhpUser, UpdatedAuthenticatedUser patientUser) {
 
-        List<UpdatedRoom> activeRoomsList = updatedRoomRepository.findAllActiveRoomLists();
+        List<Room> activeRoomsList = updatedRoomRepository.findAllActiveRoomLists();
 
-        for (UpdatedRoom room : activeRoomsList) {
+        for (Room room : activeRoomsList) {
 
             ArrayList<UpdatedParticipant> participants = new ArrayList<>(room.getParticipants());
 
@@ -334,7 +334,7 @@ public class RoomService {
                 String secondParticipantUserID = secondParticipant.getAuthenticatedUser().getParticipantId();
 
                 if ((firstParticipantUserID.equals(mhpUser.getParticipantId()) && secondParticipantUserID.equals(patientUser.getParticipantId()) || ((firstParticipantUserID.equals(patientUser.getParticipantId()) && secondParticipantUserID.equals(mhpUser.getParticipantId()))))) {
-                    UpdatedRoom currentRoom = updatedRoomRepository.getReferenceById(room.getSerialId());
+                    Room currentRoom = updatedRoomRepository.getReferenceById(room.getSerialId());
                     currentRoom.setActive(false);
                     updatedRoomRepository.save(currentRoom);
                 }
@@ -347,13 +347,13 @@ public class RoomService {
 
 //        Room roomDetails = this.getRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
 
-        UpdatedRoom updatedRoomDetails = this.getUpdatedRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
+        Room roomDetails = this.getUpdatedRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
 
-        if (updatedRoomDetails == null || !updatedRoomDetails.isActive() || updatedRoomDetails.getParticipants().size() != 2) {
+        if (roomDetails == null || !roomDetails.isActive() || roomDetails.getParticipants().size() != 2) {
             throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
         }
 
-        ArrayList<UpdatedParticipant> participantsList = new ArrayList<>(updatedRoomDetails.getParticipants());
+        ArrayList<UpdatedParticipant> participantsList = new ArrayList<>(roomDetails.getParticipants());
 
         Map<String, Object> responseData = new HashMap<>();
 
@@ -363,15 +363,15 @@ public class RoomService {
         System.out.println("first participant data is :" + firstParticipant.getAuthenticatedUser().getParticipantId());
         System.out.println("Second participant data is :" + secondParticipant.getAuthenticatedUser().getParticipantId());
 
-        responseData.put("roomID", updatedRoomDetails.getRoomId());
+        responseData.put("roomID", roomDetails.getRoomId());
 
-        processUpdatedParticipantsJWTTokenData(roomDetailsRequest, updatedRoomDetails, firstParticipant, secondParticipant, responseData);
+        processUpdatedParticipantsJWTTokenData(roomDetailsRequest, roomDetails, firstParticipant, secondParticipant, responseData);
 
         return responseData;
     }
 
 
-    public void processUpdatedParticipantsJWTTokenData(RoomDetailsRequestDTO roomDetailsRequest, UpdatedRoom roomDetails, UpdatedParticipant firstParticipant, UpdatedParticipant secondParticipant, Map<String, Object> responseData) {
+    public void processUpdatedParticipantsJWTTokenData(RoomDetailsRequestDTO roomDetailsRequest, Room roomDetails, UpdatedParticipant firstParticipant, UpdatedParticipant secondParticipant, Map<String, Object> responseData) {
 
         UpdatedParticipant mainUserData, participatingUserData;
 
@@ -387,7 +387,7 @@ public class RoomService {
     }
 
 
-    public void requestedRoomDetailData(RoomDetailsRequestDTO roomDetailsRequest, UpdatedRoom roomDetails, UpdatedParticipant firstParticipant, UpdatedParticipant secondParticipant, Map<String, Object> responseData) {
+    public void requestedRoomDetailData(RoomDetailsRequestDTO roomDetailsRequest, Room roomDetails, UpdatedParticipant firstParticipant, UpdatedParticipant secondParticipant, Map<String, Object> responseData) {
 
         responseData.put("jwtToken", firstParticipant.getJwtToken());
         responseData.put("userName", firstParticipant.getAuthenticatedUser().getUserName());

@@ -4,7 +4,7 @@ import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 //import com.example.ehrc.telemanas.Model.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedAuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
-import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
+import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 //import com.example.ehrc.telemanas.Service.ParticipantService;
 import org.apache.commons.lang3.RandomStringUtils;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -104,7 +104,7 @@ public class VideoCallingUtilities {
 //    }
 
 
-    public UpdatedParticipant getRequestedUpdatedUserAsPerRequest(UpdatedRoom roomData, RoomDetailsRequestDTO roomDetailsRequest) {
+    public UpdatedParticipant getRequestedUpdatedUserAsPerRequest(Room roomData, RoomDetailsRequestDTO roomDetailsRequest) {
 
         UpdatedParticipant firstParticipant = roomData.getParticipants().get(0);
         UpdatedParticipant secondParticipant = roomData.getParticipants().get(1);

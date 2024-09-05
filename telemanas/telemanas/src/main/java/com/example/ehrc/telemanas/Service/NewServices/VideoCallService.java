@@ -1,6 +1,5 @@
 package com.example.ehrc.telemanas.Service.NewServices;
 
-import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUser;
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
@@ -9,7 +8,7 @@ import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
 //import com.example.ehrc.telemanas.Model.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedAuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
-import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
+import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 //import com.example.ehrc.telemanas.Service.ParticipantService;
 import com.example.ehrc.telemanas.Service.RoomService;
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
@@ -69,12 +68,12 @@ public class VideoCallService {
 
     public void saveIsActiveRoomOnJoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
 
-        UpdatedRoom updatedRoom = updatedRoomService.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());//participantService.getPatientParticipant(roomDetailsRequest.getRoomShortCode());
+        Room room = updatedRoomService.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());//participantService.getPatientParticipant(roomDetailsRequest.getRoomShortCode());
 
-        if (updatedRoom.getParticipants().size() == 2) {
+        if (room.getParticipants().size() == 2) {
 
-            UpdatedParticipant firstParticipant = updatedRoom.getParticipants().get(0);
-            UpdatedParticipant secondParticipant = updatedRoom.getParticipants().get(1);
+            UpdatedParticipant firstParticipant = room.getParticipants().get(0);
+            UpdatedParticipant secondParticipant = room.getParticipants().get(1);
 
             //Update the Has Joined Room Flag for Patient to TRUE...
             UpdatedParticipant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(UpdatedAuthenticatedUser.UserRole.PATIENT) ? firstParticipant : secondParticipant;
@@ -162,7 +161,7 @@ public class VideoCallService {
 
     public ResponseEntity<Map<String, Object>> decryptPatientMobileNumberForResendSMS(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory, String roomShortCode) {
 
-        UpdatedRoom roomData = updatedRoomService.findRoomDetailsWith(roomShortCode);
+        Room roomData = updatedRoomService.findRoomDetailsWith(roomShortCode);
 
 //        System.out.println("room is  = " + roomData);
 
