@@ -1,17 +1,17 @@
 package com.example.ehrc.telemanas.Model.UpdatedModels;
 
-//import com.example.ehrc.telemanas.Model.Participant;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
 
 @Entity
-//@Table(name = "updated_participant")
 
 public class Participant {
 
@@ -49,29 +49,5 @@ public class Participant {
         this.jwtToken = jwtToken;
         this.isOrganiser = isOrganiser;
         this.hasJoinedRoom = hasJoinedRoom;
-    }
-
-    public Participant() {
-//        this.joinDate = joinDate;
-//        this.leftDate = leftDate;
-//        this.jwtToken = jwtToken;
-//        this.isOrganiser = isOrganiser;
-//        this.hasJoinedRoom = hasJoinedRoom;
-    }
-
-//    public UpdatedParticipant(Participant participant) {
-//        this.joinDate = participant.getJoinDate();
-//        this.leftDate = participant.getLeftDate();
-//        this.jwtToken = participant.getJwtToken();
-//        this.isOrganiser = participant.isOrganiser();
-//        this.hasJoinedRoom = participant.isHasJoinedRoom();
-//    }
-
-    public boolean isOrganiser() {
-        return isOrganiser;
-    }
-
-    public void setOrganiser(boolean organiser) {
-        isOrganiser = organiser;
     }
 }

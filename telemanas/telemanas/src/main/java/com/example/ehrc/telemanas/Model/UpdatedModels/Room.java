@@ -1,44 +1,23 @@
 package com.example.ehrc.telemanas.Model.UpdatedModels;
 
-//import com.example.ehrc.telemanas.Model.Participant;
-//import com.fasterxml.jackson.annotation.JsonManagedReference;
-//import com.example.ehrc.telemanas.Model.Participant;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-//import java.util.HashSet;
-//import java.util.Set;
-
-//import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-//import lombok.Getter;
-//import lombok.NoArgsConstructor;
-//import lombok.Setter;
 
 
 @Getter
 @Setter
+@NoArgsConstructor
 
 @Entity
-//@Table(name = "room")
 public class Room implements Serializable {
-
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id")
-//    private Long id;
-//
-//    @Column(name = "name")
-//    private String name;
-//
-//
-//
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,24 +41,12 @@ public class Room implements Serializable {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participant> participants = new ArrayList<>();
 
-//    public Set<UpdatedParticipant> getParticipants() {
-//        return participants;
-//    }
-//
-//    public void setParticipants(Set<UpdatedParticipant> participants) {
-//        this.participants = participants;
-//    }
-
-
     public boolean isActive() {
         return isActive;
     }
 
     public void setActive(boolean active) {
         isActive = active;
-    }
-
-    public Room() {
     }
 
     public Room(String roomId, String videoId, LocalDateTime creationDate, LocalDateTime expirationDate, boolean isActive, String roomShortCode) {
@@ -91,16 +58,9 @@ public class Room implements Serializable {
         this.roomShortCode = roomShortCode;
     }
 
-
-
     // Utility method to add a participant...
     public void addParticipant(Participant participant) {
         participants.add(participant);
         participant.setRoom(this);
     }
-    //    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JsonManagedReference
-//    private Set<Participant> participants = new HashSet<>();
-
-
 }

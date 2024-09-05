@@ -1,6 +1,7 @@
 package com.example.ehrc.telemanas.DTO;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 
 public class RoomCreationDataDTO {
 
@@ -15,9 +17,4 @@ public class RoomCreationDataDTO {
     private String roomShortCode;
     private String videoID;
 
-    public RoomCreationDataDTO(String roomID, String roomShortCode, String videoID) {
-        this.roomID = roomID;
-        this.roomShortCode = roomShortCode;
-        this.videoID = videoID;
-    }
 }

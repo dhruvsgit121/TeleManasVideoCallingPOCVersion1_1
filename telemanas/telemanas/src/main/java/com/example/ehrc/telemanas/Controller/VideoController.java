@@ -4,13 +4,9 @@ package com.example.ehrc.telemanas.Controller;
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
-import com.example.ehrc.telemanas.Service.*;
 import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
-import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
-import com.twilio.http.Response;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,15 +19,6 @@ public class VideoController {
 
     @Autowired
     private AuthenticateUserFactory authenticateUserFactory;
-
-    @Autowired
-    private VideoCallingUtilities videoCallingUtilities;
-
-//    @Autowired
-//    private RoomService roomService;
-
-//    @Autowired
-//    private ParticipantService participantService;
 
     @Autowired
     private VideoCallService videoCallService;

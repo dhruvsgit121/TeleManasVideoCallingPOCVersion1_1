@@ -17,14 +17,12 @@ import java.util.List;
 @NoArgsConstructor
 
 @Entity
-//@Table(name = "Updated_authenticated_user")
 public class AuthenticatedUser implements Serializable {
 
     public enum UserRole {
         MHP,
         PATIENT
     }
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,8 +49,6 @@ public class AuthenticatedUser implements Serializable {
         this.decryptedMobileNumber = decryptedMobileNumber;
     }
 
-//    public UpdatedAuthenticatedUser() {
-//    }
 
     @OneToMany(mappedBy = "authenticatedUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participant> participants = new ArrayList<>();

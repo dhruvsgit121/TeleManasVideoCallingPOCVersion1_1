@@ -26,14 +26,6 @@ public class PatientDataModal {
                 ", mobileNumber='" + mobileNumber + '\'' +
                 '}';
     }
-    //    @Override
-//    public String toString() {
-//        return "EYUserDataModal{" +
-//                "patientName='" + patientName + '\'' +
-//                ", age='" + age + '\'' +
-//                ", telemanasId='" + telemanasId + '\'' +
-//                '}';
-//    }
 
     public PatientDataModal(Map<String, Object> EYUserData) {
 
@@ -50,9 +42,6 @@ public class PatientDataModal {
 
         if (EYUserData.containsKey("phone"))
             this.encryptedMobileNumber = EYUserData.get("phone").toString();
-
-//        if (EYUserData.containsKey("telemanasId"))
-//            this.telemanasId = EYUserData.get("telemanasId").toString();
 
     }
 }

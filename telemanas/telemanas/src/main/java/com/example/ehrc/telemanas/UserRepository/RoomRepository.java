@@ -16,7 +16,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     @Query(value = "SELECT * FROM room WHERE room_short_code = :roomShortCode", nativeQuery = true)
     Room findRoomDetailsWith(@Param("roomShortCode") String roomShortCode);
 
-
     @Query(value = "SELECT * FROM room WHERE expiration_date < :expirationDate AND is_active = TRUE", nativeQuery = true)
     List<Room> findRoomListWithExpirationDate(@Param("expirationDate") LocalDateTime expirationDate);
 
