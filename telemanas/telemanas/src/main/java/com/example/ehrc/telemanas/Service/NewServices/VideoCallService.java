@@ -36,44 +36,52 @@ public class VideoCallService {
     @Autowired
     private RoomService roomService;
 
+
+    //Method to Start Video Call...
     public ResponseEntity<Map<String, Object>> startVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
         return roomService.startVideoCall(roomDetailsRequest);
     }
 
+    //Method to get Patient Status whether he/she has joined room or not...
     public ResponseEntity<Map<String, Object>> getPatientJoinRoomStatusData(String roomShortCode) {
         return updatedRoomService.getPatientJoinData(roomShortCode);
     }
 
-
+    //Method to Leave Video Call...
     public ResponseEntity<Map<String, Object>> leaveVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
         return roomService.exitRoom(roomDetailsRequest);
     }
 
+    //Method to Join Video Call...
     public ResponseEntity<Map<String, Object>> JoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
         return roomService.joinRoom(roomDetailsRequest);
     }
 
-
+    //Method to deactivated requested room...
     public ResponseEntity<Map<String, Object>> deactivateRequestedRoom(String roomShortCode) {
         return roomService.deactivateRequestedRoom(roomShortCode);
     }
 
-
     public void saveIsActiveRoomOnJoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
-
-        Room room = updatedRoomService.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());//participantService.getPatientParticipant(roomDetailsRequest.getRoomShortCode());
-
-        if (room.getParticipants().size() == 2) {
-
-            Participant firstParticipant = room.getParticipants().get(0);
-            Participant secondParticipant = room.getParticipants().get(1);
-
-            //Update the Has Joined Room Flag for Patient to TRUE...
-            Participant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) ? firstParticipant : secondParticipant;
-            patientParticipantData.setHasJoinedRoom(true);
-            updatedParticipantService.saveUpdatedParticipantData(patientParticipantData);
-        }
+        roomService.saveIsActiveRoomOnJoinVideoCall(roomDetailsRequest);
     }
+
+
+//    public void saveIsActiveRoomOnJoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
+//
+//        Room room = updatedRoomService.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());//participantService.getPatientParticipant(roomDetailsRequest.getRoomShortCode());
+//
+//        if (room.getParticipants().size() == 2) {
+//
+//            Participant firstParticipant = room.getParticipants().get(0);
+//            Participant secondParticipant = room.getParticipants().get(1);
+//
+//            //Update the Has Joined Room Flag for Patient to TRUE...
+//            Participant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) ? firstParticipant : secondParticipant;
+//            patientParticipantData.setHasJoinedRoom(true);
+//            updatedParticipantService.saveUpdatedParticipantData(patientParticipantData);
+//        }
+//    }
 
 
     public ResponseEntity<Map<String, Object>> createMeetingLink(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
@@ -204,12 +212,12 @@ public class VideoCallService {
         return new ResponseEntity<>(responseData, HttpStatus.SEE_OTHER);
     }
 
-
-    //Method to Validate Participants (Patient and MHP)...
+    //Method to Validate Participants Patient...
     private ResponseEntity<Map<String, Object>> validatePatientData(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
         return authenticationService.authenticatePatientData(userDTOData, authenticateUserFactory);
     }
 
+    //Method to Validate Participants MHP...
     private ResponseEntity<Map<String, Object>> validateMHPData(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
         return authenticationService.authenticateMHPData(userDTOData, authenticateUserFactory);
     }

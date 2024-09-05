@@ -113,6 +113,23 @@ public class RoomService {
 //    }
 
 
+    public void saveIsActiveRoomOnJoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
+
+        Room room = roomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());//participantService.getPatientParticipant(roomDetailsRequest.getRoomShortCode());
+
+        if (room.getParticipants().size() == 2) {
+
+            Participant firstParticipant = room.getParticipants().get(0);
+            Participant secondParticipant = room.getParticipants().get(1);
+
+            //Update the Has Joined Room Flag for Patient to TRUE...
+            Participant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) ? firstParticipant : secondParticipant;
+            patientParticipantData.setHasJoinedRoom(true);
+            participantRepository.save(patientParticipantData);
+        }
+    }
+
+
     public ResponseEntity<Map<String, Object>> startVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
 
         Map<String, Object> roomServiceRequestData = generateVideoRoomDetailsResponseEntity(roomDetailsRequest);
