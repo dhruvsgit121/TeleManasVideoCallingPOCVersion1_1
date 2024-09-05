@@ -1,6 +1,8 @@
 package com.example.ehrc.telemanas.Service.NewServices;
 
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
+import com.example.ehrc.telemanas.CustomException.RoomDoesNotExistException;
+import com.example.ehrc.telemanas.CustomException.RoomNotActiveException;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.EYDataModel.MHPDataModal;
@@ -66,24 +68,6 @@ public class VideoCallService {
         roomService.saveIsActiveRoomOnJoinVideoCall(roomDetailsRequest);
     }
 
-
-//    public void saveIsActiveRoomOnJoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
-//
-//        Room room = updatedRoomService.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());//participantService.getPatientParticipant(roomDetailsRequest.getRoomShortCode());
-//
-//        if (room.getParticipants().size() == 2) {
-//
-//            Participant firstParticipant = room.getParticipants().get(0);
-//            Participant secondParticipant = room.getParticipants().get(1);
-//
-//            //Update the Has Joined Room Flag for Patient to TRUE...
-//            Participant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) ? firstParticipant : secondParticipant;
-//            patientParticipantData.setHasJoinedRoom(true);
-//            updatedParticipantService.saveUpdatedParticipantData(patientParticipantData);
-//        }
-//    }
-
-
     public ResponseEntity<Map<String, Object>> createMeetingLink(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
 
         System.out.println("Method called!!!");
@@ -131,7 +115,7 @@ public class VideoCallService {
     }
 
 
-    public void sendSMSToPatient(String mobileNumber, String roomShortCode){
+    public void sendSMSToPatient(String mobileNumber, String roomShortCode) {
         sendLinkToPatient(mobileNumber, roomShortCode);
     }
 
@@ -164,30 +148,10 @@ public class VideoCallService {
 
         Room roomData = updatedRoomService.findRoomDetailsWith(roomShortCode);
 
-//        System.out.println("room is  = " + roomData);
-
-//        if(roomData == null)
-//            System.out.println("room data is null!!1");
-
         Map<String, Object> responseData = new HashMap<>();
         responseData.put(VideoCallingAPIConstants.isErrorFlagValue, false);
 
-        if (roomData == null || roomData.getParticipants().size() != 2) {
-            responseData.put(VideoCallingAPIConstants.isErrorFlagValue, true);
-            responseData.put(VideoCallingAPIConstants.errorMessageValue, "Room you requested didn't exists.");
-            return new ResponseEntity<>(responseData, HttpStatus.SEE_OTHER);
-        }
-
-
-        if (!roomData.isActive()) {
-            responseData.put(VideoCallingAPIConstants.isErrorFlagValue, true);
-            responseData.put(VideoCallingAPIConstants.errorMessageValue, "Room you requested is not active. Please try again.");
-            return new ResponseEntity<>(responseData, HttpStatus.SEE_OTHER);
-        }
-
-        AuthenticatedUser patientData = roomData.getParticipants().get(0).getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) ? roomData.getParticipants().get(0).getAuthenticatedUser() : roomData.getParticipants().get(1).getAuthenticatedUser();
-
-        String encryptedPhoneNumber = patientData.getDecryptedMobileNumber();
+        String encryptedPhoneNumber = getEncryptedPhoneNumber(roomData);
 
         //Decrypting Mobile Number of The Patient...
         ResponseEntity<Map<String, Object>> decryptMobileData = authenticateUserFactory.decryptUserPhoneNumber(userDTOData, encryptedPhoneNumber);
@@ -198,18 +162,31 @@ public class VideoCallService {
 
         String errorMessage = "Some error Occurred. Please try again later.";
 
-        if(decryptMobileData.hasBody()){
-            if(decryptMobileData.getBody().containsKey("responsePhoneNo")){
+        if (decryptMobileData.hasBody()) {
+            if (decryptMobileData.getBody().containsKey("responsePhoneNo")) {
                 String mobileNumber = decryptMobileData.getBody().get("responsePhoneNo").toString();
                 sendSMSToPatient(mobileNumber, roomShortCode);
                 return new ResponseEntity<>(responseData, HttpStatus.OK);
             }
-            if(decryptMobileData.getBody().containsKey("message") && decryptMobileData.getBody().get("message") != null){
+            if (decryptMobileData.getBody().containsKey("message") && decryptMobileData.getBody().get("message") != null) {
                 errorMessage = decryptMobileData.getBody().get("message").toString();
             }
         }
         responseData.put(VideoCallingAPIConstants.errorMessageValue, errorMessage);
         return new ResponseEntity<>(responseData, HttpStatus.SEE_OTHER);
+    }
+
+    private static String getEncryptedPhoneNumber(Room roomData) {
+        if (roomData == null || roomData.getParticipants().size() != 2)
+            throw new RoomDoesNotExistException(null);
+
+        if (!roomData.isActive())
+            throw new RoomNotActiveException(null);
+
+        AuthenticatedUser patientData = roomData.getParticipants().get(0).getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) ? roomData.getParticipants().get(0).getAuthenticatedUser() : roomData.getParticipants().get(1).getAuthenticatedUser();
+
+        String encryptedPhoneNumber = patientData.getDecryptedMobileNumber();
+        return encryptedPhoneNumber;
     }
 
     //Method to Validate Participants Patient...
