@@ -1,12 +1,13 @@
 package com.example.ehrc.telemanas.Utilities;
 
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
-import com.example.ehrc.telemanas.Model.Participant;
+//import com.example.ehrc.telemanas.Model.Participant;
+import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedAuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
-import com.example.ehrc.telemanas.Service.ParticipantService;
+//import com.example.ehrc.telemanas.Service.ParticipantService;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.Instant;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,8 +27,8 @@ public class VideoCallingUtilities {
     @Value("${jwt.jitsiFullDomain}")
     private String jitsiFullDomain;
 
-    @Autowired
-    private ParticipantService participantService;
+//    @Autowired
+//    private ParticipantService participantService;
 
 //    @Autowired
 //    private UserService userService;
@@ -89,18 +90,18 @@ public class VideoCallingUtilities {
         return jitsiFullDomain + roomID + "?jwt=" + JWTToken;
     }
 
-    public Participant getRequestedUserAsPerRequest(RoomDetailsRequestDTO roomDetailsRequest, ArrayList<Long> participantsList) {
-
-        Participant firstParticipant = participantService.getParticipantByID(participantsList.get(0));
-        Participant secondParticipant = participantService.getParticipantByID(participantsList.get(1));
-
-        if((firstParticipant.getUserRole().equals(Participant.UserRole.MHP) && roomDetailsRequest.getIsMHP() == 1) ||
-                (firstParticipant.getUserRole().equals(Participant.UserRole.PATIENT) && roomDetailsRequest.getIsMHP() == 0) ){
-            return firstParticipant;
-        }
-
-        return secondParticipant;
-    }
+//    public Participant getRequestedUserAsPerRequest(RoomDetailsRequestDTO roomDetailsRequest, ArrayList<Long> participantsList) {
+//
+//        Participant firstParticipant = participantService.getParticipantByID(participantsList.get(0));
+//        Participant secondParticipant = participantService.getParticipantByID(participantsList.get(1));
+//
+//        if((firstParticipant.getUserRole().equals(Participant.UserRole.MHP) && roomDetailsRequest.getIsMHP() == 1) ||
+//                (firstParticipant.getUserRole().equals(Participant.UserRole.PATIENT) && roomDetailsRequest.getIsMHP() == 0) ){
+//            return firstParticipant;
+//        }
+//
+//        return secondParticipant;
+//    }
 
 
     public UpdatedParticipant getRequestedUpdatedUserAsPerRequest(UpdatedRoom roomData, RoomDetailsRequestDTO roomDetailsRequest) {
@@ -108,8 +109,8 @@ public class VideoCallingUtilities {
         UpdatedParticipant firstParticipant = roomData.getParticipants().get(0);
         UpdatedParticipant secondParticipant = roomData.getParticipants().get(1);
 
-        if((firstParticipant.getAuthenticatedUser().getUserRole().equals(Participant.UserRole.MHP) && roomDetailsRequest.getIsMHP() == 1) ||
-                (firstParticipant.getAuthenticatedUser().getUserRole().equals(Participant.UserRole.PATIENT) && roomDetailsRequest.getIsMHP() == 0) ){
+        if((firstParticipant.getAuthenticatedUser().getUserRole().equals(UpdatedAuthenticatedUser.UserRole.MHP) && roomDetailsRequest.getIsMHP() == 1) ||
+                (firstParticipant.getAuthenticatedUser().getUserRole().equals(UpdatedAuthenticatedUser.UserRole.PATIENT) && roomDetailsRequest.getIsMHP() == 0) ){
             return firstParticipant;
         }
         return secondParticipant;

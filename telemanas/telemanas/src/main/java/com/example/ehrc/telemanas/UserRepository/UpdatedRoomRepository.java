@@ -1,8 +1,8 @@
 package com.example.ehrc.telemanas.UserRepository;
 
 //import com.example.ehrc.telemanas.Model.Participant;
-import com.example.ehrc.telemanas.Model.Room;
-import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedAuthenticatedUser;
+//import com.example.ehrc.telemanas.Model.Room;
+//import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedAuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -6,21 +6,21 @@ import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
-import com.example.ehrc.telemanas.Model.Participant;
+//import com.example.ehrc.telemanas.Model.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedAuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
-import com.example.ehrc.telemanas.Service.ParticipantService;
+//import com.example.ehrc.telemanas.Service.ParticipantService;
 import com.example.ehrc.telemanas.Service.RoomService;
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
-import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
+//import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
+//import java.util.List;
 import java.util.Map;
 
 @Service
@@ -29,8 +29,8 @@ public class VideoCallService {
     @Autowired
     private AuthenticationService authenticationService;
 
-    @Autowired
-    private ParticipantService participantService;
+//    @Autowired
+//    private ParticipantService participantService;
 
     @Autowired
     private NotificationService notificationService;
@@ -77,7 +77,7 @@ public class VideoCallService {
             UpdatedParticipant secondParticipant = updatedRoom.getParticipants().get(1);
 
             //Update the Has Joined Room Flag for Patient to TRUE...
-            UpdatedParticipant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(Participant.UserRole.PATIENT) ? firstParticipant : secondParticipant;
+            UpdatedParticipant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(UpdatedAuthenticatedUser.UserRole.PATIENT) ? firstParticipant : secondParticipant;
             patientParticipantData.setHasJoinedRoom(true);
             updatedParticipantService.saveUpdatedParticipantData(patientParticipantData);
         }
@@ -185,7 +185,7 @@ public class VideoCallService {
             return new ResponseEntity<>(responseData, HttpStatus.SEE_OTHER);
         }
 
-        UpdatedAuthenticatedUser patientData = roomData.getParticipants().get(0).getAuthenticatedUser().getUserRole().equals(Participant.UserRole.PATIENT) ? roomData.getParticipants().get(0).getAuthenticatedUser() : roomData.getParticipants().get(1).getAuthenticatedUser();
+        UpdatedAuthenticatedUser patientData = roomData.getParticipants().get(0).getAuthenticatedUser().getUserRole().equals(UpdatedAuthenticatedUser.UserRole.PATIENT) ? roomData.getParticipants().get(0).getAuthenticatedUser() : roomData.getParticipants().get(1).getAuthenticatedUser();
 
         String encryptedPhoneNumber = patientData.getDecryptedMobileNumber();
 

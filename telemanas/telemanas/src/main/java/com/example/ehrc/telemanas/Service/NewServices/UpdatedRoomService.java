@@ -1,7 +1,8 @@
 package com.example.ehrc.telemanas.Service.NewServices;
 
 
-import com.example.ehrc.telemanas.Model.Participant;
+//import com.example.ehrc.telemanas.Model.Participant;
+import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedAuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedParticipant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
 //import com.example.ehrc.telemanas.Service.ParticipantService;
@@ -38,7 +39,7 @@ public class UpdatedRoomService {
 //            UpdatedParticipant firstParticipant = roomData.getParticipants().get(0);
 //            UpdatedParticipant secondParticipant = roomData.getParticipants().get(1);
 
-            UpdatedParticipant patientParticipantData = roomData.getParticipants().get(0).getAuthenticatedUser().getUserRole().equals(Participant.UserRole.PATIENT) ? roomData.getParticipants().get(0) : roomData.getParticipants().get(1);
+            UpdatedParticipant patientParticipantData = roomData.getParticipants().get(0).getAuthenticatedUser().getUserRole().equals(UpdatedAuthenticatedUser.UserRole.PATIENT) ? roomData.getParticipants().get(0) : roomData.getParticipants().get(1);
 
             if (patientParticipantData.isHasJoinedRoom()) {
                 responseData.put("joinedRoom", patientParticipantData.isHasJoinedRoom());

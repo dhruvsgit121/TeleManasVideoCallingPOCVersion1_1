@@ -1,7 +1,7 @@
 package com.example.ehrc.telemanas.ScheduledTasks;
 
 
-import com.example.ehrc.telemanas.Model.Room;
+//import com.example.ehrc.telemanas.Model.Room;
 import com.example.ehrc.telemanas.Model.UpdatedModels.UpdatedRoom;
 import com.example.ehrc.telemanas.Service.RoomService;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;

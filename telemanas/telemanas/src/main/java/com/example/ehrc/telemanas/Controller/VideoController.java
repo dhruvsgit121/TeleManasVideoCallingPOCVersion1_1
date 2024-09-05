@@ -30,8 +30,8 @@ public class VideoController {
 //    @Autowired
 //    private RoomService roomService;
 
-    @Autowired
-    private ParticipantService participantService;
+//    @Autowired
+//    private ParticipantService participantService;
 
     @Autowired
     private VideoCallService videoCallService;
