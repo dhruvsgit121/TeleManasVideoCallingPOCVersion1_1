@@ -5,6 +5,7 @@ import com.example.ehrc.telemanas.CustomException.RoomDoesNotExistException;
 import com.example.ehrc.telemanas.CustomException.RoomNotActiveException;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
+import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import com.example.ehrc.telemanas.Model.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
 import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
@@ -37,6 +38,17 @@ public class VideoCallService {
 
     @Autowired
     private RoomService roomService;
+
+    @Autowired
+    private EventService eventService;
+
+
+    //Method to Save Video Call Events...
+//    public ResponseEntity<Map<String, Object>> saveVideCallEvents(RoomDetailsRequestDTO roomDetailsRequest) {
+    public ResponseEntity<Map<String, Object>> saveVideoCallEvents(VideoCallEventsDTO videoCallEventsDTO) {
+        return eventService.saveEventData(videoCallEventsDTO);
+//        return roomService.startVideoCall(roomDetailsRequest);
+    }
 
 
     //Method to Start Video Call...

@@ -10,11 +10,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 
 @Entity
 public class Room implements Serializable {
@@ -41,6 +43,9 @@ public class Room implements Serializable {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participant> participants = new ArrayList<>();
 
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Event> events = new ArrayList<>();
+
     public boolean isActive() {
         return isActive;
     }
@@ -62,5 +67,11 @@ public class Room implements Serializable {
     public void addParticipant(Participant participant) {
         participants.add(participant);
         participant.setRoom(this);
+    }
+
+    // Utility method to add a Event...
+    public void addEvent(Event event) {
+        events.add(event);
+        event.setRoom(this);
     }
 }

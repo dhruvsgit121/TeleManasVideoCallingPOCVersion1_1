@@ -14,6 +14,7 @@ import com.example.ehrc.telemanas.UserRepository.AuthenticatedUserRepository;
 import com.example.ehrc.telemanas.UserRepository.ParticipantRepository;
 import com.example.ehrc.telemanas.UserRepository.RoomRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
+import com.twilio.http.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -62,8 +63,16 @@ public class RoomService {
     }
 
 
+    public ResponseEntity<Map<String, Object>> getRoomValidationResponseEntity() {
+        return videoCallingUtilities.getErrorResponseMessageEntity("The room you requested is either deactivated or doesn't exist. Please try again with another room short code.", HttpStatus.OK);
+    }
+
     public Room getUpdatedRoomDetailsWith(String shortCode) {
         return roomRepository.findRoomDetailsWith(shortCode);
+    }
+
+    public Room getUpdatedActiveRoomDetailsWith(String shortCode) {
+        return roomRepository.findRoomDetailsWithActiveStatus(shortCode);
     }
 
     public List<Room> getUpdatedRoomListWithExpirationdate(LocalDateTime expirationDate) {
