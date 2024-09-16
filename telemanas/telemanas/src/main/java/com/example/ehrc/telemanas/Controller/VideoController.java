@@ -3,6 +3,7 @@ package com.example.ehrc.telemanas.Controller;
 
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
+import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
@@ -81,8 +82,18 @@ public class VideoController {
 
 
     @PostMapping("/joinroom")
-    public ResponseEntity<Map<String, Object>> setJoinRoomTime(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
-        return videoCallService.JoinVideoCall(roomDetailsRequest);
+    public ResponseEntity<Map<String, Object>> setJoinRoomTime(@Valid @RequestBody CallStartDTO callStartDTO, @RequestHeader("Authorization") String bearerToken,
+                                                               @RequestHeader(value = "Loggedin") String loggedIn) {
+
+        String token = bearerToken.substring(7);
+
+        System.out.println("method called");
+
+        //Adjusting The UserDTOData...
+        callStartDTO.setBearerToken(token);
+        callStartDTO.setLoggedInId(loggedIn);
+
+        return videoCallService.JoinVideoCall(callStartDTO);
     }
 
 

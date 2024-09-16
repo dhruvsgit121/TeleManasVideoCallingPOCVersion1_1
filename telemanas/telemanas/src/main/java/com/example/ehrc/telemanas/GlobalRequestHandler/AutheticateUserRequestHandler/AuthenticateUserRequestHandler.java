@@ -26,7 +26,7 @@ public class AuthenticateUserRequestHandler {
                 "\"}";
 
         //Create HTTP Request Entity...
-        HttpEntity<String> requestEntity = createHttpRequestEntity(userData, payload);
+        HttpEntity<String> requestEntity = videoCallingUtilities.createHttpRequestEntity(userData.getLoggedInId(), userData.getBearerToken(), payload);//createHttpRequestEntity(userData, payload);
 
         // Make the POST request
         ResponseEntity<Map<String, Object>> response = videoCallingAPIRequestHandler.makePostRequest(VideoCallingAPIConstants.authenticatePatientURL, requestEntity);

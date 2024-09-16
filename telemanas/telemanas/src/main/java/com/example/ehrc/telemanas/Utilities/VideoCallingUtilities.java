@@ -1,5 +1,6 @@
 package com.example.ehrc.telemanas.Utilities;
 
+import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 //import com.example.ehrc.telemanas.Model.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
@@ -9,9 +10,7 @@ import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import org.apache.commons.lang3.RandomStringUtils;
 //import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -114,6 +113,21 @@ public class VideoCallingUtilities {
             return firstParticipant;
         }
         return secondParticipant;
+    }
+
+
+    public HttpEntity<String> createHttpRequestEntity(String loggedInID, String bearerToken, String payload) {
+
+        // Create headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        headers.set("loggedin", loggedInID);
+        // Optionally set authorization or other headers
+        headers.set("Authorization", "Bearer " + bearerToken);
+        // Create the request entity
+        HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
+
+        return requestEntity;
     }
 
 }

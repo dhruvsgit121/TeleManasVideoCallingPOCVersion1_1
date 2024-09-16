@@ -1,6 +1,5 @@
 package com.example.ehrc.telemanas.DTO;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,5 +11,10 @@ public class RoomDetailsRequestDTO {
 
     private String roomShortCode;
     private int isMHP;
+
+    public RoomDetailsRequestDTO(CallStartDTO callStartDTO) {
+        this.roomShortCode = callStartDTO.getRoomShortCode();
+        this.isMHP = callStartDTO.getIsMHP();
+    }
 
 }

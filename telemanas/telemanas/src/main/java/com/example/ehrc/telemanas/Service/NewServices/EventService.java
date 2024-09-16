@@ -1,6 +1,11 @@
 package com.example.ehrc.telemanas.Service.NewServices;
 
+import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
+import com.example.ehrc.telemanas.CustomException.ValidationMessagesException;
+import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
+import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
+import com.example.ehrc.telemanas.GlobalRequestHandler.CallEventDataRequestHandler;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Event;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import com.example.ehrc.telemanas.Service.RoomService;
@@ -30,6 +35,9 @@ public class EventService {
     @Autowired
     private VideoCallingUtilities videoCallingUtilities;
 
+    @Autowired
+    private CallEventDataRequestHandler callEventDataRequestHandler;
+
 
     //VideoCallEventsDTO videoCallEventsDTO
 
@@ -58,5 +66,16 @@ public class EventService {
         responseData.put("Room ID", eventData.getRoom().getRoomId());
 
         return new ResponseEntity<>(responseData, HttpStatus.OK) ;
+    }
+
+    //Method to Validate Participants MHP...
+    public ResponseEntity<Map<String, Object>> callStartSaveData(CallStartDTO callStartDTO) {
+
+        Room room = roomService.getUpdatedActiveRoomDetailsWith(callStartDTO.getRoomShortCode());
+
+        if (room == null)
+            return roomService.getRoomValidationResponseEntity();
+
+        return callEventDataRequestHandler.saveCallStartData(callStartDTO, room.getVideoId());
     }
 }

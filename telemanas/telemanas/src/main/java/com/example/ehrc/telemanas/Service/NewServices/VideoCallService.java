@@ -4,6 +4,7 @@ import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.CustomException.RoomDoesNotExistException;
 import com.example.ehrc.telemanas.CustomException.RoomNotActiveException;
 import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
+import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import com.example.ehrc.telemanas.Model.EYDataModel.MHPDataModal;
@@ -64,8 +65,21 @@ public class VideoCallService {
     }
 
     //Method to Join Video Call...
-    public ResponseEntity<Map<String, Object>> JoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
-        return roomService.joinRoom(roomDetailsRequest);
+    public ResponseEntity<Map<String, Object>> JoinVideoCall(CallStartDTO callStartDTO) {
+
+        ResponseEntity<Map<String, Object>> responseData = eventService.callStartSaveData(callStartDTO);
+        if (responseData.getStatusCode() != HttpStatus.OK)
+            return responseData;
+
+        String eventDescription = (callStartDTO.getIsMHP() == 1) ? "MHP Started the video call" : "Patient Started the video call";
+        ResponseEntity<Map<String, Object>> eventServiceResponseData = eventService.saveEventData(callStartDTO.getRoomShortCode(), eventDescription);
+
+        boolean isErrorPresent = (boolean) (eventServiceResponseData.getBody().get("isErrorPresent"));
+
+        if (isErrorPresent)
+            return eventServiceResponseData;
+
+        return roomService.joinRoom(callStartDTO);
     }
 
     //Method to deactivated requested room...
