@@ -78,4 +78,15 @@ public class EventService {
 
         return callEventDataRequestHandler.saveCallStartData(callStartDTO, room.getVideoId());
     }
+
+    //Method to Validate Participants MHP...
+    public ResponseEntity<Map<String, Object>> callEndSaveData(CallStartDTO callStartDTO) {
+
+        Room room = roomService.getUpdatedActiveRoomDetailsWith(callStartDTO.getRoomShortCode());
+
+        if (room == null)
+            return roomService.getRoomValidationResponseEntity();
+
+        return callEventDataRequestHandler.saveCallEndData(callStartDTO, room.getVideoId(), videoCallingUtilities.getDateTimeWithOffset(0));
+    }
 }

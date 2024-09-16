@@ -98,8 +98,15 @@ public class VideoController {
 
 
     @PostMapping("/exitroom")
-    public ResponseEntity<Map<String, Object>> leaveVideoCall(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
-        return videoCallService.leaveVideoCall(roomDetailsRequest);
+    public ResponseEntity<Map<String, Object>> leaveVideoCall(@Valid @RequestBody CallStartDTO callStartDTO, @RequestHeader("Authorization") String bearerToken,
+                                                              @RequestHeader(value = "Loggedin") String loggedIn) {
+
+        String token = bearerToken.substring(7);
+
+        //Adjusting The UserDTOData...
+        callStartDTO.setBearerToken(token);
+        callStartDTO.setLoggedInId(loggedIn);
+        return videoCallService.leaveVideoCall(callStartDTO);
     }
 
 

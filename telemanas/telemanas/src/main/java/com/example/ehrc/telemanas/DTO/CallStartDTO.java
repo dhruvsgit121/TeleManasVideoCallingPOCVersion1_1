@@ -24,6 +24,8 @@ public class CallStartDTO {
 
     private int isMHP;
 
+    private int isErrorWhileCallEnd;
+
     private String bearerToken;
 
     private String loggedInId;

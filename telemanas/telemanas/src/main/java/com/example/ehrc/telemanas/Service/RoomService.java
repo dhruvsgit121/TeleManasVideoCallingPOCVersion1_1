@@ -167,11 +167,14 @@ public class RoomService {
     }
 
 
-    public ResponseEntity<Map<String, Object>> exitRoom(RoomDetailsRequestDTO roomDetailsRequest) {
+    public ResponseEntity<Map<String, Object>> exitRoom(CallStartDTO callStartDTO) {
 
         Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
 
-        Room roomData = roomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
+        RoomDetailsRequestDTO roomDetailsRequest = new  RoomDetailsRequestDTO(callStartDTO);
+
+
+        Room roomData = roomRepository.findRoomDetailsWith(callStartDTO.getRoomShortCode());
 
 
 //        ArrayList<Long> participantsList = new ArrayList(participantService.getParticipantsListWith(roomDetailsRequest.getRoomShortCode()));

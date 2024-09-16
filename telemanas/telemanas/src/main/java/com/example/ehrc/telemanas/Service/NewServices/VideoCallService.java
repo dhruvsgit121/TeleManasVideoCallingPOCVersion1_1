@@ -60,8 +60,21 @@ public class VideoCallService {
     }
 
     //Method to Leave Video Call...
-    public ResponseEntity<Map<String, Object>> leaveVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
-        return roomService.exitRoom(roomDetailsRequest);
+    public ResponseEntity<Map<String, Object>> leaveVideoCall(CallStartDTO callStartDTO) {
+
+        ResponseEntity<Map<String, Object>> responseData = eventService.callEndSaveData(callStartDTO);
+        if (responseData.getStatusCode() != HttpStatus.OK)
+            return responseData;
+
+        String eventDescription = (callStartDTO.getIsMHP() == 1) ? "MHP Ended the video call" : "Patient Ended the video call";
+        ResponseEntity<Map<String, Object>> eventServiceResponseData = eventService.saveEventData(callStartDTO.getRoomShortCode(), eventDescription);
+
+        boolean isErrorPresent = (boolean) (eventServiceResponseData.getBody().get("isErrorPresent"));
+
+        if (isErrorPresent)
+            return eventServiceResponseData;
+
+        return roomService.exitRoom(callStartDTO);
     }
 
     //Method to Join Video Call...
