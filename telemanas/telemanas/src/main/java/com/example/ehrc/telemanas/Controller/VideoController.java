@@ -35,8 +35,8 @@ public class VideoController {
     public ResponseEntity<Map<String, Object>> getVideoRoomDetails(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
 
         //Setting the "hasJoined" Flag for Patient to TRUE...
-        if (roomDetailsRequest.getIsMHP() == 0)
-            videoCallService.saveIsActiveRoomOnJoinVideoCall(roomDetailsRequest);
+        //if (roomDetailsRequest.getIsMHP() == 0)
+        videoCallService.saveIsActiveRoomOnJoinVideoCall(roomDetailsRequest);
 
         return videoCallService.startVideoCall(roomDetailsRequest);
     }

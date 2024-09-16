@@ -75,15 +75,27 @@ public class RoomService {
 
         Room room = roomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());//participantService.getPatientParticipant(roomDetailsRequest.getRoomShortCode());
 
-        if (room.getParticipants().size() == 2) {
+        System.out.println("saveIsActiveRoomOnJoinVideoCall called with number of participants " + room.getParticipants().size());
+        System.out.println("User is : "+ roomDetailsRequest.getIsMHP());
+
+
+        if (room.getParticipants().size() == 2 && roomDetailsRequest.getIsMHP() != 1) {
+
+            System.out.println("Entered in if block");
 
             Participant firstParticipant = room.getParticipants().get(0);
             Participant secondParticipant = room.getParticipants().get(1);
+
+            System.out.println("firstParticipant : " + firstParticipant.getSerialId() + " secondParticipant : " + secondParticipant.getSerialId() );
 
             //Update the Has Joined Room Flag for Patient to TRUE...
             Participant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) ? firstParticipant : secondParticipant;
             patientParticipantData.setHasJoinedRoom(true);
             participantRepository.save(patientParticipantData);
+
+            roomRepository.save(room);
+
+            System.out.println("data after modification is : " + patientParticipantData.getSerialId() + ", has joined the room : " + patientParticipantData.isHasJoinedRoom());
         }
     }
 
