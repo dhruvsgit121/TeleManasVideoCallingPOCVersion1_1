@@ -44,12 +44,9 @@ public class VideoCallService {
 
 
     //Method to Save Video Call Events...
-//    public ResponseEntity<Map<String, Object>> saveVideCallEvents(RoomDetailsRequestDTO roomDetailsRequest) {
     public ResponseEntity<Map<String, Object>> saveVideoCallEvents(VideoCallEventsDTO videoCallEventsDTO) {
-        return eventService.saveEventData(videoCallEventsDTO);
-//        return roomService.startVideoCall(roomDetailsRequest);
+        return eventService.saveEventData(videoCallEventsDTO.getRoomShortCode(), videoCallEventsDTO.getEventDescription());
     }
-
 
     //Method to Start Video Call...
     public ResponseEntity<Map<String, Object>> startVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {

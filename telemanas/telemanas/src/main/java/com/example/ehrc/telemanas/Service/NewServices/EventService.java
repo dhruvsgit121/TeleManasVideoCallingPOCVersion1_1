@@ -30,18 +30,21 @@ public class EventService {
     @Autowired
     private VideoCallingUtilities videoCallingUtilities;
 
-    public ResponseEntity<Map<String, Object>> saveEventData(VideoCallEventsDTO videoCallEventsDTO) {
+
+    //VideoCallEventsDTO videoCallEventsDTO
+
+    public ResponseEntity<Map<String, Object>> saveEventData(String roomShortCode, String eventDescription) {
 
         Map<String, Object> response = new HashMap<>();
 
-        Room room = roomService.getUpdatedActiveRoomDetailsWith(videoCallEventsDTO.getRoomShortCode());
+        Room room = roomService.getUpdatedActiveRoomDetailsWith(roomShortCode);
 
         System.out.println("Rom data is : " + room);
 
         if (room == null)
             return roomService.getRoomValidationResponseEntity();
 
-        Event eventData = new Event(videoCallingUtilities.getDateTimeWithOffset(0), videoCallEventsDTO.getEventDescription());
+        Event eventData = new Event(videoCallingUtilities.getDateTimeWithOffset(0), eventDescription);
         eventRepository.save(eventData);
         room.addEvent(eventData);
 
