@@ -54,7 +54,6 @@ public class VideoController {
         return videoCallService.getPatientJoinRoomStatusData(roomShortCode);
     }
 
-
     @GetMapping("/deactivateroom")
     public ResponseEntity<Map<String, Object>> deactivatedRequestedRoom(@RequestParam String roomShortCode) {
         return videoCallService.deactivateRequestedRoom(roomShortCode);
@@ -65,34 +64,15 @@ public class VideoController {
     public ResponseEntity<Map<String, Object>> resendMeetingLink(@Valid @RequestBody AuthenticateUserDTO userDTOData,
                                                           @RequestHeader("Authorization") String bearerToken,
                                                           @RequestHeader(value = "Loggedin") String loggedIn) {
-
-        System.out.println("Method called with : " + userDTOData.getRoomShortCode());
-
-        Map<String, Object> data = new HashMap<>();
-
-        String token = bearerToken.substring(7);
-
-        //Adjusting The UserDTOData...
-        userDTOData.setBearerToken(token);
-        userDTOData.setLoggedInId(loggedIn);
-
+        setAuthorizationData(userDTOData, bearerToken, loggedIn);
         return videoCallService.decryptPatientMobileNumberForResendSMS(userDTOData, authenticateUserFactory, userDTOData.getRoomShortCode());
     }
-
 
 
     @PostMapping("/joinroom")
     public ResponseEntity<Map<String, Object>> setJoinRoomTime(@Valid @RequestBody CallStartDTO callStartDTO, @RequestHeader("Authorization") String bearerToken,
                                                                @RequestHeader(value = "Loggedin") String loggedIn) {
-
-        String token = bearerToken.substring(7);
-
-        System.out.println("method called");
-
-        //Adjusting The UserDTOData...
-        callStartDTO.setBearerToken(token);
-        callStartDTO.setLoggedInId(loggedIn);
-
+        setAuthorizationData(callStartDTO, bearerToken, loggedIn);
         return videoCallService.JoinVideoCall(callStartDTO);
     }
 
@@ -100,31 +80,35 @@ public class VideoController {
     @PostMapping("/exitroom")
     public ResponseEntity<Map<String, Object>> leaveVideoCall(@Valid @RequestBody CallStartDTO callStartDTO, @RequestHeader("Authorization") String bearerToken,
                                                               @RequestHeader(value = "Loggedin") String loggedIn) {
+        setAuthorizationData(callStartDTO, bearerToken, loggedIn);
+        return videoCallService.leaveVideoCall(callStartDTO);
+    }
+
+
+    private void setAuthorizationData(CallStartDTO callStartDTO, String bearerToken, String loggedIn){
 
         String token = bearerToken.substring(7);
 
         //Adjusting The UserDTOData...
         callStartDTO.setBearerToken(token);
         callStartDTO.setLoggedInId(loggedIn);
-        return videoCallService.leaveVideoCall(callStartDTO);
     }
 
+    private void setAuthorizationData(AuthenticateUserDTO userDTOData, String bearerToken, String loggedIn){
+
+        String token = bearerToken.substring(7);
+
+        //Adjusting The UserDTOData...
+        userDTOData.setBearerToken(token);
+        userDTOData.setLoggedInId(loggedIn);
+    }
 
     @RequestMapping("/createroom")
     public ResponseEntity<Map<String, Object>> createRoom(@Valid @RequestBody AuthenticateUserDTO userDTOData,
                                                           @RequestHeader("Authorization") String bearerToken,
                                                           @RequestHeader(value = "Loggedin") String loggedIn
     ) {
-        String token = bearerToken.substring(7);
-
-        System.out.println("method called");
-
-        //Adjusting The UserDTOData...
-        userDTOData.setBearerToken(token);
-        userDTOData.setLoggedInId(loggedIn);
-
-        System.out.println("User data to be sent to api is : " + userDTOData);
-
+        setAuthorizationData(userDTOData, bearerToken, loggedIn);
         return videoCallService.createMeetingLink(userDTOData, authenticateUserFactory);
     }
 }

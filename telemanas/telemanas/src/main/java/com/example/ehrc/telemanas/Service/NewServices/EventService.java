@@ -65,28 +65,29 @@ public class EventService {
         responseData.put("Event Description", eventData.getEventDescription());
         responseData.put("Room ID", eventData.getRoom().getRoomId());
 
-        return new ResponseEntity<>(responseData, HttpStatus.OK) ;
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 
-    //Method to Validate Participants MHP...
+    //Method to Send Call Start Event...
     public ResponseEntity<Map<String, Object>> callStartSaveData(CallStartDTO callStartDTO) {
-
-        Room room = roomService.getUpdatedActiveRoomDetailsWith(callStartDTO.getRoomShortCode());
-
-        if (room == null)
-            return roomService.getRoomValidationResponseEntity();
-
-        return callEventDataRequestHandler.saveCallStartData(callStartDTO, room.getVideoId());
+        return callEventSaveData(callStartDTO, true);
     }
 
-    //Method to Validate Participants MHP...
+    //Method to Send Call End Event...
     public ResponseEntity<Map<String, Object>> callEndSaveData(CallStartDTO callStartDTO) {
+        return callEventSaveData(callStartDTO, false);
+    }
+
+    //Method to Send Call Event...
+    public ResponseEntity<Map<String, Object>> callEventSaveData(CallStartDTO callStartDTO, boolean isStartCall) {
 
         Room room = roomService.getUpdatedActiveRoomDetailsWith(callStartDTO.getRoomShortCode());
 
         if (room == null)
             return roomService.getRoomValidationResponseEntity();
 
-        return callEventDataRequestHandler.saveCallEndData(callStartDTO, room.getVideoId(), videoCallingUtilities.getDateTimeWithOffset(0));
+        return isStartCall ?
+                callEventDataRequestHandler.saveCallStartData(callStartDTO, room.getVideoId()) :
+                callEventDataRequestHandler.saveCallEndData(callStartDTO, room.getVideoId(), videoCallingUtilities.getDateTimeWithOffset(0));
     }
 }
