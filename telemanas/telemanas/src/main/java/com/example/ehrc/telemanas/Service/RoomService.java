@@ -87,7 +87,7 @@ public class RoomService {
         Room room = roomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());//participantService.getPatientParticipant(roomDetailsRequest.getRoomShortCode());
 
         System.out.println("saveIsActiveRoomOnJoinVideoCall called with number of participants " + room.getParticipants().size());
-        System.out.println("User is : "+ roomDetailsRequest.getIsMHP());
+        System.out.println("User is : " + roomDetailsRequest.getIsMHP());
 
 
         if (room.getParticipants().size() == 2 && roomDetailsRequest.getIsMHP() != 1) {
@@ -97,7 +97,7 @@ public class RoomService {
             Participant firstParticipant = room.getParticipants().get(0);
             Participant secondParticipant = room.getParticipants().get(1);
 
-            System.out.println("firstParticipant : " + firstParticipant.getSerialId() + " secondParticipant : " + secondParticipant.getSerialId() );
+            System.out.println("firstParticipant : " + firstParticipant.getSerialId() + " secondParticipant : " + secondParticipant.getSerialId());
 
             //Update the Has Joined Room Flag for Patient to TRUE...
             Participant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) ? firstParticipant : secondParticipant;
@@ -125,10 +125,33 @@ public class RoomService {
         return new ResponseEntity(roomServiceRequestData, HttpStatus.OK);
     }
 
+    public ResponseEntity<Map<String, Object>> joinRoom(RoomDetailsRequestDTO roomDetailsRequest) {
 
-    public ResponseEntity<Map<String, Object>> joinRoom(CallStartDTO callStartDTO){//RoomDetailsRequestDTO roomDetailsRequest) {
+        //RoomDetailsRequestDTO roomDetailsRequest = new  RoomDetailsRequestDTO(callStartDTO);
 
-        RoomDetailsRequestDTO roomDetailsRequest = new  RoomDetailsRequestDTO(callStartDTO);
+        //System.out.println("authorsation data" + callStartDTO.getBearerToken() + callStartDTO.getLoggedInId());
+
+        Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
+
+        Room roomData = roomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
+
+        if (roomData == null || roomData.getParticipants().size() != 2) {
+            throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
+        }
+
+        //Setting the Join Date of the user...
+        Participant requestedParticipant = videoCallingUtilities.getRequestedUpdatedUserAsPerRequest(roomData, roomDetailsRequest);
+        requestedParticipant.setJoinDate(videoCallingUtilities.getDateTimeWithOffset(0));
+        participantRepository.save(requestedParticipant);
+
+        responseData.put("message", "success");
+        return new ResponseEntity(responseData, HttpStatus.OK);
+    }
+
+
+    public ResponseEntity<Map<String, Object>> joinRoom(CallStartDTO callStartDTO) {//RoomDetailsRequestDTO roomDetailsRequest) {
+
+        RoomDetailsRequestDTO roomDetailsRequest = new RoomDetailsRequestDTO(callStartDTO);
 
         System.out.println("authorsation data" + callStartDTO.getBearerToken() + callStartDTO.getLoggedInId());
 
@@ -167,11 +190,41 @@ public class RoomService {
     }
 
 
+    public ResponseEntity<Map<String, Object>> exitRoom(RoomDetailsRequestDTO roomDetailsRequest) {
+//        public ResponseEntity<Map<String, Object>> exitRoom(CallStartDTO callStartDTO){
+
+        Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
+
+        //RoomDetailsRequestDTO roomDetailsRequest = new  RoomDetailsRequestDTO(callStartDTO);
+
+
+        Room roomData = roomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
+
+
+//        ArrayList<Long> participantsList = new ArrayList(participantService.getParticipantsListWith(roomDetailsRequest.getRoomShortCode()));
+
+        if (roomData == null || roomData.getParticipants().size() != 2) {
+            throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
+        }
+
+
+        //Setting the Join Date of the user...
+        Participant requestedParticipant = videoCallingUtilities.getRequestedUpdatedUserAsPerRequest(roomData, roomDetailsRequest);
+        requestedParticipant.setLeftDate(videoCallingUtilities.getDateTimeWithOffset(0));
+        participantRepository.save(requestedParticipant);
+
+        responseData.put("message", "success");
+        return new ResponseEntity(responseData, HttpStatus.OK);
+
+
+    }
+
+
     public ResponseEntity<Map<String, Object>> exitRoom(CallStartDTO callStartDTO) {
 
         Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
 
-        RoomDetailsRequestDTO roomDetailsRequest = new  RoomDetailsRequestDTO(callStartDTO);
+        RoomDetailsRequestDTO roomDetailsRequest = new RoomDetailsRequestDTO(callStartDTO);
 
 
         Room roomData = roomRepository.findRoomDetailsWith(callStartDTO.getRoomShortCode());

@@ -60,6 +60,11 @@ public class VideoCallService {
     }
 
     //Method to Leave Video Call...
+    public ResponseEntity<Map<String, Object>> leaveVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
+        return roomService.exitRoom(roomDetailsRequest);
+    }
+
+    //Method to Leave Video Call...
     public ResponseEntity<Map<String, Object>> leaveVideoCall(CallStartDTO callStartDTO) {
 
         ResponseEntity<Map<String, Object>> responseData = eventService.callEndSaveData(callStartDTO);
@@ -75,6 +80,11 @@ public class VideoCallService {
             return eventServiceResponseData;
 
         return roomService.exitRoom(callStartDTO);
+    }
+
+
+    public ResponseEntity<Map<String, Object>> JoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
+        return roomService.joinRoom(roomDetailsRequest);
     }
 
     //Method to Join Video Call...

@@ -59,6 +59,12 @@ public class VideoController {
         return videoCallService.deactivateRequestedRoom(roomShortCode);
     }
 
+    @PostMapping("/patientjoinroom")
+    public ResponseEntity<Map<String, Object>> setJoinRoomTime(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
+        return videoCallService.JoinVideoCall(roomDetailsRequest);
+    }
+
+
 
     @RequestMapping("/resendlink")
     public ResponseEntity<Map<String, Object>> resendMeetingLink(@Valid @RequestBody AuthenticateUserDTO userDTOData,
@@ -74,6 +80,12 @@ public class VideoController {
                                                                @RequestHeader(value = "Loggedin") String loggedIn) {
         setAuthorizationData(callStartDTO, bearerToken, loggedIn);
         return videoCallService.JoinVideoCall(callStartDTO);
+    }
+
+
+    @PostMapping("/patientexitroom")
+    public ResponseEntity<Map<String, Object>> leaveVideoCall(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
+        return videoCallService.leaveVideoCall(roomDetailsRequest);
     }
 
 
