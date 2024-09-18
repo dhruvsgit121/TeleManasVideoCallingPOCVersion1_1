@@ -140,6 +140,14 @@ public class VideoCallService {
 
         ResponseEntity<Map<String, Object>> videoCallRoomData = roomService.createRoom(userDTOData, patientUserDataModal, mhpDataModal, roomService);
         sendMessageAfterParsingVideoCallRoomData(videoCallRoomData, patientUserDataModal);
+
+        if (videoCallRoomData.hasBody() && videoCallRoomData.getBody().get("roomCode") != null) {
+            String eventDescription = "MHP created the room.";
+            ResponseEntity<Map<String, Object>> eventServiceResponseData = eventService.saveEventData(videoCallRoomData.getBody().get("roomCode").toString(), eventDescription);
+            boolean isErrorPresent = (boolean) (eventServiceResponseData.getBody().get("isErrorPresent"));
+            if (isErrorPresent)
+                return eventServiceResponseData;
+        }
         return videoCallRoomData;
     }
 
