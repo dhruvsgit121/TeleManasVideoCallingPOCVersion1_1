@@ -9,9 +9,12 @@ import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLOutput;
 import java.util.*;
 
 
@@ -42,9 +45,31 @@ public class VideoController {
     @PostMapping("/getroomdetails")
     public ResponseEntity<Map<String, Object>> getVideoRoomDetails(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
 
+        System.out.println("getVideoRoomDetails called");
+
+        System.out.println("API Hitted with data : " + roomDetailsRequest.getRoomShortCode());
+        System.out.println("API Hitted with data : " + roomDetailsRequest.getIsMHP());
+
         //Setting the "hasJoined" Flag for Patient to TRUE...
         //if (roomDetailsRequest.getIsMHP() == 0)
         videoCallService.saveIsActiveRoomOnJoinVideoCall(roomDetailsRequest);
+
+        if (roomDetailsRequest.getIsMHP() == 0) {
+
+            System.out.println("entered in videocontrolle rgetVideoRoomDetails ");
+            ResponseEntity<Map<String, Object>> responseEntity = videoCallService.checkValidityOfSMSLinkForPatient(roomDetailsRequest.getRoomShortCode());
+
+            if (responseEntity != null && responseEntity.hasBody() && responseEntity.getStatusCode() != HttpStatus.OK) {
+                System.out.println("responseEntity != null && responseEntity.hasBody() && ");
+                return responseEntity;
+            }
+        }
+
+        ResponseEntity<Map<String, Object>> joinUserFlag =  setJoinRoomTime(roomDetailsRequest);
+
+        if (joinUserFlag != null && joinUserFlag.hasBody() && joinUserFlag.getStatusCode() != HttpStatus.OK) {
+            return joinUserFlag;
+        }
 
         return videoCallService.startVideoCall(roomDetailsRequest);
     }
@@ -65,11 +90,10 @@ public class VideoController {
     }
 
 
-
     @RequestMapping("/resendlink")
     public ResponseEntity<Map<String, Object>> resendMeetingLink(@Valid @RequestBody AuthenticateUserDTO userDTOData,
-                                                          @RequestHeader("Authorization") String bearerToken,
-                                                          @RequestHeader(value = "Loggedin") String loggedIn) {
+                                                                 @RequestHeader("Authorization") String bearerToken,
+                                                                 @RequestHeader(value = "Loggedin") String loggedIn) {
         setAuthorizationData(userDTOData, bearerToken, loggedIn);
         return videoCallService.decryptPatientMobileNumberForResendSMS(userDTOData, authenticateUserFactory, userDTOData.getRoomShortCode());
     }
@@ -97,7 +121,7 @@ public class VideoController {
     }
 
 
-    private void setAuthorizationData(CallStartDTO callStartDTO, String bearerToken, String loggedIn){
+    private void setAuthorizationData(CallStartDTO callStartDTO, String bearerToken, String loggedIn) {
 
         String token = bearerToken.substring(7);
 
@@ -106,7 +130,7 @@ public class VideoController {
         callStartDTO.setLoggedInId(loggedIn);
     }
 
-    private void setAuthorizationData(AuthenticateUserDTO userDTOData, String bearerToken, String loggedIn){
+    private void setAuthorizationData(AuthenticateUserDTO userDTOData, String bearerToken, String loggedIn) {
 
         String token = bearerToken.substring(7);
 

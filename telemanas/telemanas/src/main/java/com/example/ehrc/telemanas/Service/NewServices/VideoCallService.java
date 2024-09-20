@@ -110,6 +110,12 @@ public class VideoCallService {
         return roomService.deactivateRequestedRoom(roomShortCode);
     }
 
+
+    public ResponseEntity<Map<String, Object>> checkValidityOfSMSLinkForPatient(String roomShortCode) {
+        return roomService.getValidityOfSMSLinkForPatient(roomShortCode);
+    }
+
+
     public void saveIsActiveRoomOnJoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
         roomService.saveIsActiveRoomOnJoinVideoCall(roomDetailsRequest);
     }

@@ -84,13 +84,18 @@ public class RoomService {
 
     public void saveIsActiveRoomOnJoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
 
+//        System.out.println("saveIsActiveRoomOnJoinVideoCall called");
         Room room = roomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());//participantService.getPatientParticipant(roomDetailsRequest.getRoomShortCode());
 
-        System.out.println("saveIsActiveRoomOnJoinVideoCall called with number of participants " + room.getParticipants().size());
-        System.out.println("User is : " + roomDetailsRequest.getIsMHP());
+        if (room == null) {
+            System.out.println("room requested is not valid");
+            return;
+        }
 
+        if (room != null && room.getParticipants().size() == 2 && roomDetailsRequest.getIsMHP() != 1) {
 
-        if (room.getParticipants().size() == 2 && roomDetailsRequest.getIsMHP() != 1) {
+            System.out.println("saveIsActiveRoomOnJoinVideoCall called with number of participants " + room.getParticipants().size());
+            System.out.println("User is : " + roomDetailsRequest.getIsMHP());
 
             System.out.println("Entered in if block");
 
@@ -383,7 +388,38 @@ public class RoomService {
     }
 
 
-    public void processUpdatedParticipantsJWTTokenData(RoomDetailsRequestDTO roomDetailsRequest, Room roomDetails, Participant firstParticipant, Participant secondParticipant, Map<String, Object> responseData) {
+
+    public ResponseEntity<Map<String, Object>> getValidityOfSMSLinkForPatient(String roomShortCode) {
+
+        Room requestedRoom = roomRepository.findRoomDetailsWithActiveStatus(roomShortCode);
+
+        System.out.println("getValidityOfSMSLinkForPatient");
+
+        if(requestedRoom != null){
+            Participant patientParticipant = null;
+            for(Participant participant : requestedRoom.getParticipants()){
+                if(participant.isOrganiser() == false){
+                    System.out.println("initalise the patient");
+                    patientParticipant = participant;
+                    break;
+                }
+            }
+
+            System.out.println("Participant data is : " + patientParticipant.getJoinDate() + patientParticipant.getLeftDate());
+
+            if(patientParticipant != null && patientParticipant.isHasJoinedRoom() && patientParticipant.getJoinDate() != null && patientParticipant.getLeftDate() != null)
+                return videoCallingUtilities.getErrorResponseMessageEntity("The current video call is ended. Please try another room code.", HttpStatus.SEE_OTHER);
+
+
+            if(patientParticipant != null && patientParticipant.isHasJoinedRoom() && patientParticipant.getJoinDate() != null && patientParticipant.getLeftDate() == null)
+                return videoCallingUtilities.getErrorResponseMessageEntity("There is another session going on right now for the current patient. Please end that video call first and then proceed again.", HttpStatus.SEE_OTHER);
+
+        }
+        return null;
+    }
+
+
+        public void processUpdatedParticipantsJWTTokenData(RoomDetailsRequestDTO roomDetailsRequest, Room roomDetails, Participant firstParticipant, Participant secondParticipant, Map<String, Object> responseData) {
 
         Participant mainUserData, participatingUserData;
 
