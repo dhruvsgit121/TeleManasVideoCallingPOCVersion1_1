@@ -7,13 +7,11 @@ import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
 import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
-import com.example.ehrc.telemanas.Service.NewServices.EventService;
 import com.example.ehrc.telemanas.Service.NewServices.UpdatedParticipantService;
 import com.example.ehrc.telemanas.UserRepository.AuthenticatedUserRepository;
 import com.example.ehrc.telemanas.UserRepository.ParticipantRepository;
 import com.example.ehrc.telemanas.UserRepository.RoomRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
-import com.twilio.http.Response;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,14 +41,8 @@ public class RoomService {
     @Autowired
     private UpdatedParticipantService participantService;
 
-
-//    @Autowired
-//    private EventService eventService;
-
-
     private final JWTTokenService jwtTokenService;
-
-
+    
     @Autowired
     public RoomService(JWTTokenService jwtTokenService) {
         this.jwtTokenService = jwtTokenService;
