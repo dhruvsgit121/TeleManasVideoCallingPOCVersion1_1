@@ -44,6 +44,20 @@ public class VideoCallService {
     private EventService eventService;
 
 
+    public String getEncryptedPhoneNumberForPrescription(Room roomData) {
+        if (roomData == null || roomData.getParticipants().size() != 2)
+            throw new RoomDoesNotExistException(null);
+
+        if (!roomData.isActive())
+            throw new RoomNotActiveException(null);
+
+        AuthenticatedUser patientData = roomData.getParticipants().get(0).getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) ? roomData.getParticipants().get(0).getAuthenticatedUser() : roomData.getParticipants().get(1).getAuthenticatedUser();
+
+        String encryptedPhoneNumber = patientData.getDecryptedMobileNumber();
+        return encryptedPhoneNumber;
+    }
+
+
     //Method to Save Video Call Events...
     public ResponseEntity<Map<String, Object>> saveVideoCallEvents(VideoCallEventsDTO videoCallEventsDTO) {
         return eventService.saveEventData(videoCallEventsDTO.getRoomShortCode(), videoCallEventsDTO.getEventDescription());
@@ -263,7 +277,7 @@ public class VideoCallService {
         return new ResponseEntity<>(responseData, HttpStatus.SEE_OTHER);
     }
 
-    private static String getEncryptedPhoneNumber(Room roomData) {
+    public static String getEncryptedPhoneNumber(Room roomData) {
         if (roomData == null || roomData.getParticipants().size() != 2)
             throw new RoomDoesNotExistException(null);
 

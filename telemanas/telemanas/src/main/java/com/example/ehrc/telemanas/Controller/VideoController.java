@@ -2,11 +2,9 @@ package com.example.ehrc.telemanas.Controller;
 
 
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
-import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
-import com.example.ehrc.telemanas.DTO.CallStartDTO;
-import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
-import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
+import com.example.ehrc.telemanas.DTO.*;
 import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
+import com.example.ehrc.telemanas.Service.PrescriptionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,8 +26,32 @@ public class VideoController {
     @Autowired
     private VideoCallService videoCallService;
 
-//    @Autowired
-//    private SSEService sseService;
+    @Autowired
+    private PrescriptionService prescriptionService;
+
+    @PostMapping("/store_prescription")
+    public ResponseEntity<Map<String, Object>> savePrescriptionData(@Valid @RequestBody PrescriptionDTO prescriptionDTO) {
+        return prescriptionService.savePrescriptionData(prescriptionDTO);//videoCallService.saveVideoCallEvents(videoCallEventsDTO);
+    }
+
+    @PostMapping("/send_prescription")
+//    @RequestMapping("/resendlink")
+    public ResponseEntity<Map<String, Object>> resendPrescriptionLink(@Valid @RequestBody AuthenticateUserDTO userDTOData,
+                                                                      @RequestHeader("Authorization") String bearerToken,
+                                                                      @RequestHeader(value = "Loggedin") String loggedIn) {
+        setAuthorizationData(userDTOData, bearerToken, loggedIn);
+        //return videoCallService.decryptPatientMobileNumberForResendSMS(userDTOData, authenticateUserFactory, userDTOData.getRoomShortCode());
+
+//        setAuthorizationData(userDTOData, bearerToken, loggedIn);
+//        return videoCallService.decryptPatientMobileNumberForResendSMS(userDTOData, authenticateUserFactory, userDTOData.getRoomShortCode());
+        return prescriptionService.sendPrescriptionData(userDTOData, authenticateUserFactory, userDTOData.getRoomShortCode());
+    }
+
+
+    @PostMapping("/get_prescription")
+    public ResponseEntity<Map<String, Object>> getPrescriptionData(@Valid @RequestBody RequestPrescriptionDTO requestPrescriptionDTO) {
+        return prescriptionService.getPrescriptionData(requestPrescriptionDTO);
+    }
 
 
     @PostMapping("/saveeventsdata")

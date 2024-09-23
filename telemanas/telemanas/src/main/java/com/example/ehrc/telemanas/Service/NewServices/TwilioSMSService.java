@@ -62,4 +62,27 @@ public class TwilioSMSService {
             System.out.println(exception);
         }
     }
+
+    public void sendPrescriptionSms(String toPhoneNumber, String textBody) {
+
+        String messageTextBody = "https://telemanas-preprod.iiitb.ac.in/eprescription/?code=" + textBody;
+
+        String phoneNumber = toPhoneNumber;
+//        phoneNumber = "+919015346166";
+
+        System.out.println("precription send to : " + toPhoneNumber + " with text : " + messageTextBody);
+
+        try {
+            Message.creator(
+                    new PhoneNumber(phoneNumber),
+                    new PhoneNumber(twilioPhoneNumber),
+                    messageTextBody
+            ).create();
+            System.out.println("SMS Send to the user...");
+        } catch (Exception exception) {
+            System.out.println(exception.getLocalizedMessage());
+            System.out.println("Eneterded in catch block");
+            System.out.println(exception);
+        }
+    }
 }
