@@ -334,8 +334,8 @@ public class RoomService {
         System.out.println("Data before saving : " + patientDataModal.getPatientName());
 
 
-        RoomCreationUserDTO roomCreationPatientData = new RoomCreationUserDTO(userDTOData.getTelemanasId(), patientDataModal.getPatientName(), patientJWTToken, false, AuthenticatedUser.UserRole.PATIENT);
-        RoomCreationUserDTO roomCreationMHPData = new RoomCreationUserDTO(userDTOData.getMhpUserName(), mhpDataModal.getMhpName(), doctorJWTToken, true, AuthenticatedUser.UserRole.MHP);
+        RoomCreationUserDTO roomCreationPatientData = new RoomCreationUserDTO(userDTOData.getTelemanasId(), patientDataModal.getPatientName(), patientJWTToken, false, AuthenticatedUser.UserRole.PATIENT, "");
+        RoomCreationUserDTO roomCreationMHPData = new RoomCreationUserDTO(userDTOData.getMhpUserName(), mhpDataModal.getMhpName(), doctorJWTToken, true, AuthenticatedUser.UserRole.MHP, mhpDataModal.getRoleDisplayName());
 
         boolean isDoctorConsentProvided = (userDTOData.getIsDoctorConsentProvided() == 1);
 
@@ -358,14 +358,14 @@ public class RoomService {
         //Created The Patient Authenticated User Data Modal...
         AuthenticatedUser patientAuthenticatedUser = authenticatedUserRepository.findAuthenticatedUser(roomCreationPatientData.getParticipantID());
         if (patientAuthenticatedUser == null) {
-            patientAuthenticatedUser = new AuthenticatedUser(AuthenticatedUser.UserRole.PATIENT, roomCreationPatientData.getUserName(), roomCreationPatientData.getParticipantID(), patientDataModal.getEncryptedMobileNumber());
+            patientAuthenticatedUser = new AuthenticatedUser(AuthenticatedUser.UserRole.PATIENT, roomCreationPatientData.getUserName(), roomCreationPatientData.getParticipantID(), patientDataModal.getEncryptedMobileNumber(), roomCreationPatientData.getRoleDisplayName());
             authenticatedUserRepository.save(patientAuthenticatedUser);
         }
 
         //Created The MHP Authenticated User Data Modal...
         AuthenticatedUser mhpAuthenticatedUser = authenticatedUserRepository.findAuthenticatedUser(roomCreationMHPData.getParticipantID());
         if (mhpAuthenticatedUser == null) {
-            mhpAuthenticatedUser = new AuthenticatedUser(AuthenticatedUser.UserRole.MHP, roomCreationMHPData.getUserName(), roomCreationMHPData.getParticipantID(), "");
+            mhpAuthenticatedUser = new AuthenticatedUser(AuthenticatedUser.UserRole.MHP, roomCreationMHPData.getUserName(), roomCreationMHPData.getParticipantID(), "", roomCreationMHPData.getRoleDisplayName());
             authenticatedUserRepository.save(mhpAuthenticatedUser);
         }
 
@@ -493,9 +493,15 @@ public class RoomService {
         responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(roomDetails.getRoomId(), firstParticipant.getJwtToken()));
 
         if (roomDetailsRequest.getIsMHP() != 1) {
-            String clientID = firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.MHP) ? firstParticipant.getAuthenticatedUser().getParticipantId() : secondParticipant.getAuthenticatedUser().getParticipantId();
+
+            AuthenticatedUser MHPUser = firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.MHP) ? firstParticipant.getAuthenticatedUser() : secondParticipant.getAuthenticatedUser();
+
+            String clientID = MHPUser.getParticipantId();
+            String roleDisplayName = MHPUser.getRoleDisplayName();
+            //firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.MHP) ? firstParticipant.getAuthenticatedUser().getParticipantId() : secondParticipant.getAuthenticatedUser().getParticipantId();
             responseData.put("clientID", clientID);
             responseData.put("MHPRegistrationNumber", "MHP1234NHNOPA");
+            responseData.put("Designation", roleDisplayName);
         }
     }
 }

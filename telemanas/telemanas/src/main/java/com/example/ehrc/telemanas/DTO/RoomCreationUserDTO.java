@@ -19,6 +19,10 @@ public class RoomCreationUserDTO {
     private String jwtToken;
     private Boolean isOrganiser;
 
+
+
     private AuthenticatedUser.UserRole userRole;
+
+    private String roleDisplayName;
 
 }

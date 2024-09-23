@@ -40,13 +40,17 @@ public class AuthenticatedUser implements Serializable {
     private String participantId;
 
     @Column(nullable = false)
+    private String roleDisplayName;
+
+    @Column(nullable = false)
     private String decryptedMobileNumber;
 
-    public AuthenticatedUser(AuthenticatedUser.UserRole userRole, String userName, String participantId, String decryptedMobileNumber) {
+    public AuthenticatedUser(AuthenticatedUser.UserRole userRole, String userName, String participantId, String decryptedMobileNumber, String roleDisplayName) {
         this.userRole = userRole;
         this.userName = userName;
         this.participantId = participantId;
         this.decryptedMobileNumber = decryptedMobileNumber;
+        this.roleDisplayName = roleDisplayName;
     }
 
 
