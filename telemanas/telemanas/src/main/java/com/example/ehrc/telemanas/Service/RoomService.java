@@ -8,6 +8,7 @@ import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import com.example.ehrc.telemanas.Service.NewServices.EventService;
+import com.example.ehrc.telemanas.Service.NewServices.UpdatedParticipantService;
 import com.example.ehrc.telemanas.UserRepository.AuthenticatedUserRepository;
 import com.example.ehrc.telemanas.UserRepository.ParticipantRepository;
 import com.example.ehrc.telemanas.UserRepository.RoomRepository;
@@ -36,6 +37,9 @@ public class RoomService {
 
     @Autowired
     private SSEService sseService;
+
+    @Autowired
+    private UpdatedParticipantService participantService;
 
 
 //    @Autowired
@@ -92,6 +96,11 @@ public class RoomService {
             return;
         }
 
+        System.out.println("saveIsActiveRoomOnJoinVideoCall called in room service");
+
+        System.out.println(roomDetailsRequest.getRoomShortCode());
+        System.out.println(roomDetailsRequest.getIsMHP());
+
         if (room != null && room.getParticipants().size() == 2 && roomDetailsRequest.getIsMHP() != 1) {
 
             System.out.println("saveIsActiveRoomOnJoinVideoCall called with number of participants " + room.getParticipants().size());
@@ -106,11 +115,23 @@ public class RoomService {
 
             //Update the Has Joined Room Flag for Patient to TRUE...
             Participant patientParticipantData = firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) ? firstParticipant : secondParticipant;
-            patientParticipantData.setHasJoinedRoom(true);
-            participantRepository.save(patientParticipantData);
 
-            roomRepository.save(room);
+            //int rowsAffected = participantRepository.setParticipantHasJoinedRoomFlag(patientParticipantData.getSerialId());
 
+//            System.out.println("rowsAffected : " + rowsAffected);
+
+            boolean isUpdated = participantService.markParticipantAsJoined(patientParticipantData.getSerialId());
+
+            System.out.println("isUpdated flag is : " + isUpdated);
+
+            patientParticipantData = participantRepository.getReferenceById(patientParticipantData.getSerialId());
+//
+//            patientModifiedUser.setHasJoinedRoom(true);
+//            participantRepository.save(patientParticipantData);
+//
+//            roomRepository.save(room);
+
+            System.out.println("****************************Data after modification****************************");
             System.out.println("data after modification is : " + patientParticipantData.getSerialId() + ", has joined the room : " + patientParticipantData.isHasJoinedRoom());
         }
     }

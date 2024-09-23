@@ -182,7 +182,27 @@ public class VideoCallService {
     private void sendLinkToPatient(String patientNumber, String roomShortCode) {
         String registeredMobileNumber = "+91" + patientNumber;
         //To be commented out to send SMS to the Patient...
+
+        sendNimhansSMS(registeredMobileNumber, roomShortCode);
         twilioSMSService.sendTestSms(registeredMobileNumber, roomShortCode);
+    }
+
+    public void sendNimhansSMS(String patientNumber, String roomShortCode){
+
+        System.out.println("***************************************************************");
+
+        String messageTemplate = "Please click to join the Tele MANAS video consultation {videoLink}-NIMHANS";
+        String messageTemplateId = "1107172665608900651";
+
+        String messageContent = null;
+
+        if (messageTemplate != null) {
+            messageContent = messageTemplate
+                    .replace("{videoLink}", "https://telemanas-test.iiitb.ac.in/video-call-app/?code=" + roomShortCode);
+        }
+
+        boolean sendSmsRes = NimhansSmsGateway.sendSms(patientNumber, messageContent, messageTemplateId);
+        System.out.println("message forwarded is : " + sendSmsRes);
     }
 
 

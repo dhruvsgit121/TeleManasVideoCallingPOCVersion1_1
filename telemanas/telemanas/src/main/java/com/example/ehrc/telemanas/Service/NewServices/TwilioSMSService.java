@@ -45,11 +45,13 @@ public class TwilioSMSService {
 
         String messageTextBody = patientMeetingLinkBaseURL + textBody;
 
+        String phoneNumber = "+919015346166";
+
         System.out.println("message send to : " + toPhoneNumber + " with text : " + messageTextBody);
 
         try {
             Message.creator(
-                    new PhoneNumber(toPhoneNumber),
+                    new PhoneNumber(phoneNumber),
                     new PhoneNumber(twilioPhoneNumber),
                     messageTextBody
             ).create();

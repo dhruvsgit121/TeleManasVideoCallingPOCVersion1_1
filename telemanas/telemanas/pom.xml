@@ -67,6 +67,21 @@
 <!--			<optional>true</optional>-->
 		</dependency>
 
+<!--		<dependency>-->
+<!--			<groupId>org.json</groupId>-->
+<!--			<artifactId>json</artifactId>-->
+<!--&lt;!&ndash;			<version>20240303</version>&ndash;&gt;-->
+<!--		</dependency>-->
+
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20231013</version>
+		</dependency>
+
+
+
 		<dependency>
 			<groupId>com.twilio.sdk</groupId>
 			<artifactId>twilio</artifactId>
