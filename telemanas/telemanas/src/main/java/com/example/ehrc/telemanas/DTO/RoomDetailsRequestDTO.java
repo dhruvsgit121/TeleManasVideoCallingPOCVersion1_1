@@ -11,6 +11,7 @@ public class RoomDetailsRequestDTO {
 
     private String roomShortCode;
     private int isMHP;
+    private int isPatientConsentProvided;
 
     public RoomDetailsRequestDTO() {
     }

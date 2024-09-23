@@ -38,12 +38,5 @@ public class UpdatedParticipantService {
             System.out.println("Error updating participant with serial ID : " + serialID + " : "+ e.getMessage());
         }
         return false; // Participant not found or error occurred
-//        Participant participant = entityManager.find(Participant.class, serialID);
-//        if (participant != null) {
-//            participant.setHasJoinedRoom(true);
-//            entityManager.merge(participant);
-//            return true; // Update successful
-//        }
-//        return false; // Participant not found
     }
 }

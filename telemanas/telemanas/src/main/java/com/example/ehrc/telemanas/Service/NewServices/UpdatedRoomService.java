@@ -6,10 +6,12 @@ import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import com.example.ehrc.telemanas.UserRepository.RoomRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +22,9 @@ public class UpdatedRoomService {
 
     @Autowired
     private RoomRepository roomRepository;
+
+
+
 
     public Room findRoomDetailsWith(String roomShortCode) {
         return roomRepository.findRoomDetailsWith(roomShortCode);

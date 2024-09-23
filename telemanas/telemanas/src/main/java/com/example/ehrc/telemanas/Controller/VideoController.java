@@ -54,6 +54,9 @@ public class VideoController {
         //if (roomDetailsRequest.getIsMHP() == 0)
         videoCallService.saveIsActiveRoomOnJoinVideoCall(roomDetailsRequest);
 
+        if (roomDetailsRequest.getIsMHP() == 0)
+            videoCallService.saveConsentForPatientOnJoinVideoCall(roomDetailsRequest);
+
         if (roomDetailsRequest.getIsMHP() == 0) {
 
             System.out.println("entered in videocontrolle rgetVideoRoomDetails ");
@@ -65,7 +68,7 @@ public class VideoController {
             }
         }
 
-        ResponseEntity<Map<String, Object>> joinUserFlag =  setJoinRoomTime(roomDetailsRequest);
+        ResponseEntity<Map<String, Object>> joinUserFlag = setJoinRoomTime(roomDetailsRequest);
 
         if (joinUserFlag != null && joinUserFlag.hasBody() && joinUserFlag.getStatusCode() != HttpStatus.OK) {
             return joinUserFlag;

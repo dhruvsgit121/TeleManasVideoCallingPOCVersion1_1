@@ -14,11 +14,13 @@ import com.example.ehrc.telemanas.UserRepository.ParticipantRepository;
 import com.example.ehrc.telemanas.UserRepository.RoomRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
 import com.twilio.http.Response;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -64,6 +66,26 @@ public class RoomService {
     private VideoCallingUtilities videoCallingUtilities;
 
 
+    @Autowired
+    private EntityManager entityManager;
+
+    @Transactional
+    public boolean markConsentForPatient(long serialID) {
+        try {
+            Room room = entityManager.find(Room.class, serialID);
+            if (room != null) {
+                room.setPatientConsentProvided(true);
+                entityManager.merge(room);
+                entityManager.flush();
+                return true; // Update successful
+            }
+        } catch (Exception e) {
+            System.out.println("Error updating participant with serial ID : " + serialID + " : " + e.getMessage());
+        }
+        return false; // Participant not found or error occurred
+    }
+
+
     public Room saveUpdatedRoom(Room room) {
         return roomRepository.save(room);
     }
@@ -83,6 +105,18 @@ public class RoomService {
 
     public List<Room> getUpdatedRoomListWithExpirationdate(LocalDateTime expirationDate) {
         return roomRepository.findRoomListWithExpirationDate(expirationDate);
+    }
+
+
+    public void savePatientConsentOnJoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
+        Room room = roomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
+
+        boolean isConsentProvidedForPatient = (roomDetailsRequest.getIsPatientConsentProvided() == 1);
+
+        if (isConsentProvidedForPatient) {
+            boolean isUpdated = markConsentForPatient(room.getSerialId());
+            System.out.println("savePatientConsentOnJoinVideoCall called with response : " + isUpdated);
+        }
     }
 
 
@@ -411,17 +445,16 @@ public class RoomService {
     }
 
 
-
     public ResponseEntity<Map<String, Object>> getValidityOfSMSLinkForPatient(String roomShortCode) {
 
         Room requestedRoom = roomRepository.findRoomDetailsWithActiveStatus(roomShortCode);
 
         System.out.println("getValidityOfSMSLinkForPatient");
 
-        if(requestedRoom != null){
+        if (requestedRoom != null) {
             Participant patientParticipant = null;
-            for(Participant participant : requestedRoom.getParticipants()){
-                if(participant.isOrganiser() == false){
+            for (Participant participant : requestedRoom.getParticipants()) {
+                if (participant.isOrganiser() == false) {
                     System.out.println("initalise the patient");
                     patientParticipant = participant;
                     break;
@@ -430,11 +463,11 @@ public class RoomService {
 
             System.out.println("Participant data is : " + patientParticipant.getJoinDate() + patientParticipant.getLeftDate());
 
-            if(patientParticipant != null && patientParticipant.isHasJoinedRoom() && patientParticipant.getJoinDate() != null && patientParticipant.getLeftDate() != null)
+            if (patientParticipant != null && patientParticipant.isHasJoinedRoom() && patientParticipant.getJoinDate() != null && patientParticipant.getLeftDate() != null)
                 return videoCallingUtilities.getErrorResponseMessageEntity("The current video call is ended. Please try another room code.", HttpStatus.SEE_OTHER);
 
 
-            if(patientParticipant != null && patientParticipant.isHasJoinedRoom() && patientParticipant.getJoinDate() != null && patientParticipant.getLeftDate() == null)
+            if (patientParticipant != null && patientParticipant.isHasJoinedRoom() && patientParticipant.getJoinDate() != null && patientParticipant.getLeftDate() == null)
                 return videoCallingUtilities.getErrorResponseMessageEntity("There is another session going on right now for the current patient. Please end that video call first and then proceed again.", HttpStatus.SEE_OTHER);
 
         }
@@ -442,7 +475,7 @@ public class RoomService {
     }
 
 
-        public void processUpdatedParticipantsJWTTokenData(RoomDetailsRequestDTO roomDetailsRequest, Room roomDetails, Participant firstParticipant, Participant secondParticipant, Map<String, Object> responseData) {
+    public void processUpdatedParticipantsJWTTokenData(RoomDetailsRequestDTO roomDetailsRequest, Room roomDetails, Participant firstParticipant, Participant secondParticipant, Map<String, Object> responseData) {
 
         Participant mainUserData, participatingUserData;
 

@@ -120,6 +120,13 @@ public class VideoCallService {
         roomService.saveIsActiveRoomOnJoinVideoCall(roomDetailsRequest);
     }
 
+
+    public void saveConsentForPatientOnJoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
+        roomService.savePatientConsentOnJoinVideoCall(roomDetailsRequest);
+    }
+
+
+
     public ResponseEntity<Map<String, Object>> createMeetingLink(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
 
         System.out.println("Method called!!!");
