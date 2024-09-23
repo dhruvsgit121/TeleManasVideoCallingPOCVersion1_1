@@ -38,6 +38,10 @@ public class Room implements Serializable {
 
     private boolean isActive;
 
+    private boolean isDoctorConsentProvided;
+
+    private boolean isPatientConsentProvided;
+
     private String roomShortCode;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -54,13 +58,14 @@ public class Room implements Serializable {
         isActive = active;
     }
 
-    public Room(String roomId, String videoId, LocalDateTime creationDate, LocalDateTime expirationDate, boolean isActive, String roomShortCode) {
+    public Room(String roomId, String videoId, LocalDateTime creationDate, LocalDateTime expirationDate, boolean isActive, String roomShortCode, boolean isDoctorConsentProvided) {
         this.roomId = roomId;
         this.videoId = videoId;
         this.creationDate = creationDate;
         this.expirationDate = expirationDate;
         this.isActive = isActive;
         this.roomShortCode = roomShortCode;
+        this.isDoctorConsentProvided = isDoctorConsentProvided;
     }
 
     // Utility method to add a participant...

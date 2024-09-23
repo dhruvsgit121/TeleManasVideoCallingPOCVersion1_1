@@ -311,7 +311,9 @@ public class RoomService {
         RoomCreationUserDTO roomCreationPatientData = new RoomCreationUserDTO(userDTOData.getTelemanasId(), patientDataModal.getPatientName(), patientJWTToken, false, AuthenticatedUser.UserRole.PATIENT);
         RoomCreationUserDTO roomCreationMHPData = new RoomCreationUserDTO(userDTOData.getMhpUserName(), mhpDataModal.getMhpName(), doctorJWTToken, true, AuthenticatedUser.UserRole.MHP);
 
-        Room savedRoomData = saveNewRoomData(roomCreationData, roomCreationMHPData, roomCreationPatientData, patientDataModal);
+        boolean isDoctorConsentProvided = (userDTOData.getIsDoctorConsentProvided() == 1);
+
+        Room savedRoomData = saveNewRoomData(roomCreationData, roomCreationMHPData, roomCreationPatientData, patientDataModal, isDoctorConsentProvided);
 
         Map<String, Object> responseMap = videoCallingUtilities.getSuccessResponseMap();
         responseMap.put("roomCode", savedRoomData.getRoomShortCode());
@@ -320,9 +322,9 @@ public class RoomService {
     }
 
 
-    public Room saveNewRoomData(RoomCreationDataDTO roomCreationData, RoomCreationUserDTO roomCreationMHPData, RoomCreationUserDTO roomCreationPatientData, PatientDataModal patientDataModal) {
+    public Room saveNewRoomData(RoomCreationDataDTO roomCreationData, RoomCreationUserDTO roomCreationMHPData, RoomCreationUserDTO roomCreationPatientData, PatientDataModal patientDataModal, boolean isDoctorConsentProvided) {
 
-        Room roomData = new Room(roomCreationData.getRoomID(), roomCreationData.getVideoID(), videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomCreationData.getRoomShortCode());
+        Room roomData = new Room(roomCreationData.getRoomID(), roomCreationData.getVideoID(), videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomCreationData.getRoomShortCode(), isDoctorConsentProvided);
 
         Participant mhpParticipantUser = new Participant(null, null, roomCreationMHPData.getJwtToken(), roomCreationMHPData.getIsOrganiser(), false);
         Participant patientParticipantUser = new Participant(null, null, roomCreationPatientData.getJwtToken(), roomCreationPatientData.getIsOrganiser(), false);

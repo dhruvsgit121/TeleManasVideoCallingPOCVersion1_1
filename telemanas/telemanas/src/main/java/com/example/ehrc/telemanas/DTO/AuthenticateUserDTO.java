@@ -37,4 +37,6 @@ public class AuthenticateUserDTO {
     private String loggedInId;
 
     private String roomShortCode;
+
+    private Integer isDoctorConsentProvided;
 }
