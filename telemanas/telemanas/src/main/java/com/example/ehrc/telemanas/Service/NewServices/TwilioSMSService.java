@@ -45,7 +45,8 @@ public class TwilioSMSService {
 
         String messageTextBody = patientMeetingLinkBaseURL + textBody;
 
-        String phoneNumber = "+919015346166";
+        //String phoneNumber = "+919015346166";
+        String phoneNumber = toPhoneNumber;
 
         System.out.println("message send to : " + toPhoneNumber + " with text : " + messageTextBody);
 
