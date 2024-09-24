@@ -42,7 +42,7 @@ public class RoomService {
     private UpdatedParticipantService participantService;
 
     private final JWTTokenService jwtTokenService;
-    
+
     @Autowired
     public RoomService(JWTTokenService jwtTokenService) {
         this.jwtTokenService = jwtTokenService;

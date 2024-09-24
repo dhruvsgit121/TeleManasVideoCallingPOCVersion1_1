@@ -7,6 +7,9 @@ import com.twilio.type.PhoneNumber;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 
 @Service
 public class TwilioSMSService {
@@ -17,6 +20,8 @@ public class TwilioSMSService {
 
     @Value("${sms.patientMessageURL}")
     private String patientMeetingLinkBaseURL;
+
+
 
     public TwilioSMSService(@Value("${twilio.auth.token}") String authToken,
                             @Value("${twilio.account.sid}") String accountSid,
@@ -41,9 +46,31 @@ public class TwilioSMSService {
         }
     }
 
+
+    public static String encodeUrl(String longUrl) {
+        try {
+            return URLEncoder.encode(longUrl, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Failed to encode URL", e);
+        }
+    }
+
+
+
     public void sendTestSms(String toPhoneNumber, String textBody) {
 
         String messageTextBody = patientMeetingLinkBaseURL + textBody;
+
+        System.out.println("value is : " + messageTextBody);
+
+//        messageTextBody = "https://www.google.com";
+
+//        String longUrl = "https://example.com";
+        String accessToken = "09a24dcde7d075360838c9b24c4cfb7999e6a4f8";  // Replace with your actual Bitly token
+
+        String shortUrl = BitlyService.shortenUrl(encodeUrl(messageTextBody), accessToken);
+        System.out.println("Shortened URL: " + shortUrl);
+
 
         String phoneNumber = "+919015346166";
 
