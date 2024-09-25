@@ -30,6 +30,7 @@ public class UserIdentity implements Serializable {
 
     private String roomShortCode;
 
+    private boolean isIdentityVerified = false;
 
     public UserIdentity(String name, String type, byte[] data) {
         this.name = name;

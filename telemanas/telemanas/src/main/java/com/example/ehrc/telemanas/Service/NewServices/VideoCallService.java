@@ -53,6 +53,9 @@ public class VideoCallService {
     private EventService eventService;
 
     @Autowired
+    private UserIdentityService userIdentityService;
+
+    @Autowired
     private UserIdentityRepository userIdentityRepository;
 
 
@@ -93,6 +96,17 @@ public class VideoCallService {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+@Transactional
+    public ResponseEntity<String> verifyUserIdentity(String roomShortCode){
+        UserIdentity userIdentity = userIdentityRepository.findUserIdentityWith(roomShortCode);
+
+        if (userIdentity == null)
+            return ResponseEntity.ok("User Identity does not exists for given room code.");
+
+        userIdentityService.setUserIdentifyAsVerified(userIdentity.getIdentityId());
+        return ResponseEntity.ok("User Verified Successfully.");
     }
 
 

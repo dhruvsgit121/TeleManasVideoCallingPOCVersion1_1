@@ -40,6 +40,14 @@ public class VideoController {
     }
 
 
+    //    @GetMapping("/files/{id}")
+    @GetMapping("/verifyuseridentity/{roomShortCode}")
+    public ResponseEntity<String> verifyUserIdentity(@PathVariable String roomShortCode) {
+        return videoCallService.verifyUserIdentity(roomShortCode);
+    }
+
+
+
     @PostMapping("/saveeventsdata")
     public ResponseEntity<Map<String, Object>> saveVideoCallEventsData(@Valid @RequestBody VideoCallEventsDTO videoCallEventsDTO) {
         return videoCallService.saveVideoCallEvents(videoCallEventsDTO);
