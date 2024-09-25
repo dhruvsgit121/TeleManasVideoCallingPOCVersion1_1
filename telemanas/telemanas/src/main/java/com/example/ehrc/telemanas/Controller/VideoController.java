@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLOutput;
 import java.util.*;
@@ -32,6 +33,13 @@ public class VideoController {
 //    private SSEService sseService;
 
 
+    //    @GetMapping("/files/{id}")
+    @GetMapping("/files/{roomShortCode}")
+    public ResponseEntity<byte[]> getFile(@PathVariable String roomShortCode) {
+        return videoCallService.getFile(roomShortCode);
+    }
+
+
     @PostMapping("/saveeventsdata")
     public ResponseEntity<Map<String, Object>> saveVideoCallEventsData(@Valid @RequestBody VideoCallEventsDTO videoCallEventsDTO) {
         return videoCallService.saveVideoCallEvents(videoCallEventsDTO);
@@ -40,6 +48,11 @@ public class VideoController {
     @GetMapping("/helloworld")
     public String getVideoRoomDetails() {
         return "videoCallService.startVideoCall(roomDetailsRequest)!!!!!!";
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("roomShortCode") String roomShortCode) {
+        return videoCallService.uploadFile(file, roomShortCode);
     }
 
     @PostMapping("/getroomdetails")

@@ -66,10 +66,10 @@ public class TwilioSMSService {
 //        messageTextBody = "https://www.google.com";
 
 //        String longUrl = "https://example.com";
-        String accessToken = "09a24dcde7d075360838c9b24c4cfb7999e6a4f8";  // Replace with your actual Bitly token
+//        String accessToken = "09a24dcde7d075360838c9b24c4cfb7999e6a4f8";  // Replace with your actual Bitly token
 
-        String shortUrl = BitlyService.shortenUrl(encodeUrl(messageTextBody), accessToken);
-        System.out.println("Shortened URL: " + shortUrl);
+//        String shortUrl = BitlyService.shortenUrl(encodeUrl(messageTextBody), accessToken);
+//        System.out.println("Shortened URL: " + shortUrl);
 
 
         String phoneNumber = "+919015346166";

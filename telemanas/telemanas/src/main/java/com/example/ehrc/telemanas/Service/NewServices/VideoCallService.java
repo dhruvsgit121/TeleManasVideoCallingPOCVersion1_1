@@ -12,15 +12,24 @@ import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
 import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
 //import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
+import com.example.ehrc.telemanas.Model.UserIdentity;
 import com.example.ehrc.telemanas.Service.RoomService;
+import com.example.ehrc.telemanas.UserRepository.UserIdentityRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
+import org.apache.http.entity.FileEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class VideoCallService {
@@ -43,6 +52,9 @@ public class VideoCallService {
     @Autowired
     private EventService eventService;
 
+    @Autowired
+    private UserIdentityRepository userIdentityRepository;
+
 
     //Method to Save Video Call Events...
     public ResponseEntity<Map<String, Object>> saveVideoCallEvents(VideoCallEventsDTO videoCallEventsDTO) {
@@ -63,6 +75,44 @@ public class VideoCallService {
     public ResponseEntity<Map<String, Object>> leaveVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
         return roomService.exitRoom(roomDetailsRequest);
     }
+
+    @Transactional
+    public ResponseEntity<byte[]> getFile(@PathVariable String roomShortCode) {
+
+        System.out.println("API hit : " + roomShortCode);
+
+        UserIdentity fileEntityOpt = userIdentityRepository.findUserIdentityWith(roomShortCode);
+
+        System.out.println("fileEntityOpt.isPresent() : " + fileEntityOpt);
+        if (fileEntityOpt != null) {
+//            UserIdentity userIdentity = fileEntityOpt.get();
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename=\"" + fileEntityOpt.getName() + "\"")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(fileEntityOpt.getData());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
+    public ResponseEntity<String> uploadFile(MultipartFile file, String roomShortCode){
+
+        if (file.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File is empty.");
+        }
+
+        try {
+            UserIdentity fileEntity = new UserIdentity(file.getOriginalFilename(), file.getContentType(), file.getBytes(), roomShortCode);
+            userIdentityRepository.save(fileEntity);
+            return ResponseEntity.ok("File uploaded successfully: " + file.getOriginalFilename());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file: " + e.getMessage());
+        }
+    }
+
+
 
     //Method to Leave Video Call...
     public ResponseEntity<Map<String, Object>> leaveVideoCall(CallStartDTO callStartDTO) {
