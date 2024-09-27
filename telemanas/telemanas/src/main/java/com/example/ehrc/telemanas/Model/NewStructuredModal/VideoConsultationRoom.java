@@ -1,5 +1,6 @@
 package com.example.ehrc.telemanas.Model.NewStructuredModal;
 
+import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,8 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -38,4 +41,21 @@ public class VideoConsultationRoom implements Serializable{
 
     private boolean isActive;
 
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VideoConsultationParticipant> participants = new ArrayList<>();
+
+    // Utility method to add a participant...
+    public void addParticipant(VideoConsultationParticipant participant) {
+        participants.add(participant);
+        participant.setRoom(this);
+    }
+
+    public VideoConsultationRoom(String roomId, String roomShortCode, LocalDateTime creationDate, LocalDateTime expirationDate, LocalDateTime updateDate, boolean isActive) {
+        this.roomId = roomId;
+        this.roomShortCode = roomShortCode;
+        this.creationDate = creationDate;
+        this.expirationDate = expirationDate;
+        this.updateDate = updateDate;
+        this.isActive = isActive;
+    }
 }

@@ -18,6 +18,9 @@ public class RoomManagerService {
     @Autowired
     private AuthenticateUserFactory authenticateUserFactory;
 
+    @Autowired
+    private NewRoomService roomService;
+
     public ResponseEntity<Map<String, Object>> createMeetingLink(AuthenticateUserDTO userAuthorisationDataDTO, AuthenticationService authenticationService) {
 
         ResponseEntity<Map<String, Object>> userDataAuthenticationResponseMap = authenticationService.authenticateMHPAndPatientData(userAuthorisationDataDTO, authenticateUserFactory);
@@ -41,24 +44,13 @@ public class RoomManagerService {
         if (decryptUserPhoneNumberResponseMap != null)
             return decryptUserPhoneNumberResponseMap;
 
-
         if (decryptPhoneNumberResponseMap != null && decryptPhoneNumberResponseMap.containsKey("decryptedPhoneNumber"))
             patientUserData.setMobileNumber(decryptPhoneNumberResponseMap.get("decryptedPhoneNumber").toString());
 
-
-//        ResponseEntity<Map<String, Object>> videoCallRoomData = roomService.createRoom(userDTOData, patientUserDataModal, mhpDataModal, roomService);
-//        sendMessageAfterParsingVideoCallRoomData(videoCallRoomData, patientUserDataModal);
-//
-//        if (videoCallRoomData.hasBody() && videoCallRoomData.getBody().get("roomCode") != null) {
-//            String eventDescription = "MHP created the room.";
-//            ResponseEntity<Map<String, Object>> eventServiceResponseData = eventService.saveEventData(videoCallRoomData.getBody().get("roomCode").toString(), eventDescription);
-//            boolean isErrorPresent = (boolean) (eventServiceResponseData.getBody().get("isErrorPresent"));
-//            if (isErrorPresent)
-//                return eventServiceResponseData;
-//        }
-//        return videoCallRoomData;
-
-        Map<String, Object> responseMap = new HashMap<>();
-        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+        return processNewRoomCreation(userAuthorisationDataDTO, mhpUserData, patientUserData);
+    }
+    
+    public ResponseEntity<Map<String, Object>> processNewRoomCreation(AuthenticateUserDTO userAuthorisationDataDTO, MHPDataModal mhpUserData, PatientDataModal patientUserData) {
+        return roomService.createRoom(userAuthorisationDataDTO, patientUserData, mhpUserData);
     }
 }

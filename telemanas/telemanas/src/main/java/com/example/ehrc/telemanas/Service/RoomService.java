@@ -321,7 +321,7 @@ public class RoomService {
         String roomShortCode = videoCallingUtilities.generateRandomString(20);
         String videoID = videoCallingUtilities.generateRandomString(20);
 
-        RoomCreationDataDTO roomCreationData = new RoomCreationDataDTO(roomID, roomShortCode, videoID);
+        RoomCreationDataDTO roomCreationData = new RoomCreationDataDTO(roomID, roomShortCode);
 
         return processNewlyCreatedRoom(userDTOData, patientDataModal, mhpDataModal, jwtTokenService, roomCreationData);
     }
@@ -352,7 +352,7 @@ public class RoomService {
 
     public Room saveNewRoomData(RoomCreationDataDTO roomCreationData, RoomCreationUserDTO roomCreationMHPData, RoomCreationUserDTO roomCreationPatientData, PatientDataModal patientDataModal, boolean isDoctorConsentProvided) {
 
-        Room roomData = new Room(roomCreationData.getRoomID(), roomCreationData.getVideoID(), videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomCreationData.getRoomShortCode(), isDoctorConsentProvided);
+        Room roomData = new Room(roomCreationData.getRoomID(), "roomCreationData.getVideoID()", videoCallingUtilities.getDateTimeWithOffset(0), videoCallingUtilities.getDateTimeWithOffset(expirationOffset), true, roomCreationData.getRoomShortCode(), isDoctorConsentProvided);
 
         Participant mhpParticipantUser = new Participant(null, null, roomCreationMHPData.getJwtToken(), roomCreationMHPData.getIsOrganiser(), false);
         Participant patientParticipantUser = new Participant(null, null, roomCreationPatientData.getJwtToken(), roomCreationPatientData.getIsOrganiser(), false);

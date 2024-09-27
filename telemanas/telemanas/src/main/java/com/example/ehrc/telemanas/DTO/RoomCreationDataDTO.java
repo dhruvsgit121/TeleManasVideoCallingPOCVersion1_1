@@ -15,6 +15,6 @@ public class RoomCreationDataDTO {
 
     private String roomID;
     private String roomShortCode;
-    private String videoID;
+//    private String videoID;
 
 }
