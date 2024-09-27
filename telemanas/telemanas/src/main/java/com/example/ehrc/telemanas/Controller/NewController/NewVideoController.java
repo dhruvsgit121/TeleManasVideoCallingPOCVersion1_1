@@ -9,10 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,22 +30,15 @@ public class NewVideoController {
                                                           @RequestHeader("Authorization") String bearerToken,
                                                           @RequestHeader(value = "Loggedin") String loggedIn
     ) {
-
         setAuthorizationData(userAuthorisationDataDTO, bearerToken, loggedIn);
-//        return videoCallService.createMeetingLink(userDTOData, authenticateUserFactory);
-
-        System.out.println("Data in NewVideoController /createroom API is : " + userAuthorisationDataDTO);
-
-
-
         return videoService.createMeetingLink(userAuthorisationDataDTO);
-
-//        Map<String, Object> response = new HashMap<>();
-//
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
 
+    @GetMapping("/deactivateroom")
+    public ResponseEntity<Map<String, Object>> deactivatedRequestedRoom(@RequestParam String roomShortCode) {
+        System.out.println("deactivateroom requetsed code is : " + roomShortCode);
+        return videoService.deactivateRequestedRoom(roomShortCode);
+    }
 
     private void setAuthorizationData(AuthenticateUserDTO userDTOData, String bearerToken, String loggedIn) {
 

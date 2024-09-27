@@ -8,8 +8,10 @@ import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.PatientDa
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationParticipant;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationRoom;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationStatusMaster;
+import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationRoomRepository;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationStatusMasterRepository;
+import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +44,7 @@ public class NewRoomService {
     private int expirationOffset;
 
     public ResponseEntity<Map<String, Object>> createRoom(AuthenticateUserDTO userDTOData, PatientDataModal patientDataModal, MHPDataModal mhpDataModal) {
-        
+
         System.out.println("roomShortCodesList : " + patientDataModal.getMobileNumber());
 
         //In case we don't have existing Room ID...
@@ -82,7 +84,8 @@ public class NewRoomService {
 
                 if ((firstParticipantUserID.equals(mhpID) && secondParticipantUserID.equals(patientID) || ((firstParticipantUserID.equals(patientID) && secondParticipantUserID.equals(mhpID))))) {
                     VideoConsultationRoom currentRoom = videoConsultationRoomRepository.getReferenceById(room.getId());
-                    currentRoom.setActive(false);
+//                    currentRoom.setActive(false);
+                    setRoomActivationDeactivationFlag(currentRoom, false);
                     videoConsultationRoomRepository.save(currentRoom);
                 }
             }
@@ -138,7 +141,21 @@ public class NewRoomService {
     }
 
 
-    public void setRoomActivationDeactivationFlag(VideoConsultationRoom videoConsultationRoom, boolean isActive){
+    public ResponseEntity<Map<String, Object>> deactivateRequestedRoom(String roomShortCode) {
+
+        VideoConsultationRoom requestedRoom = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(roomShortCode);
+
+        if (requestedRoom == null)
+            return videoCallingUtilities.getErrorResponseMessageEntity(VideoCallingAPIConstants.ERROR_MESSAGE_ROOM_DOES_NOT_EXISTS, HttpStatus.OK);
+
+        setRoomActivationDeactivationFlag(requestedRoom, false);
+        videoConsultationRoomRepository.save(requestedRoom);
+
+        return new ResponseEntity<>(videoCallingUtilities.getSuccessResponseMap(), HttpStatus.OK);
+    }
+    
+    @Transactional
+    private void setRoomActivationDeactivationFlag(VideoConsultationRoom videoConsultationRoom, boolean isActive){
         VideoConsultationStatusMaster statusActiveFlagData = videoConsultationStatusMasterRepository.findStatusWithStatusName(isActive ? "active" : "inactive");
         videoConsultationRoom.setActive(isActive);
         videoConsultationRoom.setStatus(statusActiveFlagData);
