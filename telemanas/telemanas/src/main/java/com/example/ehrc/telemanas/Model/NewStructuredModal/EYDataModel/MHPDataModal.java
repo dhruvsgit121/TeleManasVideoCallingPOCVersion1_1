@@ -1,4 +1,4 @@
-package com.example.ehrc.telemanas.Model.EYDataModel;
+package com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel;
 
 import lombok.Getter;
 import lombok.Setter;

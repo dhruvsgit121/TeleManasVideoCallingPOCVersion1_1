@@ -2,12 +2,14 @@ package com.example.ehrc.telemanas.Service;
 
 import com.example.ehrc.telemanas.CustomException.ValidationMessagesException;
 import com.example.ehrc.telemanas.DTO.*;
-import com.example.ehrc.telemanas.Model.EYDataModel.MHPDataModal;
-import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
+import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.MHPDataModal;
+import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.PatientDataModal;
 import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import com.example.ehrc.telemanas.Service.NewServices.UpdatedParticipantService;
+import com.example.ehrc.telemanas.Service.NewStructuredService.JWTTokenService;
 import com.example.ehrc.telemanas.UserRepository.AuthenticatedUserRepository;
 import com.example.ehrc.telemanas.UserRepository.ParticipantRepository;
 import com.example.ehrc.telemanas.UserRepository.RoomRepository;
@@ -337,7 +339,7 @@ public class RoomService {
         RoomCreationUserDTO roomCreationPatientData = new RoomCreationUserDTO(userDTOData.getTelemanasId(), patientDataModal.getPatientName(), patientJWTToken, false, AuthenticatedUser.UserRole.PATIENT, "");
         RoomCreationUserDTO roomCreationMHPData = new RoomCreationUserDTO(userDTOData.getMhpUserName(), mhpDataModal.getMhpName(), doctorJWTToken, true, AuthenticatedUser.UserRole.MHP, mhpDataModal.getRoleDisplayName());
 
-        boolean isDoctorConsentProvided = (userDTOData.getIsDoctorConsentProvided() == 1);
+        boolean isDoctorConsentProvided = true;//(userDTOData.getIsDoctorConsentProvided() == 1);
 
         Room savedRoomData = saveNewRoomData(roomCreationData, roomCreationMHPData, roomCreationPatientData, patientDataModal, isDoctorConsentProvided);
 

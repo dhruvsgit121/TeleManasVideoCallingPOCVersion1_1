@@ -1,7 +1,7 @@
 package com.example.ehrc.telemanas.GlobalRequestHandler.AutheticateUserRequestHandler;
 
 
-import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.GlobalRequestHandler.VideoCallingAPIRequestHandler;
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;

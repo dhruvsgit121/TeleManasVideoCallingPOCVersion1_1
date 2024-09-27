@@ -1,4 +1,4 @@
-package com.example.ehrc.telemanas.DTO;
+package com.example.ehrc.telemanas.DTO.NewStructuredDTO;
 
 
 import jakarta.validation.constraints.NotBlank;
@@ -38,5 +38,5 @@ public class AuthenticateUserDTO {
 
     private String roomShortCode;
 
-    private Integer isDoctorConsentProvided;
+//    private Integer isDoctorConsentProvided;
 }

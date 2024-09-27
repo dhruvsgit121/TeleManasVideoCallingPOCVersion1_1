@@ -1,6 +1,5 @@
 package com.example.ehrc.telemanas.Utilities;
 
-import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 //import com.example.ehrc.telemanas.Model.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
@@ -25,6 +24,9 @@ public class VideoCallingUtilities {
 
     @Value("${jwt.jitsiFullDomain}")
     private String jitsiFullDomain;
+
+    public String APIRequest_Header_LoggedIn_Key="";
+
 
 //    @Autowired
 //    private ParticipantService participantService;

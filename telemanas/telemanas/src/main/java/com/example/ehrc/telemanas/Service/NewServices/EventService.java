@@ -1,10 +1,6 @@
 package com.example.ehrc.telemanas.Service.NewServices;
 
-import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
-import com.example.ehrc.telemanas.CustomException.ValidationMessagesException;
-import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
-import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import com.example.ehrc.telemanas.GlobalRequestHandler.CallEventDataRequestHandler;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Event;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;

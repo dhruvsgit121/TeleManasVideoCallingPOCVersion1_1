@@ -1,6 +1,6 @@
 package com.example.ehrc.telemanas.AuthenticateService;
 
-import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Map;

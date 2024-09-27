@@ -1,6 +1,6 @@
 package com.example.ehrc.telemanas.AuthenticateService;
 
-import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.GlobalRequestHandler.AutheticateUserRequestHandler.AuthenticateUserRequestHandler;
 //import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
 //import org.springframework.beans.factory.annotation.Autowired;

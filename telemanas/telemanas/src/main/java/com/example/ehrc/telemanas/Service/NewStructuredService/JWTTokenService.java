@@ -1,4 +1,4 @@
-package com.example.ehrc.telemanas.Service;
+package com.example.ehrc.telemanas.Service.NewStructuredService;
 
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;

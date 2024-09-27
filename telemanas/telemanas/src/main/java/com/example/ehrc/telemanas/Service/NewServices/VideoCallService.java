@@ -3,20 +3,20 @@ package com.example.ehrc.telemanas.Service.NewServices;
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.CustomException.RoomDoesNotExistException;
 import com.example.ehrc.telemanas.CustomException.RoomNotActiveException;
-import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
-import com.example.ehrc.telemanas.Model.EYDataModel.MHPDataModal;
-import com.example.ehrc.telemanas.Model.EYDataModel.PatientDataModal;
+import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.MHPDataModal;
+import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.PatientDataModal;
 import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
 //import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import com.example.ehrc.telemanas.Model.UserIdentity;
+import com.example.ehrc.telemanas.Service.NewStructuredService.AuthenticationService;
 import com.example.ehrc.telemanas.Service.RoomService;
 import com.example.ehrc.telemanas.UserRepository.UserIdentityRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
-import org.apache.http.entity.FileEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,12 +24,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class VideoCallService {

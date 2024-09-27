@@ -2,7 +2,7 @@ package com.example.ehrc.telemanas.Controller;
 
 
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
-import com.example.ehrc.telemanas.DTO.AuthenticateUserDTO;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
@@ -10,12 +10,10 @@ import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.SQLOutput;
 import java.util.*;
 
 
