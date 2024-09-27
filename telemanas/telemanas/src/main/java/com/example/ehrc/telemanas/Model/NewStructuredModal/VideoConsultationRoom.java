@@ -41,14 +41,36 @@ public class VideoConsultationRoom implements Serializable{
 
     private boolean isActive;
 
+//    private String active;
+
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VideoConsultationParticipant> participants = new ArrayList<>();
+
+
+    @ManyToOne
+    @JoinColumn(name = "status_id", nullable = false)  // Foreign key column
+    private VideoConsultationStatusMaster status; // Reference to VideoConsultationStatusMaster
+
+
+
+//    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<VideoConsultationParticipant> participants = new ArrayList<>();
 
     // Utility method to add a participant...
     public void addParticipant(VideoConsultationParticipant participant) {
         participants.add(participant);
         participant.setRoom(this);
     }
+
+//    public VideoConsultationRoom(String roomId, String roomShortCode, LocalDateTime creationDate, LocalDateTime expirationDate, LocalDateTime updateDate, boolean isActive) {
+//        this.roomId = roomId;
+//        this.roomShortCode = roomShortCode;
+//        this.creationDate = creationDate;
+//        this.expirationDate = expirationDate;
+//        this.updateDate = updateDate;
+//        this.isActive = isActive;
+//    }
+
 
     public VideoConsultationRoom(String roomId, String roomShortCode, LocalDateTime creationDate, LocalDateTime expirationDate, LocalDateTime updateDate, boolean isActive) {
         this.roomId = roomId;
@@ -57,5 +79,6 @@ public class VideoConsultationRoom implements Serializable{
         this.expirationDate = expirationDate;
         this.updateDate = updateDate;
         this.isActive = isActive;
+//        this.active = active;
     }
 }
