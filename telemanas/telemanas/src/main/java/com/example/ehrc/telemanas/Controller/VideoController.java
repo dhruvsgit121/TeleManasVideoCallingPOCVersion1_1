@@ -161,12 +161,12 @@ public class VideoController {
         userDTOData.setLoggedInId(loggedIn);
     }
 
-    @RequestMapping("/createroom")
-    public ResponseEntity<Map<String, Object>> createRoom(@Valid @RequestBody AuthenticateUserDTO userDTOData,
-                                                          @RequestHeader("Authorization") String bearerToken,
-                                                          @RequestHeader(value = "Loggedin") String loggedIn
-    ) {
-        setAuthorizationData(userDTOData, bearerToken, loggedIn);
-        return videoCallService.createMeetingLink(userDTOData, authenticateUserFactory);
-    }
+//    @RequestMapping("/createroom")
+//    public ResponseEntity<Map<String, Object>> createRoom(@Valid @RequestBody AuthenticateUserDTO userDTOData,
+//                                                          @RequestHeader("Authorization") String bearerToken,
+//                                                          @RequestHeader(value = "Loggedin") String loggedIn
+//    ) {
+//        setAuthorizationData(userDTOData, bearerToken, loggedIn);
+//        return videoCallService.createMeetingLink(userDTOData, authenticateUserFactory);
+//    }
 }

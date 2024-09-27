@@ -49,7 +49,7 @@ public class RoomManagerService {
 
         return processNewRoomCreation(userAuthorisationDataDTO, mhpUserData, patientUserData);
     }
-    
+
     public ResponseEntity<Map<String, Object>> processNewRoomCreation(AuthenticateUserDTO userAuthorisationDataDTO, MHPDataModal mhpUserData, PatientDataModal patientUserData) {
         return roomService.createRoom(userAuthorisationDataDTO, patientUserData, mhpUserData);
     }

@@ -7,13 +7,13 @@ import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
-import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.MHPDataModal;
-import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.PatientDataModal;
+//import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.MHPDataModal;
+//import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.PatientDataModal;
 import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
 //import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import com.example.ehrc.telemanas.Model.UserIdentity;
-import com.example.ehrc.telemanas.Service.NewStructuredService.AuthenticationService;
+//import com.example.ehrc.telemanas.Service.NewStructuredService.AuthenticationService;
 import com.example.ehrc.telemanas.Service.RoomService;
 import com.example.ehrc.telemanas.UserRepository.UserIdentityRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
@@ -32,8 +32,8 @@ import java.util.Map;
 @Service
 public class VideoCallService {
 
-    @Autowired
-    private AuthenticationService authenticationService;
+//    @Autowired
+//    private AuthenticationService authenticationService;
 
     @Autowired
     private TwilioSMSService twilioSMSService;
@@ -41,8 +41,8 @@ public class VideoCallService {
     @Autowired
     private UpdatedRoomService updatedRoomService;
 
-    @Autowired
-    private UpdatedParticipantService updatedParticipantService;
+//    @Autowired
+//    private UpdatedParticipantService updatedParticipantService;
 
     @Autowired
     private RoomService roomService;
@@ -189,59 +189,59 @@ public class VideoCallService {
 
 
 
-    public ResponseEntity<Map<String, Object>> createMeetingLink(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
+//    public ResponseEntity<Map<String, Object>> createMeetingLink(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
+//
+////        System.out.println("Method called!!!");
+////
+////        ResponseEntity<Map<String, Object>> patientAuthenticationResponseData = validatePatientData(userDTOData, authenticateUserFactory);//authenticationService.autheticateParticipantsData(userDTOData, authenticateUserFactory);
+////
+////        if (patientAuthenticationResponseData.getStatusCode() != HttpStatus.OK)
+////            return patientAuthenticationResponseData;
+////
+////        //Parsing the Map data to EYUserDataModal Data Modal...
+////        PatientDataModal patientUserDataModal = null;
+////        if (patientAuthenticationResponseData.hasBody())
+////            patientUserDataModal = new PatientDataModal(patientAuthenticationResponseData.getBody());
+////
+////
+////        ResponseEntity<Map<String, Object>> MHPAuthenticationResponseData = validateMHPData(userDTOData, authenticateUserFactory);//authenticationService.autheticateParticipantsData(userDTOData, authenticateUserFactory);
+////
+////        if (MHPAuthenticationResponseData.getStatusCode() != HttpStatus.OK)
+////            return MHPAuthenticationResponseData;
+////
+////        //Parsing the Map data to EYUserDataModal Data Modal...
+////        MHPDataModal mhpDataModal = null;
+////        if (MHPAuthenticationResponseData.hasBody())
+////            mhpDataModal = new MHPDataModal(MHPAuthenticationResponseData.getBody());
+////
+////        System.out.println("USer MHP Data is : " + mhpDataModal);
+////
+////
+////        ResponseEntity<Map<String, Object>> patientMobileDecryptionResponseData = decryptPatientMobileNumber(authenticateUserFactory, userDTOData, patientUserDataModal);
+////
+////        if (patientMobileDecryptionResponseData != null) {
+////            return patientMobileDecryptionResponseData;
+////        }
+////
+////        ResponseEntity<Map<String, Object>> videoCallRoomData = roomService.createRoom(userDTOData, patientUserDataModal, mhpDataModal, roomService);
+////        sendMessageAfterParsingVideoCallRoomData(videoCallRoomData, patientUserDataModal);
+////
+////        if (videoCallRoomData.hasBody() && videoCallRoomData.getBody().get("roomCode") != null) {
+////            String eventDescription = "MHP created the room.";
+////            ResponseEntity<Map<String, Object>> eventServiceResponseData = eventService.saveEventData(videoCallRoomData.getBody().get("roomCode").toString(), eventDescription);
+////            boolean isErrorPresent = (boolean) (eventServiceResponseData.getBody().get("isErrorPresent"));
+////            if (isErrorPresent)
+////                return eventServiceResponseData;
+////        }
+////        return videoCallRoomData;
+//    }
 
-        System.out.println("Method called!!!");
-
-        ResponseEntity<Map<String, Object>> patientAuthenticationResponseData = validatePatientData(userDTOData, authenticateUserFactory);//authenticationService.autheticateParticipantsData(userDTOData, authenticateUserFactory);
-
-        if (patientAuthenticationResponseData.getStatusCode() != HttpStatus.OK)
-            return patientAuthenticationResponseData;
-
-        //Parsing the Map data to EYUserDataModal Data Modal...
-        PatientDataModal patientUserDataModal = null;
-        if (patientAuthenticationResponseData.hasBody())
-            patientUserDataModal = new PatientDataModal(patientAuthenticationResponseData.getBody());
-
-
-        ResponseEntity<Map<String, Object>> MHPAuthenticationResponseData = validateMHPData(userDTOData, authenticateUserFactory);//authenticationService.autheticateParticipantsData(userDTOData, authenticateUserFactory);
-
-        if (MHPAuthenticationResponseData.getStatusCode() != HttpStatus.OK)
-            return MHPAuthenticationResponseData;
-
-        //Parsing the Map data to EYUserDataModal Data Modal...
-        MHPDataModal mhpDataModal = null;
-        if (MHPAuthenticationResponseData.hasBody())
-            mhpDataModal = new MHPDataModal(MHPAuthenticationResponseData.getBody());
-
-        System.out.println("USer MHP Data is : " + mhpDataModal);
-
-
-        ResponseEntity<Map<String, Object>> patientMobileDecryptionResponseData = decryptPatientMobileNumber(authenticateUserFactory, userDTOData, patientUserDataModal);
-
-        if (patientMobileDecryptionResponseData != null) {
-            return patientMobileDecryptionResponseData;
-        }
-
-        ResponseEntity<Map<String, Object>> videoCallRoomData = roomService.createRoom(userDTOData, patientUserDataModal, mhpDataModal, roomService);
-        sendMessageAfterParsingVideoCallRoomData(videoCallRoomData, patientUserDataModal);
-
-        if (videoCallRoomData.hasBody() && videoCallRoomData.getBody().get("roomCode") != null) {
-            String eventDescription = "MHP created the room.";
-            ResponseEntity<Map<String, Object>> eventServiceResponseData = eventService.saveEventData(videoCallRoomData.getBody().get("roomCode").toString(), eventDescription);
-            boolean isErrorPresent = (boolean) (eventServiceResponseData.getBody().get("isErrorPresent"));
-            if (isErrorPresent)
-                return eventServiceResponseData;
-        }
-        return videoCallRoomData;
-    }
-
-    private void sendMessageAfterParsingVideoCallRoomData(ResponseEntity<Map<String, Object>> videoCallRoomData, PatientDataModal userDataModal) {
-        if (videoCallRoomData.hasBody()) {
-            String roomShortCode = videoCallRoomData.getBody().get("roomCode").toString();
-            sendSMSToPatient(userDataModal.getMobileNumber(), roomShortCode);
-        }
-    }
+//    private void sendMessageAfterParsingVideoCallRoomData(ResponseEntity<Map<String, Object>> videoCallRoomData, PatientDataModal userDataModal) {
+//        if (videoCallRoomData.hasBody()) {
+//            String roomShortCode = videoCallRoomData.getBody().get("roomCode").toString();
+//            sendSMSToPatient(userDataModal.getMobileNumber(), roomShortCode);
+//        }
+//    }
 
 
     public void sendSMSToPatient(String mobileNumber, String roomShortCode) {
@@ -275,22 +275,22 @@ public class VideoCallService {
     }
 
 
-    public ResponseEntity<Map<String, Object>> decryptPatientMobileNumber(AuthenticateUserFactory authenticateUserFactory, AuthenticateUserDTO userDTOData, PatientDataModal userDataModal) {
-
-        //Decrypting Mobile Number of The Patient...
-        ResponseEntity<Map<String, Object>> decryptMobileData = authenticateUserFactory.decryptUserPhoneNumber(userDTOData, userDataModal.getEncryptedMobileNumber());
-        if (decryptMobileData.getStatusCode() != HttpStatus.OK)
-            return decryptMobileData;
-
-        System.out.println("Data Recieved is in mobile decrypt is : " + decryptMobileData.getBody());
-
-        if (decryptMobileData.hasBody()) {
-            Map<String, Object> encryptMobileNumberResponseData = decryptMobileData.getBody();
-            userDataModal.setMobileNumber((String) encryptMobileNumberResponseData.get("responsePhoneNo"));
-        }
-
-        return null;
-    }
+//    public ResponseEntity<Map<String, Object>> decryptPatientMobileNumber(AuthenticateUserFactory authenticateUserFactory, AuthenticateUserDTO userDTOData, PatientDataModal userDataModal) {
+//
+//        //Decrypting Mobile Number of The Patient...
+//        ResponseEntity<Map<String, Object>> decryptMobileData = authenticateUserFactory.decryptUserPhoneNumber(userDTOData, userDataModal.getEncryptedMobileNumber());
+//        if (decryptMobileData.getStatusCode() != HttpStatus.OK)
+//            return decryptMobileData;
+//
+//        System.out.println("Data Recieved is in mobile decrypt is : " + decryptMobileData.getBody());
+//
+//        if (decryptMobileData.hasBody()) {
+//            Map<String, Object> encryptMobileNumberResponseData = decryptMobileData.getBody();
+//            userDataModal.setMobileNumber((String) encryptMobileNumberResponseData.get("responsePhoneNo"));
+//        }
+//
+//        return null;
+//    }
 
 
     public ResponseEntity<Map<String, Object>> decryptPatientMobileNumberForResendSMS(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory, String roomShortCode) {
@@ -338,14 +338,14 @@ public class VideoCallService {
         return encryptedPhoneNumber;
     }
 
-    //Method to Validate Participants Patient...
-    private ResponseEntity<Map<String, Object>> validatePatientData(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
-        return authenticationService.authenticatePatientData(userDTOData, authenticateUserFactory);
-    }
-
-    //Method to Validate Participants MHP...
-    private ResponseEntity<Map<String, Object>> validateMHPData(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
-        return authenticationService.authenticateMHPData(userDTOData, authenticateUserFactory);
-    }
+//    //Method to Validate Participants Patient...
+//    private ResponseEntity<Map<String, Object>> validatePatientData(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
+//        return authenticationService.authenticatePatientData(userDTOData, authenticateUserFactory);
+//    }
+//
+//    //Method to Validate Participants MHP...
+//    private ResponseEntity<Map<String, Object>> validateMHPData(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
+//        return authenticationService.authenticateMHPData(userDTOData, authenticateUserFactory);
+//    }
 
 }
