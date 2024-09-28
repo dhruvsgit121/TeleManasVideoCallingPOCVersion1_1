@@ -47,11 +47,22 @@ public class NewVideoController {
         return videoService.JoinVideoCall(callStartDTO);
     }
 
-
     @PostMapping("/patientjoinroom")
     public ResponseEntity<Map<String, Object>> setJoinRoomTime(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
         return videoService.JoinPatientVideoCall(roomDetailsRequest);//videoCallService.JoinVideoCall(roomDetailsRequest);
     }
+
+    @PostMapping("/exitroom")
+    public ResponseEntity<Map<String, Object>> leaveVideoCall(@Valid @RequestBody CallStartDTO callStartDTO, @RequestHeader("Authorization") String bearerToken,
+                                                              @RequestHeader(value = "Loggedin") String loggedIn) {
+        setAuthorizationData(callStartDTO, bearerToken, loggedIn);
+        return videoService.LeaveMHPVideoCall(callStartDTO);
+    }
+
+//    @PostMapping("/patientexitroom")
+//    public ResponseEntity<Map<String, Object>> leaveVideoCall(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
+//        return videoService.LeavePatientVideoCall(roomDetailsRequest);
+//    }
 
 
 

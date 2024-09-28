@@ -188,13 +188,21 @@ public class NewRoomService {
 
     public ResponseEntity<Map<String, Object>> joinRoom(CallStartDTO callStartDTO) {
         videoConsultationCallService.SetVideoCallStatusForUser(callStartDTO.getRoomShortCode(), (callStartDTO.getIsMHP() == 1));
+        videoConsultationCallService.SetVideoCallJoiningTime(callStartDTO.getRoomShortCode());
         Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 
     public ResponseEntity<Map<String, Object>> joinPatientRoom(RoomDetailsRequestDTO roomDetailsRequest) {
         videoConsultationCallService.SetVideoCallStatus(roomDetailsRequest.getRoomShortCode(), VideoConsultationCallService.VideoCallStatus.PATIENTJOINED);//SetVideoCallStatusForUser(callStartDTO.getRoomShortCode(), false);
-        videoConsultationCallService.SetVideoCallJoiningTime(roomDetailsRequest.getRoomShortCode());
+        Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
+
+
+    public ResponseEntity<Map<String, Object>> MHPExitRoom(CallStartDTO callStartDTO) {
+        videoConsultationCallService.SetVideoCallStatus(callStartDTO.getRoomShortCode(), VideoConsultationCallService.VideoCallStatus.ENDED);
+        videoConsultationCallService.SetVideoCallEndingTime(callStartDTO.getRoomShortCode());
         Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }

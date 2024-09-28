@@ -43,6 +43,15 @@ public class VideoConsultationCallService {
     }
 
 
+    @Transactional
+    public void SetVideoCallEndingTime(String roomShortCode) {
+        VideoConsultationRoom requestedRoom = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(roomShortCode);
+        //requestedRoom.getVideoCallData().setCallStatus(callStatus);
+        requestedRoom.getVideoCallData().setCallEndTime(videoCallingUtilities.getDateTimeWithOffset(0));
+        videoConsultationRoomRepository.save(requestedRoom);
+    }
+
+
     public void SetVideoCallStatusForUser(String roomShortCode, boolean isMHP) {
         SetVideoCallStatus(roomShortCode, isMHP ? VideoConsultationCallService.VideoCallStatus.INPROGRESS : VideoConsultationCallService.VideoCallStatus.PATIENTJOINED);
     }

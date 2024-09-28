@@ -87,11 +87,11 @@ public class VideoController {
             }
         }
 
-        ResponseEntity<Map<String, Object>> joinUserFlag = setJoinRoomTime(roomDetailsRequest);
-
-        if (joinUserFlag != null && joinUserFlag.hasBody() && joinUserFlag.getStatusCode() != HttpStatus.OK) {
-            return joinUserFlag;
-        }
+//        ResponseEntity<Map<String, Object>> joinUserFlag = setJoinRoomTime(roomDetailsRequest);
+//
+//        if (joinUserFlag != null && joinUserFlag.hasBody() && joinUserFlag.getStatusCode() != HttpStatus.OK) {
+//            return joinUserFlag;
+//        }
 
         return videoCallService.startVideoCall(roomDetailsRequest);
     }

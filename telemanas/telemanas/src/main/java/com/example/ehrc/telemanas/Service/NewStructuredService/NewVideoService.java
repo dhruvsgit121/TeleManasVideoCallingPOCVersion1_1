@@ -40,4 +40,14 @@ public class NewVideoService {
     }
 
 
+    //Method to Join Video Call...
+    public ResponseEntity<Map<String, Object>> LeaveMHPVideoCall(CallStartDTO callStartDTO) {
+        return roomManagerService.leaveVideoCall(callStartDTO);
+    }
+
+//    //Method to Join Video Call...
+//    public ResponseEntity<Map<String, Object>> LeavePatientVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
+//        return roomManagerService.leaveVideoCall(roomDetailsRequest);
+//    }
+
 }
