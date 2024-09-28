@@ -96,15 +96,15 @@ public class VideoController {
         return videoCallService.startVideoCall(roomDetailsRequest);
     }
 
-    @GetMapping("/getpatientjoinflag")
-    public ResponseEntity<Map<String, Object>> getPatientRoomJoinDetails(@RequestParam String roomShortCode) {
-        return videoCallService.getPatientJoinRoomStatusData(roomShortCode);
-    }
-
-    @GetMapping("/deactivateroom")
-    public ResponseEntity<Map<String, Object>> deactivatedRequestedRoom(@RequestParam String roomShortCode) {
-        return videoCallService.deactivateRequestedRoom(roomShortCode);
-    }
+//    @GetMapping("/getpatientjoinflag")
+//    public ResponseEntity<Map<String, Object>> getPatientRoomJoinDetails(@RequestParam String roomShortCode) {
+//        return videoCallService.getPatientJoinRoomStatusData(roomShortCode);
+//    }
+//
+//    @GetMapping("/deactivateroom")
+//    public ResponseEntity<Map<String, Object>> deactivatedRequestedRoom(@RequestParam String roomShortCode) {
+//        return videoCallService.deactivateRequestedRoom(roomShortCode);
+//    }
 
 //    @PostMapping("/patientjoinroom")
 //    public ResponseEntity<Map<String, Object>> setJoinRoomTime(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {

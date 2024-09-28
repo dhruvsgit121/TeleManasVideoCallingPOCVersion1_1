@@ -59,11 +59,11 @@ public class NewVideoController {
         return videoService.LeaveMHPVideoCall(callStartDTO);
     }
 
-//    @PostMapping("/patientexitroom")
-//    public ResponseEntity<Map<String, Object>> leaveVideoCall(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
-//        return videoService.LeavePatientVideoCall(roomDetailsRequest);
-//    }
 
+    @GetMapping("/getpatientjoinflag")
+    public ResponseEntity<Map<String, Object>> getPatientRoomJoinDetails(@RequestParam String roomShortCode) {
+        return videoService.PatientJoinVideoCall(roomShortCode);
+    }
 
 
     @GetMapping("/deactivateroom")

@@ -13,6 +13,7 @@ import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationPart
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationRoom;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationStatusMaster;
 //import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
+import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationCallRepository;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -205,5 +207,25 @@ public class NewRoomService {
         videoConsultationCallService.SetVideoCallEndingTime(callStartDTO.getRoomShortCode());
         Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
         return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
+
+
+    public ResponseEntity<Map<String, Object>> getPatientJoinData(String roomShortCode) {
+
+        VideoConsultationRoom roomData = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(roomShortCode);
+
+        ResponseEntity<Map<String, Object>> responseMap = videoCallingUtilities.getRoomActivationCheckResponseMap(roomShortCode);
+        if(responseMap != null)
+            return responseMap;
+
+        if(roomData.getVideoCallData().getCallStatus().equals(VideoConsultationCallService.VideoCallStatus.INPROGRESS))
+            return videoCallingUtilities.getGlobalErrorResponseMessageEntity("Video call is in progress right now. Please try again later.");
+
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put(VideoCallingAPIConstants.isErrorFlagValue, false);
+        if (roomData.getVideoCallData().getCallStatus().equals(VideoConsultationCallService.VideoCallStatus.PATIENTJOINED))
+                responseData.put("joinedRoom", true);
+
+        return new ResponseEntity(responseData, HttpStatus.OK);
     }
 }

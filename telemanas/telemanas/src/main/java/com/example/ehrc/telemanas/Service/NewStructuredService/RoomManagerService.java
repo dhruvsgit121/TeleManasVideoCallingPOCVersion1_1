@@ -85,48 +85,16 @@ public class RoomManagerService {
         if (responseData.getStatusCode() != HttpStatus.OK)
             return responseData;
 
-//        String eventDescription = (callStartDTO.getIsMHP() == 1) ? "MHP Ended the video call" : "Patient Ended the video call";
-//        ResponseEntity<Map<String, Object>> eventServiceResponseData = eventService.saveEventData(callStartDTO.getRoomShortCode(), eventDescription);
-//
-//        boolean isErrorPresent = (boolean) (eventServiceResponseData.getBody().get("isErrorPresent"));
-//
-//        if (isErrorPresent)
-//            return eventServiceResponseData;
-
         return roomService.MHPExitRoom(callStartDTO);
     }
 
 
-//    public ResponseEntity<Map<String, Object>> leavePatientVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
-//
-////        System.out.println("leaveVideoCall : " + callStartDTO);
-////
-////        ResponseEntity<Map<String, Object>> responseData = eventService.callEndSaveData(callStartDTO);
-////        if (responseData.getStatusCode() != HttpStatus.OK)
-////            return responseData;
-//
-////        String eventDescription = (callStartDTO.getIsMHP() == 1) ? "MHP Ended the video call" : "Patient Ended the video call";
-////        ResponseEntity<Map<String, Object>> eventServiceResponseData = eventService.saveEventData(callStartDTO.getRoomShortCode(), eventDescription);
-////
-////        boolean isErrorPresent = (boolean) (eventServiceResponseData.getBody().get("isErrorPresent"));
-////
-////        if (isErrorPresent)
-////            return eventServiceResponseData;
-//
-//        return roomService.(callStartDTO);
-//    }
-
-
+    public ResponseEntity<Map<String, Object>> patientJoinCallFlagData(String roomShortCode) {
+        return roomService.getPatientJoinData(roomShortCode);
+    }
 
     //Method to Join Video Call...
     public ResponseEntity<Map<String, Object>> JoinPatientVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
-
-        System.out.println("CallStartDTO is : " + roomDetailsRequest);
-
-//        ResponseEntity<Map<String, Object>> responseData = eventService.callStartSaveData(callStartDTO);
-//        if (responseData.getStatusCode() != HttpStatus.OK)
-//            return responseData;
-
         return roomService.joinPatientRoom(roomDetailsRequest);
     }
 }

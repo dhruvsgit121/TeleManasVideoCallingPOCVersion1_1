@@ -45,6 +45,11 @@ public class NewVideoService {
         return roomManagerService.leaveVideoCall(callStartDTO);
     }
 
+    //Method to Join Video Call...
+    public ResponseEntity<Map<String, Object>> PatientJoinVideoCall(String roomShortCode) {
+        return roomManagerService.patientJoinCallFlagData(roomShortCode);
+    }
+
 //    //Method to Join Video Call...
 //    public ResponseEntity<Map<String, Object>> LeavePatientVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
 //        return roomManagerService.leaveVideoCall(roomDetailsRequest);
