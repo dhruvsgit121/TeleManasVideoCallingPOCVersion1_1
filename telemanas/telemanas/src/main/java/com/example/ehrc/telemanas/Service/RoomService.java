@@ -105,7 +105,7 @@ public class RoomService {
     public void savePatientConsentOnJoinVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
         Room room = roomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
 
-        boolean isConsentProvidedForPatient = (roomDetailsRequest.getIsPatientConsentProvided() == 1);
+        boolean isConsentProvidedForPatient = (true);
 
         if (isConsentProvidedForPatient) {
             boolean isUpdated = markConsentForPatient(room.getSerialId());

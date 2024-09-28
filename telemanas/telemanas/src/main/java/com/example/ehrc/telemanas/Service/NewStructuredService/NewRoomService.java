@@ -185,43 +185,17 @@ public class NewRoomService {
         videoConsultationRoom.setStatus(statusActiveFlagData);
     }
 
-//    @Transactional
-    public ResponseEntity<Map<String, Object>> joinRoom(CallStartDTO callStartDTO) {//RoomDetailsRequestDTO roomDetailsRequest) {
 
-//        VideoConsultationRoom requestedRoom = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(callStartDTO.getRoomShortCode());
-
-//        requestedRoom.getParticipants()
-
-//        RoomDetailsRequestDTO roomDetailsRequest = new RoomDetailsRequestDTO(callStartDTO);
-//
-//        System.out.println("authorsation data" + callStartDTO.getBearerToken() + callStartDTO.getLoggedInId());
-
-//        Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
-//
-//        Room roomData = roomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
-//
-//        if (roomData == null || roomData.getParticipants().size() != 2) {
-//            throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
-//        }
-//
-//        //Setting the Join Date of the user...
-//        Participant requestedParticipant = videoCallingUtilities.getRequestedUpdatedUserAsPerRequest(roomData, roomDetailsRequest);
-//        requestedParticipant.setJoinDate(videoCallingUtilities.getDateTimeWithOffset(0));
-//        participantRepository.save(requestedParticipant);
-
-
-
+    public ResponseEntity<Map<String, Object>> joinRoom(CallStartDTO callStartDTO) {
         videoConsultationCallService.SetVideoCallStatusForUser(callStartDTO.getRoomShortCode(), (callStartDTO.getIsMHP() == 1));
         Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
         return new ResponseEntity<>(responseData, HttpStatus.OK);
-
-//        return VideoConsultationParticipantService
-
-//
-//        responseData.put("message", "success");
-//        return new ResponseEntity(responseData, HttpStatus.OK);
     }
 
-
-
+    public ResponseEntity<Map<String, Object>> joinPatientRoom(RoomDetailsRequestDTO roomDetailsRequest) {
+        videoConsultationCallService.SetVideoCallStatus(roomDetailsRequest.getRoomShortCode(), VideoConsultationCallService.VideoCallStatus.PATIENTJOINED);//SetVideoCallStatusForUser(callStartDTO.getRoomShortCode(), false);
+        videoConsultationCallService.SetVideoCallJoiningTime(roomDetailsRequest.getRoomShortCode());
+        Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
 }

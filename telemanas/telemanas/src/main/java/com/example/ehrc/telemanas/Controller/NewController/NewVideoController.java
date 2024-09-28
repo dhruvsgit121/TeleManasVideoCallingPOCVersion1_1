@@ -3,6 +3,7 @@ package com.example.ehrc.telemanas.Controller.NewController;
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 //import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
+import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Service.NewStructuredService.NewVideoService;
 import com.example.ehrc.telemanas.Service.NewStructuredService.RoomManagerService;
 import jakarta.validation.Valid;
@@ -45,6 +46,14 @@ public class NewVideoController {
         setAuthorizationData(callStartDTO, bearerToken, loggedIn);
         return videoService.JoinVideoCall(callStartDTO);
     }
+
+
+    @PostMapping("/patientjoinroom")
+    public ResponseEntity<Map<String, Object>> setJoinRoomTime(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
+        return videoService.JoinPatientVideoCall(roomDetailsRequest);//videoCallService.JoinVideoCall(roomDetailsRequest);
+    }
+
+
 
     @GetMapping("/deactivateroom")
     public ResponseEntity<Map<String, Object>> deactivatedRequestedRoom(@RequestParam String roomShortCode) {

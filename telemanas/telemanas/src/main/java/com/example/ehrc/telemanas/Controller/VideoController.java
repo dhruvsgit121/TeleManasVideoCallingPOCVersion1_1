@@ -106,10 +106,10 @@ public class VideoController {
         return videoCallService.deactivateRequestedRoom(roomShortCode);
     }
 
-    @PostMapping("/patientjoinroom")
-    public ResponseEntity<Map<String, Object>> setJoinRoomTime(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
-        return videoCallService.JoinVideoCall(roomDetailsRequest);
-    }
+//    @PostMapping("/patientjoinroom")
+//    public ResponseEntity<Map<String, Object>> setJoinRoomTime(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
+//        return videoCallService.JoinVideoCall(roomDetailsRequest);
+//    }
 
 
     @RequestMapping("/resendlink")
