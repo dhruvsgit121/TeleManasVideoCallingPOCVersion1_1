@@ -2,12 +2,15 @@ package com.example.ehrc.telemanas.Utilities;
 
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 //import com.example.ehrc.telemanas.Model.Participant;
+import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationRoom;
 import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 //import com.example.ehrc.telemanas.Service.ParticipantService;
+import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationRoomRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 //import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,9 @@ public class VideoCallingUtilities {
     private String jitsiFullDomain;
 
     public String APIRequest_Header_LoggedIn_Key="";
+
+    @Autowired
+    private VideoConsultationRoomRepository videoConsultationRoomRepository;
 
 
 //    @Autowired
@@ -55,6 +61,20 @@ public class VideoCallingUtilities {
         successResponseMap.put(VideoCallingAPIConstants.isErrorFlagValue, false);
         return successResponseMap;
     }
+
+
+    public ResponseEntity<Map<String, Object>> getRoomActivationCheckResponseMap(String roomShortCode) {
+        VideoConsultationRoom room = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(roomShortCode);
+        if (room == null)
+            return getErrorResponseMessageEntity(VideoCallingAPIConstants.ERROR_MESSAGE_ROOM_DOES_NOT_EXISTS, HttpStatus.SEE_OTHER);
+        return null;
+    }
+
+//    VideoConsultationRoom room = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(callStartDTO.getRoomShortCode());
+//
+//        if (room == null)
+//            return roomService.getRoomValidationResponseEntity();
+
 
 
     public ResponseEntity<Map<String, Object>> getGlobalErrorResponseMessageEntity(String errorMessage) {

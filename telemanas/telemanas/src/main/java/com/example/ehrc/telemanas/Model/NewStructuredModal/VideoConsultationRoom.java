@@ -1,6 +1,6 @@
 package com.example.ehrc.telemanas.Model.NewStructuredModal;
 
-import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
+//import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

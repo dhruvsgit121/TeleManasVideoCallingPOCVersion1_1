@@ -1,10 +1,12 @@
 package com.example.ehrc.telemanas.Service.NewStructuredService;
 
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
+import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.PatientDataModal;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
+import com.example.ehrc.telemanas.Service.NewServices.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,9 @@ public class RoomManagerService {
 
     @Autowired
     private NewRoomService roomService;
+
+    @Autowired
+    private EventService eventService;
 
     public ResponseEntity<Map<String, Object>> createMeetingLink(AuthenticateUserDTO userAuthorisationDataDTO, AuthenticationService authenticationService) {
 
@@ -57,5 +62,25 @@ public class RoomManagerService {
 
     public ResponseEntity<Map<String, Object>> deactivateRequestedRoom(String roomShortCode) {
         return roomService.deactivateRequestedRoom(roomShortCode);
+    }
+
+    //Method to Join Video Call...
+    public ResponseEntity<Map<String, Object>> JoinVideoCall(CallStartDTO callStartDTO) {
+
+        System.out.println("CallStartDTO is : " + callStartDTO);
+
+        ResponseEntity<Map<String, Object>> responseData = eventService.callStartSaveData(callStartDTO);
+        if (responseData.getStatusCode() != HttpStatus.OK)
+            return responseData;
+
+//        String eventDescription = (callStartDTO.getIsMHP() == 1) ? "MHP Started the video call" : "Patient Started the video call";
+//        ResponseEntity<Map<String, Object>> eventServiceResponseData = eventService.saveEventData(callStartDTO.getRoomShortCode(), eventDescription);
+
+//        boolean isErrorPresent = (boolean) (eventServiceResponseData.getBody().get("isErrorPresent"));
+//
+//        if (isErrorPresent)
+//            return eventServiceResponseData;
+
+        return roomService.joinRoom(callStartDTO);
     }
 }

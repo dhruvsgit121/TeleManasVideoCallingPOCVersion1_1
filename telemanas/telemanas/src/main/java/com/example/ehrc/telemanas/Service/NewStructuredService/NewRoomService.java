@@ -1,8 +1,11 @@
 package com.example.ehrc.telemanas.Service.NewStructuredService;
 
 
+import com.example.ehrc.telemanas.CustomException.ValidationMessagesException;
+import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomCreationDataDTO;
+import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.PatientDataModal;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationCall;
@@ -10,6 +13,8 @@ import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationPart
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationRoom;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationStatusMaster;
 //import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
+import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
+import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationCallRepository;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationRoomRepository;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationStatusMasterRepository;
@@ -45,6 +50,9 @@ public class NewRoomService {
 
     @Autowired
     private JWTTokenService jwtTokenService;
+
+    @Autowired
+    private VideoConsultationCallService videoConsultationCallService;
 
     @Value("${jwt.expirationOffSet}")
     private int expirationOffset;
@@ -176,4 +184,44 @@ public class NewRoomService {
         videoConsultationRoom.setActive(isActive);
         videoConsultationRoom.setStatus(statusActiveFlagData);
     }
+
+//    @Transactional
+    public ResponseEntity<Map<String, Object>> joinRoom(CallStartDTO callStartDTO) {//RoomDetailsRequestDTO roomDetailsRequest) {
+
+//        VideoConsultationRoom requestedRoom = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(callStartDTO.getRoomShortCode());
+
+//        requestedRoom.getParticipants()
+
+//        RoomDetailsRequestDTO roomDetailsRequest = new RoomDetailsRequestDTO(callStartDTO);
+//
+//        System.out.println("authorsation data" + callStartDTO.getBearerToken() + callStartDTO.getLoggedInId());
+
+//        Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
+//
+//        Room roomData = roomRepository.findRoomDetailsWith(roomDetailsRequest.getRoomShortCode());
+//
+//        if (roomData == null || roomData.getParticipants().size() != 2) {
+//            throw new ValidationMessagesException("Room you requested is not valid. Please try to join new room.");
+//        }
+//
+//        //Setting the Join Date of the user...
+//        Participant requestedParticipant = videoCallingUtilities.getRequestedUpdatedUserAsPerRequest(roomData, roomDetailsRequest);
+//        requestedParticipant.setJoinDate(videoCallingUtilities.getDateTimeWithOffset(0));
+//        participantRepository.save(requestedParticipant);
+
+
+
+        videoConsultationCallService.SetVideoCallStatusForUser(callStartDTO.getRoomShortCode(), (callStartDTO.getIsMHP() == 1));
+        Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+
+//        return VideoConsultationParticipantService
+
+//
+//        responseData.put("message", "success");
+//        return new ResponseEntity(responseData, HttpStatus.OK);
+    }
+
+
+
 }

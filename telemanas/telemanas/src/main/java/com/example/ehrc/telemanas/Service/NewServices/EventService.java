@@ -2,10 +2,13 @@ package com.example.ehrc.telemanas.Service.NewServices;
 
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.GlobalRequestHandler.CallEventDataRequestHandler;
+import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationRoom;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Event;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
+import com.example.ehrc.telemanas.Service.NewStructuredService.NewRoomService;
 import com.example.ehrc.telemanas.Service.RoomService;
 import com.example.ehrc.telemanas.UserRepository.EventRepository;
+import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationRoomRepository;
 import com.example.ehrc.telemanas.UserRepository.RoomRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class EventService {
     private EventRepository eventRepository;
 
     @Autowired
+    private VideoConsultationRoomRepository videoConsultationRoomRepository;
+
+    @Autowired
     private RoomRepository roomRepository;
 
     @Autowired
@@ -33,6 +39,9 @@ public class EventService {
 
     @Autowired
     private CallEventDataRequestHandler callEventDataRequestHandler;
+
+    @Autowired
+    private NewRoomService newRoomService;
 
 
     //VideoCallEventsDTO videoCallEventsDTO
@@ -77,13 +86,21 @@ public class EventService {
     //Method to Send Call Event...
     public ResponseEntity<Map<String, Object>> callEventSaveData(CallStartDTO callStartDTO, boolean isStartCall) {
 
-        Room room = roomService.getUpdatedActiveRoomDetailsWith(callStartDTO.getRoomShortCode());
+        VideoConsultationRoom room = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(callStartDTO.getRoomShortCode());
 
-        if (room == null)
-            return roomService.getRoomValidationResponseEntity();
+        System.out.println("callEventSaveData called in EventService.java");
+
+        if(videoCallingUtilities.getRoomActivationCheckResponseMap(callStartDTO.getRoomShortCode()) != null) {
+//            System.out.println("Entered in tbis loop");
+//
+//            System.out.println("Response is : " + videoCallingUtilities.getRoomActivationCheckResponseMap(callStartDTO.getRoomShortCode()) );
+            return videoCallingUtilities.getRoomActivationCheckResponseMap(callStartDTO.getRoomShortCode());
+        }
+
+        System.out.println("callEventSaveData video id is : " + room.getVideoCallData().getVideoCallId());
 
         return isStartCall ?
-                callEventDataRequestHandler.saveCallStartData(callStartDTO, room.getVideoId()) :
-                callEventDataRequestHandler.saveCallEndData(callStartDTO, room.getVideoId(), videoCallingUtilities.getDateTimeWithOffset(0));
+                callEventDataRequestHandler.saveCallStartData(callStartDTO, room.getVideoCallData().getVideoCallId()) :
+                callEventDataRequestHandler.saveCallEndData(callStartDTO, room.getVideoCallData().getVideoCallId(), videoCallingUtilities.getDateTimeWithOffset(0));
     }
 }
