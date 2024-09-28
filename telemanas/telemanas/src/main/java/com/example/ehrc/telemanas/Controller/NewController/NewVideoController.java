@@ -1,17 +1,16 @@
 package com.example.ehrc.telemanas.Controller.NewController;
 
-
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
-import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
+//import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
 import com.example.ehrc.telemanas.Service.NewStructuredService.NewVideoService;
 import com.example.ehrc.telemanas.Service.NewStructuredService.RoomManagerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+//import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -23,7 +22,6 @@ public class NewVideoController {
 
     @Autowired
     private NewVideoService videoService;
-
 
     @RequestMapping("/createroom")
     public ResponseEntity<Map<String, Object>> createRoom(@Valid @RequestBody AuthenticateUserDTO userAuthorisationDataDTO,

@@ -5,14 +5,17 @@ import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomCreationDataDTO;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.PatientDataModal;
+import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationCall;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationParticipant;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationRoom;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationStatusMaster;
-import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
+//import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
+import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationCallRepository;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationRoomRepository;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationStatusMasterRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
+//import jakarta.validation.constraints.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -33,6 +36,9 @@ public class NewRoomService {
 
     @Autowired
     private VideoConsultationRoomRepository videoConsultationRoomRepository;
+
+    @Autowired
+    private VideoConsultationCallRepository videoConsultationCallRepository;
 
     @Autowired
     private VideoConsultationStatusMasterRepository videoConsultationStatusMasterRepository;
@@ -84,7 +90,6 @@ public class NewRoomService {
 
                 if ((firstParticipantUserID.equals(mhpID) && secondParticipantUserID.equals(patientID) || ((firstParticipantUserID.equals(patientID) && secondParticipantUserID.equals(mhpID))))) {
                     VideoConsultationRoom currentRoom = videoConsultationRoomRepository.getReferenceById(room.getId());
-//                    currentRoom.setActive(false);
                     setRoomActivationDeactivationFlag(currentRoom, false);
                     videoConsultationRoomRepository.save(currentRoom);
                 }
@@ -132,12 +137,23 @@ public class NewRoomService {
         //Search from status master...
         setRoomActivationDeactivationFlag(videoConsultationRoom, true);
 
+        //Save Video Consultation Call Data...
+        VideoConsultationCall callData =  setVideoConsultationCallData();
+        videoConsultationRoom.setVideoCallData(callData);
+
+        //Save Video Room & Call Data...
         videoConsultationRoomRepository.save(videoConsultationRoom);
 
         Map<String, Object> responseMap = videoCallingUtilities.getSuccessResponseMap();
         responseMap.put("roomCode", videoConsultationRoom.getRoomShortCode());
 
         return new ResponseEntity(responseMap, HttpStatus.OK);
+    }
+
+    public VideoConsultationCall setVideoConsultationCallData() {
+        String videoCallUUID = videoCallingUtilities.generateRandomString(20);
+        VideoConsultationCall videoConsultationCall = new VideoConsultationCall(videoCallUUID);
+        return videoConsultationCallRepository.save(videoConsultationCall);
     }
 
 
@@ -153,9 +169,9 @@ public class NewRoomService {
 
         return new ResponseEntity<>(videoCallingUtilities.getSuccessResponseMap(), HttpStatus.OK);
     }
-    
+
     @Transactional
-    private void setRoomActivationDeactivationFlag(VideoConsultationRoom videoConsultationRoom, boolean isActive){
+    private void setRoomActivationDeactivationFlag(VideoConsultationRoom videoConsultationRoom, boolean isActive) {
         VideoConsultationStatusMaster statusActiveFlagData = videoConsultationStatusMasterRepository.findStatusWithStatusName(isActive ? "active" : "inactive");
         videoConsultationRoom.setActive(isActive);
         videoConsultationRoom.setStatus(statusActiveFlagData);

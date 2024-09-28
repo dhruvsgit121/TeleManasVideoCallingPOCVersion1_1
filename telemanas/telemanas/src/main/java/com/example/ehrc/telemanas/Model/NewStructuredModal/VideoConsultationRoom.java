@@ -51,7 +51,9 @@ public class VideoConsultationRoom implements Serializable{
     @JoinColumn(name = "status_id", nullable = false)  // Foreign key column
     private VideoConsultationStatusMaster status; // Reference to VideoConsultationStatusMaster
 
-
+    @OneToOne
+    @JoinColumn(name = "video_consultation_call_id", nullable = false)  // Foreign key column
+    private VideoConsultationCall videoCallData;
 
 //    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<VideoConsultationParticipant> participants = new ArrayList<>();

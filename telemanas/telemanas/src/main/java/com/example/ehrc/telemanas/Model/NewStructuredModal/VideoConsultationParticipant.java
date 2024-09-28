@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 
 
 @Entity(name = "video_consultation_participant")
-public class VideoConsultationParticipant {
+public class VideoConsultationParticipant implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
