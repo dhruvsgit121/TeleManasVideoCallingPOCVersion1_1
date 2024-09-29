@@ -5,6 +5,7 @@ import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 //import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.ResendVideoCallLinkDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.SendPrescriptionDTO;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.VerifyUserIdentityDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import com.example.ehrc.telemanas.Service.NewStructuredService.NewVideoService;
@@ -94,6 +95,13 @@ public class NewVideoController {
         AuthenticateUserDTO userDataDTO = new AuthenticateUserDTO(sendPrescriptionData);
         setAuthorizationData(userDataDTO, bearerToken, loggedIn);
         return videoService.resendPrescriptionLink(userDataDTO, sendPrescriptionData);
+    }
+
+
+
+    @PostMapping("/verifyuseridentity")
+    public ResponseEntity<Map<String, Object>> verifyUserIdentity(@Valid @RequestBody VerifyUserIdentityDTO verifyUserIdentityDTO) {
+        return videoService.verifyUserIdentity(verifyUserIdentityDTO);
     }
 
 

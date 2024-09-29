@@ -18,6 +18,12 @@ import java.io.Serializable;
 @Entity(name = "video_consultation_id_proof")
 public class VideoConsultationIDProof implements Serializable {
 
+    public enum VideoCallIDProofStatus {
+        NOTVERIFIED,
+        YES,
+        NO
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

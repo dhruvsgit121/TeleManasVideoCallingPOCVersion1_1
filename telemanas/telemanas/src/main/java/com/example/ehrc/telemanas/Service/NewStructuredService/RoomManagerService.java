@@ -4,6 +4,7 @@ import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.SendPrescriptionDTO;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.VerifyUserIdentityDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.PatientDataModal;
@@ -121,6 +122,11 @@ public class RoomManagerService {
 
     public ResponseEntity<Map<String, Object>> uploadFile(MultipartFile file, String roomShortCode) {
         return userIdentityService.uploadFile(file, roomShortCode);
+    }
+
+
+    public ResponseEntity<Map<String, Object>> verifyUserIdentity(VerifyUserIdentityDTO verifyUserIdentityDTO) {
+        return userIdentityService.verifyUserIdentity(verifyUserIdentityDTO);
     }
 
 

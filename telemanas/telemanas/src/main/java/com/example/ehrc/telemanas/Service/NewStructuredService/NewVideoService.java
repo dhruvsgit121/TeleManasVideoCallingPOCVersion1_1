@@ -4,6 +4,7 @@ import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.ResendVideoCallLinkDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.SendPrescriptionDTO;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.VerifyUserIdentityDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,10 @@ public class NewVideoService {
 
     public ResponseEntity<Map<String, Object>> getPrescriptionDetails(String roomShortCode) {
         return roomManagerService.getPrescriptionDetails(roomShortCode);
+    }
+
+    public ResponseEntity<Map<String, Object>> verifyUserIdentity(VerifyUserIdentityDTO verifyUserIdentityDTO) {
+        return roomManagerService.verifyUserIdentity(verifyUserIdentityDTO);
     }
 
 //    public ResponseEntity<Map<String, Object>> resendVideoCallLink(AuthenticateUserDTO userAuthorisationDataDTO, AuthenticationService authenticationService) {

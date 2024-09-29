@@ -47,7 +47,12 @@ public class VideoConsultationCall implements Serializable {
 
     private boolean isMHPConsentGiven;
 
-    private boolean isIDProofChecked;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private VideoConsultationIDProof.VideoCallIDProofStatus isIDProofStatus;
+
+//    private boolean isIDProofChecked;
 
     @OneToMany(mappedBy = "videoCall", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VideoConsultationEvent> events = new ArrayList<>();
@@ -72,7 +77,7 @@ public class VideoConsultationCall implements Serializable {
 //        this.isIDProofChecked = isIDProofChecked;
 //    }
 
-    public VideoConsultationCall(String videoCallId, LocalDateTime callStartTime, LocalDateTime callEndTime, VideoConsultationCallService.VideoCallStatus callStatus, boolean isPatientConsent1Given, boolean isPatientConsent2Given, boolean isMHPConsentGiven, boolean isIDProofChecked) {
+    public VideoConsultationCall(String videoCallId, LocalDateTime callStartTime, LocalDateTime callEndTime, VideoConsultationCallService.VideoCallStatus callStatus, boolean isPatientConsent1Given, boolean isPatientConsent2Given, boolean isMHPConsentGiven, VideoConsultationIDProof.VideoCallIDProofStatus isIDProofStatus) {
         this.videoCallId = videoCallId;
         this.callStartTime = callStartTime;
         this.callEndTime = callEndTime;
@@ -80,13 +85,26 @@ public class VideoConsultationCall implements Serializable {
         this.isPatientConsent1Given = isPatientConsent1Given;
         this.isPatientConsent2Given = isPatientConsent2Given;
         this.isMHPConsentGiven = isMHPConsentGiven;
-        this.isIDProofChecked = isIDProofChecked;
+        this.isIDProofStatus = isIDProofStatus;
     }
+
+
+//    public VideoConsultationCall(String videoCallId, LocalDateTime callStartTime, LocalDateTime callEndTime, VideoConsultationCallService.VideoCallStatus callStatus, boolean isPatientConsent1Given, boolean isPatientConsent2Given, boolean isMHPConsentGiven, boolean isIDProofChecked) {
+//        this.videoCallId = videoCallId;
+//        this.callStartTime = callStartTime;
+//        this.callEndTime = callEndTime;
+//        this.callStatus = callStatus;
+//        this.isPatientConsent1Given = isPatientConsent1Given;
+//        this.isPatientConsent2Given = isPatientConsent2Given;
+//        this.isMHPConsentGiven = isMHPConsentGiven;
+//        this.isIDProofChecked = isIDProofChecked;
+//    }
 
     public VideoConsultationCall(String videoCallId) {
 
-        this(videoCallId, null, null, VideoConsultationCallService.VideoCallStatus.STARTED, false, false, false, false);
+//        this(videoCallId, null, null, VideoConsultationCallService.VideoCallStatus.STARTED, false, false, false, NOT);
 //        this.videoCallId = videoCallId;
+        this(videoCallId, null, null, VideoConsultationCallService.VideoCallStatus.STARTED, false, false, false, VideoConsultationIDProof.VideoCallIDProofStatus.NOTVERIFIED);
     }
 
     //    public VideoConsultationCall(String videoCallId, String callStatus, boolean isPatientConsent1Given, boolean isPatientConsent2Given, boolean isMHPConsentGiven, boolean isIDProofChecked) {

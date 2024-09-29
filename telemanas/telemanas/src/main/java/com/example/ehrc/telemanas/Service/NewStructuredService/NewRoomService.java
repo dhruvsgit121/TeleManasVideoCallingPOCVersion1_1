@@ -63,6 +63,8 @@ public class NewRoomService {
     @Value("${jwt.expirationOffSet}")
     private int expirationOffset;
 
+
+    @Transactional
     public ResponseEntity<Map<String, Object>> createRoom(AuthenticateUserDTO userDTOData, PatientDataModal patientDataModal, MHPDataModal mhpDataModal) {
 
         System.out.println("roomShortCodesList : " + patientDataModal.getMobileNumber());
