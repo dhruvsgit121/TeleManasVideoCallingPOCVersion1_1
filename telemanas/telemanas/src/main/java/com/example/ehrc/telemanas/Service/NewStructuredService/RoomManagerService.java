@@ -111,6 +111,10 @@ public class RoomManagerService {
         return roomService.joinPatientRoom(roomDetailsRequest);
     }
 
+    public ResponseEntity<Map<String, Object>> getPrescriptionDetails(String roomShortCode) {
+        return prescriptionService.getPrescriptionDetails(roomShortCode);
+    }
+
 
     public ResponseEntity<Map<String, Object>> resendPrescriptionLink(AuthenticateUserDTO userDTOData, AuthenticationService authenticationService, SendPrescriptionDTO sendPrescriptionData) {
         return prescriptionService.resendPrescriptionLink(userDTOData, authenticationService, authenticateUserFactory, sendPrescriptionData);

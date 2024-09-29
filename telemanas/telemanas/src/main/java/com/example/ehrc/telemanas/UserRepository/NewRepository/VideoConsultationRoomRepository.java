@@ -17,5 +17,8 @@ public interface VideoConsultationRoomRepository extends JpaRepository<VideoCons
     @Query(value = "SELECT * FROM video_consultation_room WHERE room_short_code = :roomShortCode AND is_active = TRUE", nativeQuery = true)
     VideoConsultationRoom findRoomDetailsWithActiveStatus(@Param("roomShortCode") String roomShortCode);
 
+    @Query(value = "SELECT * FROM video_consultation_room WHERE room_short_code = :roomShortCode", nativeQuery = true)
+    VideoConsultationRoom findRoomDetailsWith(@Param("roomShortCode") String roomShortCode);
+
 
 }

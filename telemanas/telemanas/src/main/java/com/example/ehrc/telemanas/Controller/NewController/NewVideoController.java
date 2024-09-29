@@ -96,6 +96,11 @@ public class NewVideoController {
     }
 
 
+    @GetMapping("/get_prescription")
+    public ResponseEntity<Map<String, Object>> getPrescriptionDetails(@RequestParam String roomShortCode) {
+        return videoService.getPrescriptionDetails(roomShortCode);
+    }
+
 
     @RequestMapping("/resendlink")
     public ResponseEntity<Map<String, Object>> resendMeetingLink(@Valid @RequestBody ResendVideoCallLinkDTO resendLinkData,

@@ -10,6 +10,7 @@ import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationRoom
 import com.example.ehrc.telemanas.Service.NewServices.TwilioSMSService;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationPrescriptionRepository;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationRoomRepository;
+import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
 //import org.hibernate.tool.schema.spi.SchemaTruncator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +36,27 @@ public class PrescriptionService {
     @Autowired
     private VideoCallingUtilities videoCallingUtilities;
 
+    public ResponseEntity<Map<String, Object>> getPrescriptionDetails(String roomShortCode) {
+
+        VideoConsultationRoom requestedRoom = videoConsultationRoomRepository.findRoomDetailsWith(roomShortCode);
+        if (requestedRoom == null)
+            return videoCallingUtilities.getErrorResponseMessageEntity(VideoCallingAPIConstants.ERROR_MESSAGE_PRESCRIPTION_ROOM_DOES_NOT_EXISTS, HttpStatus.SEE_OTHER);
+
+        VideoConsultationPrescription videoPrescriptionData = videoConsultationPrescriptionRepository.findPrescriptionDetailsWith(requestedRoom.getVideoCallData().getId()) ;
+        if (videoPrescriptionData == null)
+            return videoCallingUtilities.getErrorResponseMessageEntity(VideoCallingAPIConstants.ERROR_MESSAGE_PRESCRIPTION_DOES_NOT_EXISTS, HttpStatus.SEE_OTHER);
+
+        
+        Map<String, Object> resposneMap = videoCallingUtilities.getSuccessResponseMap();
+        resposneMap.put("ivrsCallid", videoPrescriptionData.getCallIvrsID());
+        return new ResponseEntity<>(resposneMap, HttpStatus.OK);
+    }
+
     public ResponseEntity<Map<String, Object>> resendPrescriptionLink(AuthenticateUserDTO userDTOData, AuthenticationService authenticationService, AuthenticateUserFactory authenticateUserFactory, SendPrescriptionDTO sendPrescriptionData) {
 
         Map<String, Object> decryptPhoneNumberResponseMap = new HashMap<>();
 
-        if(videoCallingUtilities.getRoomActivationCheckResponseMap(sendPrescriptionData.getRoomShortCode()) != null)
+        if (videoCallingUtilities.getRoomActivationCheckResponseMap(sendPrescriptionData.getRoomShortCode()) != null)
             return videoCallingUtilities.getRoomActivationCheckResponseMap(sendPrescriptionData.getRoomShortCode());
 
         ResponseEntity<Map<String, Object>> decryptUserPhoneNumberResponseMap = authenticationService.getDecryptedPhoneNumber(userDTOData, authenticateUserFactory, sendPrescriptionData.getEncryptedPhoneNumber(), decryptPhoneNumberResponseMap);
@@ -61,14 +78,14 @@ public class PrescriptionService {
         return new ResponseEntity<>(resposneMap, HttpStatus.OK);
     }
 
-    public void sendPrescriptionLinkDataData(SendPrescriptionDTO sendPrescriptionData){
+    public void sendPrescriptionLinkDataData(SendPrescriptionDTO sendPrescriptionData) {
         VideoConsultationRoom requestedRoom = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(sendPrescriptionData.getRoomShortCode());
         savePrescriptionLinVideoCallPrescriptionData(requestedRoom, sendPrescriptionData);
     }
 
-    public void savePrescriptionLinVideoCallPrescriptionData(VideoConsultationRoom requestedRoom, SendPrescriptionDTO sendPrescriptionData){
+    public void savePrescriptionLinVideoCallPrescriptionData(VideoConsultationRoom requestedRoom, SendPrescriptionDTO sendPrescriptionData) {
         VideoConsultationPrescription prescription = videoConsultationPrescriptionRepository.findPrescriptionDetailsWith(requestedRoom.getVideoCallData().getId());
-        if(prescription == null){
+        if (prescription == null) {
             VideoConsultationPrescription prescriptionData = new VideoConsultationPrescription(videoCallingUtilities.getDateTimeWithOffset(0), sendPrescriptionData.getIvrsCallID());
             prescriptionData.setVideoCallData(requestedRoom.getVideoCallData());
             videoConsultationPrescriptionRepository.save(prescriptionData);

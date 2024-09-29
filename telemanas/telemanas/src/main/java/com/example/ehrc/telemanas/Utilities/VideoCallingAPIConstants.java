@@ -10,6 +10,9 @@ public class VideoCallingAPIConstants {
     public static String errorMessageValue= "errorMessage";
 
     public static String ERROR_MESSAGE_ROOM_DOES_NOT_EXISTS = "Room you requested is either expired or does not exists.";
+    public static String ERROR_MESSAGE_PRESCRIPTION_ROOM_DOES_NOT_EXISTS = "Room you requested does not exists.";
+    public static String ERROR_MESSAGE_PRESCRIPTION_DOES_NOT_EXISTS = "Prescription does not exists for the requested room.";
+
 
     public static String getUserDetailsURL;
     public static String decryptPatientMobileNumberURL;

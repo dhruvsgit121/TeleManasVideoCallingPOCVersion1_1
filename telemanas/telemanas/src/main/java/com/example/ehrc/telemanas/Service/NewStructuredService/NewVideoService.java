@@ -36,6 +36,10 @@ public class NewVideoService {
         return roomManagerService.resendPrescriptionLink(userDTOData, authenticationService, sendPrescriptionData);
     }
 
+    public ResponseEntity<Map<String, Object>> getPrescriptionDetails(String roomShortCode) {
+        return roomManagerService.getPrescriptionDetails(roomShortCode);
+    }
+
 //    public ResponseEntity<Map<String, Object>> resendVideoCallLink(AuthenticateUserDTO userAuthorisationDataDTO, AuthenticationService authenticationService) {
 
     public ResponseEntity<Map<String, Object>> deactivateRequestedRoom(String roomShortCode) {
