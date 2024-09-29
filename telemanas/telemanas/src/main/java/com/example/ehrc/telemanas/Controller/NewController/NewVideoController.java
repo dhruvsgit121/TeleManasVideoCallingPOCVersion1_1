@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 //import java.util.HashMap;
 import java.util.Map;
@@ -93,6 +94,12 @@ public class NewVideoController {
         AuthenticateUserDTO userDataDTO = new AuthenticateUserDTO(sendPrescriptionData);
         setAuthorizationData(userDataDTO, bearerToken, loggedIn);
         return videoService.resendPrescriptionLink(userDataDTO, sendPrescriptionData);
+    }
+
+
+    @PostMapping("/upload")
+    public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("roomShortCode") String roomShortCode) {
+        return videoService.uploadFile(file, roomShortCode);
     }
 
 

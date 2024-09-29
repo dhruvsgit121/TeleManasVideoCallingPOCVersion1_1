@@ -46,7 +46,7 @@ public class PrescriptionService {
         if (videoPrescriptionData == null)
             return videoCallingUtilities.getErrorResponseMessageEntity(VideoCallingAPIConstants.ERROR_MESSAGE_PRESCRIPTION_DOES_NOT_EXISTS, HttpStatus.SEE_OTHER);
 
-        
+
         Map<String, Object> resposneMap = videoCallingUtilities.getSuccessResponseMap();
         resposneMap.put("ivrsCallid", videoPrescriptionData.getCallIvrsID());
         return new ResponseEntity<>(resposneMap, HttpStatus.OK);

@@ -3,12 +3,12 @@ package com.example.ehrc.telemanas.Service.NewStructuredService;
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
-import com.example.ehrc.telemanas.DTO.NewStructuredDTO.ResendVideoCallLinkDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.SendPrescriptionDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.PatientDataModal;
 //import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
+import com.example.ehrc.telemanas.Model.NewStructuredModal.NewUserIdentityService;
 import com.example.ehrc.telemanas.Service.NewServices.EventService;
 import com.example.ehrc.telemanas.Service.NewServices.TwilioSMSService;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +32,9 @@ public class RoomManagerService {
 
     @Autowired
     private EventService eventService;
+
+    @Autowired
+    private NewUserIdentityService userIdentityService;
 
     @Autowired
     private TwilioSMSService twilioSMSService;
@@ -113,6 +117,10 @@ public class RoomManagerService {
 
     public ResponseEntity<Map<String, Object>> getPrescriptionDetails(String roomShortCode) {
         return prescriptionService.getPrescriptionDetails(roomShortCode);
+    }
+
+    public ResponseEntity<Map<String, Object>> uploadFile(MultipartFile file, String roomShortCode) {
+        return userIdentityService.uploadFile(file, roomShortCode);
     }
 
 
