@@ -2,6 +2,7 @@ package com.example.ehrc.telemanas.Service.NewStructuredService;
 
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.ResendVideoCallLinkDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,12 @@ public class NewVideoService {
     public ResponseEntity<Map<String, Object>> createMeetingLink(AuthenticateUserDTO userAuthorisationDataDTO) {
         return roomManagerService.createMeetingLink(userAuthorisationDataDTO, authenticationService);
     }
+
+    public ResponseEntity<Map<String, Object>> resendVideoCallLink(AuthenticateUserDTO userDTOData, String encryptedPhoneNumber) {
+        return roomManagerService.resendVideoCallLink(userDTOData, authenticationService, encryptedPhoneNumber);
+    }
+
+//    public ResponseEntity<Map<String, Object>> resendVideoCallLink(AuthenticateUserDTO userAuthorisationDataDTO, AuthenticationService authenticationService) {
 
     public ResponseEntity<Map<String, Object>> deactivateRequestedRoom(String roomShortCode) {
         return roomManagerService.deactivateRequestedRoom(roomShortCode);

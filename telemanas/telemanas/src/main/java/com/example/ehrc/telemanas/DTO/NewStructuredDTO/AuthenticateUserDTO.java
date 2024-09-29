@@ -38,5 +38,12 @@ public class AuthenticateUserDTO {
 
     private String roomShortCode;
 
-//    private Integer isDoctorConsentProvided;
+    public AuthenticateUserDTO() {
+    }
+
+    public AuthenticateUserDTO(ResendVideoCallLinkDTO resendLinkData) {
+        this.bearerToken = resendLinkData.getBearerToken();
+        this.loggedInId = resendLinkData.getLoggedInId();
+        this.roomShortCode = resendLinkData.getRoomShortCode();
+    }
 }

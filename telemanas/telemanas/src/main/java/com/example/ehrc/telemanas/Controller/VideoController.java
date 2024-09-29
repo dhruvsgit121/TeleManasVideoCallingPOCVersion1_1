@@ -46,10 +46,10 @@ public class VideoController {
 
 
 
-    @PostMapping("/saveeventsdata")
-    public ResponseEntity<Map<String, Object>> saveVideoCallEventsData(@Valid @RequestBody VideoCallEventsDTO videoCallEventsDTO) {
-        return videoCallService.saveVideoCallEvents(videoCallEventsDTO);
-    }
+//    @PostMapping("/saveeventsdata")
+//    public ResponseEntity<Map<String, Object>> saveVideoCallEventsData(@Valid @RequestBody VideoCallEventsDTO videoCallEventsDTO) {
+//        return videoCallService.saveVideoCallEvents(videoCallEventsDTO);
+//    }
 
 //    @GetMapping("/helloworld")
 //    public String getVideoRoomDetails() {

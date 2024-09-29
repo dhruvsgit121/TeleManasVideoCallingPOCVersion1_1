@@ -3,6 +3,7 @@ package com.example.ehrc.telemanas.Controller.NewController;
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 //import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.ResendVideoCallLinkDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import com.example.ehrc.telemanas.Service.NewStructuredService.NewVideoService;
@@ -82,6 +83,23 @@ public class NewVideoController {
         return videoService.deactivateRequestedRoom(roomShortCode);
     }
 
+
+
+    @RequestMapping("/resendlink")
+    public ResponseEntity<Map<String, Object>> resendMeetingLink(@Valid @RequestBody ResendVideoCallLinkDTO resendLinkData,
+                                                                 @RequestHeader("Authorization") String bearerToken,
+                                                                 @RequestHeader(value = "Loggedin") String loggedIn) {
+
+        AuthenticateUserDTO userDataDTO = new AuthenticateUserDTO(resendLinkData);
+
+
+        setAuthorizationData(userDataDTO, bearerToken, loggedIn);
+        return videoService.resendVideoCallLink(userDataDTO, resendLinkData.getEncryptedPhoneNumber());
+    }
+
+
+
+
     private void setAuthorizationData(AuthenticateUserDTO userDTOData, String bearerToken, String loggedIn) {
         String token = bearerToken.substring(7);
 
@@ -89,6 +107,14 @@ public class NewVideoController {
         userDTOData.setBearerToken(token);
         userDTOData.setLoggedInId(loggedIn);
     }
+
+//    private void setAuthorizationData(ResendVideoCallLinkDTO resendLinkData, String bearerToken, String loggedIn) {
+//        String token = bearerToken.substring(7);
+//
+//        //Adjusting The UserDTOData...
+//        resendLinkData.setBearerToken(token);
+//        resendLinkData.setLoggedInId(loggedIn);
+//    }
 
     private void setAuthorizationData(CallStartDTO callStartDTO, String bearerToken, String loggedIn) {
         String token = bearerToken.substring(7);
