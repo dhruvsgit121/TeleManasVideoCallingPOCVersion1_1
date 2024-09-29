@@ -83,6 +83,10 @@ public class RoomManagerService {
         return roomService.deactivateRequestedRoom(roomShortCode);
     }
 
+    public ResponseEntity<Map<String, Object>> getFile(String roomShortCode) {
+        return userIdentityService.getFile(roomShortCode);
+    }
+
 
     public ResponseEntity<Map<String, Object>> fetchUserIdentityUploadFlag(String roomShortCode) {
         return userIdentityService.fetchUserIdentityFlag(roomShortCode);

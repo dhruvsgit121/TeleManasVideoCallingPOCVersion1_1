@@ -56,6 +56,12 @@ public class NewVideoService {
         return roomManagerService.deactivateRequestedRoom(roomShortCode);
     }
 
+
+    public ResponseEntity<Map<String, Object>> getFile(String roomShortCode) {
+        return roomManagerService.getFile(roomShortCode);
+    }
+
+
     public ResponseEntity<Map<String, Object>> fetchUserIdentityUploadFlag(String roomShortCode) {
         return roomManagerService.fetchUserIdentityUploadFlag(roomShortCode);
     }

@@ -1,14 +1,17 @@
 package com.example.ehrc.telemanas.Model.NewStructuredModal;
 
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.VerifyUserIdentityDTO;
+import com.example.ehrc.telemanas.Model.UserIdentity;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationIDProofRepository;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationRoomRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
@@ -87,5 +90,44 @@ public class NewUserIdentityService {
         if (requestedRoom != null && requestedRoom.getVideoCallData().getVideoCallIdProof() != null)
             responseMap.put("isUploaded", true);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity<Map<String, Object>> getFile(String roomShortCode) {
+
+        System.out.println("API hit : " + roomShortCode);
+
+        if (videoCallingUtilities.getRoomActivationCheckResponseMap(roomShortCode) != null)
+            return videoCallingUtilities.getRoomActivationCheckResponseMap(roomShortCode);
+
+        VideoConsultationRoom requestedRoom = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(roomShortCode);
+
+        if (requestedRoom != null && requestedRoom.getVideoCallData().getVideoCallIdProof() == null)
+            return videoCallingUtilities.getGlobalErrorResponseMessageEntity("No ID Proof exists for given room. Please try uploading the ID Proof first.");
+
+        VideoConsultationCall callData = requestedRoom.getVideoCallData();
+        VideoConsultationIDProof IDProofData = callData.getVideoCallIdProof();
+
+        System.out.println("fileEntityOpt : " + IDProofData);
+        if (IDProofData != null) {
+            // Create a response map
+            Map<String, Object> response = videoCallingUtilities.getSuccessResponseMap();
+            response.put("fileName", IDProofData.getFileName());
+            response.put("fileData", IDProofData.getFileData());
+            // Assuming this is a byte array
+            response.put("fileType", IDProofData.getFileType());
+            response.put("message", "File retrieved successfully");
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON) // Set content type to JSON
+                    .body(response);
+
+//            return ResponseEntity.ok()
+//                    .header("Content-Disposition", "attachment; filename=\"" + IDProofData.getFileName() + "\"")
+//                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+//                    .body(response);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

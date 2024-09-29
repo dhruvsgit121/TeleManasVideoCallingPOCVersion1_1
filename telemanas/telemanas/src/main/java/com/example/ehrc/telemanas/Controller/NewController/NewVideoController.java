@@ -86,6 +86,11 @@ public class NewVideoController {
         return videoService.deactivateRequestedRoom(roomShortCode);
     }
 
+    @GetMapping("/files/{roomShortCode}")
+    public ResponseEntity<Map<String, Object>> getFile(@PathVariable String roomShortCode) {
+        return videoService.getFile(roomShortCode);
+    }
+
 
     @GetMapping("/fetchuseridentityuploadflag")
     public ResponseEntity<Map<String, Object>> fetchUserIdentityUploadFlag(@RequestParam String roomShortCode) {
