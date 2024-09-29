@@ -1,15 +1,14 @@
 package com.example.ehrc.telemanas.Service.NewStructuredService;
 
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
-import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
-import com.example.ehrc.telemanas.DTO.NewStructuredDTO.ResendVideoCallLinkDTO;
-import com.example.ehrc.telemanas.DTO.NewStructuredDTO.SendPrescriptionDTO;
-import com.example.ehrc.telemanas.DTO.NewStructuredDTO.VerifyUserIdentityDTO;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.*;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
@@ -38,7 +37,11 @@ public class NewVideoService {
         return roomManagerService.resendPrescriptionLink(userDTOData, authenticationService, sendPrescriptionData);
     }
 
-    public ResponseEntity<Map<String, Object>> uploadFile(MultipartFile file, String roomShortCode) {
+    public ResponseEntity<Map<String, Object>> getPatientRoomDetails(PatientRoomDetailsDTO patientRoomDetailsDTO) {
+        return roomManagerService.getPatientRoomDetails(patientRoomDetailsDTO);
+    }
+
+        public ResponseEntity<Map<String, Object>> uploadFile(MultipartFile file, String roomShortCode) {
         return roomManagerService.uploadFile(file, roomShortCode);
     }
 

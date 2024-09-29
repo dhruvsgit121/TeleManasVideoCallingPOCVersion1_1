@@ -1,11 +1,8 @@
 package com.example.ehrc.telemanas.Controller.NewController;
 
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
-import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.*;
 //import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
-import com.example.ehrc.telemanas.DTO.NewStructuredDTO.ResendVideoCallLinkDTO;
-import com.example.ehrc.telemanas.DTO.NewStructuredDTO.SendPrescriptionDTO;
-import com.example.ehrc.telemanas.DTO.NewStructuredDTO.VerifyUserIdentityDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import com.example.ehrc.telemanas.Service.NewStructuredService.NewVideoService;
@@ -92,6 +89,11 @@ public class NewVideoController {
     }
 
 
+
+
+
+
+
     @GetMapping("/fetchuseridentityuploadflag")
     public ResponseEntity<Map<String, Object>> fetchUserIdentityUploadFlag(@RequestParam String roomShortCode) {
         return videoService.fetchUserIdentityUploadFlag(roomShortCode);
@@ -107,6 +109,17 @@ public class NewVideoController {
         setAuthorizationData(userDataDTO, bearerToken, loggedIn);
         return videoService.resendPrescriptionLink(userDataDTO, sendPrescriptionData);
     }
+
+
+    @PostMapping("/getpatientroomdetails")
+    public ResponseEntity<Map<String, Object>> getPatientRoomDetails(@Valid @RequestBody PatientRoomDetailsDTO patientRoomDetailsDTO) {
+
+//        AuthenticateUserDTO userDataDTO = new AuthenticateUserDTO(patientRoomDetailsDTO);
+//        setAuthorizationData(userDataDTO, bearerToken, loggedIn);
+        return videoService.getPatientRoomDetails(patientRoomDetailsDTO);
+    }
+
+
 
 
 

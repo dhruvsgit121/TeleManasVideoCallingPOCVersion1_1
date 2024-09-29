@@ -32,17 +32,17 @@ public class VideoController {
 
 
     //    @GetMapping("/files/{id}")
-    @GetMapping("/files/{roomShortCode}")
-    public ResponseEntity<byte[]> getFile(@PathVariable String roomShortCode) {
-        return videoCallService.getFile(roomShortCode);
-    }
-
-
-    //    @GetMapping("/files/{id}")
-    @GetMapping("/verifyuseridentity/{roomShortCode}")
-    public ResponseEntity<String> verifyUserIdentity(@PathVariable String roomShortCode) {
-        return videoCallService.verifyUserIdentity(roomShortCode);
-    }
+//    @GetMapping("/files/{roomShortCode}")
+//    public ResponseEntity<byte[]> getFile(@PathVariable String roomShortCode) {
+//        return videoCallService.getFile(roomShortCode);
+//    }
+//
+//
+//    //    @GetMapping("/files/{id}")
+//    @GetMapping("/verifyuseridentity/{roomShortCode}")
+//    public ResponseEntity<String> verifyUserIdentity(@PathVariable String roomShortCode) {
+//        return videoCallService.verifyUserIdentity(roomShortCode);
+//    }
 
 
 

@@ -38,6 +38,10 @@ public class VideoConsultationParticipant implements Serializable {
     @JoinColumn(name = "room_id", referencedColumnName = "id")
     private VideoConsultationRoom room;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private VideoConsultationUser user;
+
     @OneToMany(mappedBy = "participant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VideoConsultationEvent> events = new ArrayList<>();
 

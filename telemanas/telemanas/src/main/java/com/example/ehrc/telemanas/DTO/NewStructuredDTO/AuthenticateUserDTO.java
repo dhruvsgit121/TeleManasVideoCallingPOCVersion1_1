@@ -41,6 +41,14 @@ public class AuthenticateUserDTO {
     public AuthenticateUserDTO() {
     }
 
+//    PatientRoomDetailsDTO patientRoomDetailsDTO
+
+//    public AuthenticateUserDTO(PatientRoomDetailsDTO patientRoomDetailsDTO) {
+//        this.bearerToken = patientRoomDetailsDTO.getBearerToken();
+//        this.loggedInId = patientRoomDetailsDTO.getLoggedInId();
+//        this.roomShortCode = patientRoomDetailsDTO.getRoomShortCode();
+//    }
+
     public AuthenticateUserDTO(ResendVideoCallLinkDTO resendLinkData) {
         this.bearerToken = resendLinkData.getBearerToken();
         this.loggedInId = resendLinkData.getLoggedInId();

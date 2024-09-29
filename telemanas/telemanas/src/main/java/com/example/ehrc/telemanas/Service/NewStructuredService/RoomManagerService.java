@@ -3,6 +3,7 @@ package com.example.ehrc.telemanas.Service.NewStructuredService;
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.PatientRoomDetailsDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.SendPrescriptionDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.VerifyUserIdentityDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
@@ -13,10 +14,12 @@ import com.example.ehrc.telemanas.Model.NewStructuredModal.NewUserIdentityServic
 import com.example.ehrc.telemanas.Service.NewServices.EventService;
 import com.example.ehrc.telemanas.Service.NewServices.TwilioSMSService;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
@@ -137,6 +140,26 @@ public class RoomManagerService {
     public ResponseEntity<Map<String, Object>> verifyUserIdentity(VerifyUserIdentityDTO verifyUserIdentityDTO) {
         return userIdentityService.verifyUserIdentity(verifyUserIdentityDTO);
     }
+
+
+    public ResponseEntity<Map<String, Object>> getPatientRoomDetails(PatientRoomDetailsDTO patientRoomDetailsDTO) {
+
+
+        return roomService.getPatientRoomDetails(patientRoomDetailsDTO);
+//
+//        if (videoCallingUtilities.getRoomActivationCheckResponseMap(patientRoomDetailsDTO.getRoomShortCode()) != null) {
+//            return videoCallingUtilities.getRoomActivationCheckResponseMap(patientRoomDetailsDTO.getRoomShortCode());
+//        }
+//
+//
+//
+//
+//
+//
+//        return new ResponseEntity<>(videoCallingUtilities.getSuccessResponseMap(), HttpStatus.OK);
+
+    }
+
 
 
     public ResponseEntity<Map<String, Object>> resendPrescriptionLink(AuthenticateUserDTO userDTOData, AuthenticationService authenticationService, SendPrescriptionDTO sendPrescriptionData) {
