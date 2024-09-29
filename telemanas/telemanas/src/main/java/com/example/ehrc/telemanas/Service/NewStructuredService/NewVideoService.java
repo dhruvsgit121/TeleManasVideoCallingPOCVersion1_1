@@ -56,6 +56,10 @@ public class NewVideoService {
         return roomManagerService.deactivateRequestedRoom(roomShortCode);
     }
 
+    public ResponseEntity<Map<String, Object>> fetchUserIdentityUploadFlag(String roomShortCode) {
+        return roomManagerService.fetchUserIdentityUploadFlag(roomShortCode);
+    }
+
 
     //Method to Join Video Call...
     public ResponseEntity<Map<String, Object>> JoinVideoCall(CallStartDTO callStartDTO) {

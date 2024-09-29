@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-//import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -30,7 +29,7 @@ public class NewUserIdentityService {
     @Transactional
     public ResponseEntity<Map<String, Object>> uploadFile(MultipartFile file, String roomShortCode) {
 
-        if(videoCallingUtilities.getRoomActivationCheckResponseMap(roomShortCode) != null)
+        if (videoCallingUtilities.getRoomActivationCheckResponseMap(roomShortCode) != null)
             return videoCallingUtilities.getRoomActivationCheckResponseMap(roomShortCode);
 
         if (file.isEmpty()) {
@@ -40,7 +39,7 @@ public class NewUserIdentityService {
 
             VideoConsultationRoom requestedRoom = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(roomShortCode);
 
-            if(requestedRoom.getVideoCallData().getVideoCallIdProof() != null)
+            if (requestedRoom.getVideoCallData().getVideoCallIdProof() != null)
                 return videoCallingUtilities.getErrorResponseMessageEntity("ID Proof for current room is already uploaded.", HttpStatus.BAD_REQUEST);
 
             VideoConsultationIDProof userIDProof = new VideoConsultationIDProof(file.getBytes(), file.getOriginalFilename(), file.getContentType());
@@ -60,7 +59,6 @@ public class NewUserIdentityService {
     }
 
 
-
     @Transactional
     public ResponseEntity<Map<String, Object>> verifyUserIdentity(VerifyUserIdentityDTO verifyUserIdentityDTO) {
 
@@ -78,5 +76,16 @@ public class NewUserIdentityService {
         videoConsultationRoomRepository.save(requestedRoom);
 
         return new ResponseEntity<>(videoCallingUtilities.getSuccessResponseMap(), HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity<Map<String, Object>> fetchUserIdentityFlag(String roomShortCode) {
+
+        VideoConsultationRoom requestedRoom = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(roomShortCode);
+
+        Map<String, Object> responseMap = videoCallingUtilities.getSuccessResponseMap();
+        if (requestedRoom != null && requestedRoom.getVideoCallData().getVideoCallIdProof() != null)
+            responseMap.put("isUploaded", true);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 }

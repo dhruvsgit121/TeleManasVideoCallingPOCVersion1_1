@@ -87,6 +87,12 @@ public class NewVideoController {
     }
 
 
+    @GetMapping("/fetchuseridentityuploadflag")
+    public ResponseEntity<Map<String, Object>> fetchUserIdentityUploadFlag(@RequestParam String roomShortCode) {
+        return videoService.fetchUserIdentityUploadFlag(roomShortCode);
+    }
+
+
     @RequestMapping("/send_prescription")
     public ResponseEntity<Map<String, Object>> sendPrescriptionLink(@Valid @RequestBody SendPrescriptionDTO sendPrescriptionData,
                                                                  @RequestHeader("Authorization") String bearerToken,
