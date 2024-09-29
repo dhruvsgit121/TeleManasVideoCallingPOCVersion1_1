@@ -18,4 +18,6 @@ public class VideoCallEventsDTO {
     @NotBlank(message = "Room Short Code cannot be blank. Please enter Room Short Code to proceed.")
     private String roomShortCode;
 
+    private int isMHP;
+
 }

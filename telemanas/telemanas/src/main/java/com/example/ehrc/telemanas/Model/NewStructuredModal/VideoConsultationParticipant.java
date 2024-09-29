@@ -1,7 +1,7 @@
 package com.example.ehrc.telemanas.Model.NewStructuredModal;
 
-import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
-import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
+//import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
+//import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+//import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,50 +38,12 @@ public class VideoConsultationParticipant implements Serializable {
     @JoinColumn(name = "room_id", referencedColumnName = "id")
     private VideoConsultationRoom room;
 
+    @OneToMany(mappedBy = "participant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VideoConsultationEvent> events = new ArrayList<>();
+
     public VideoConsultationParticipant(String jwt_token, String participantID, boolean isOrganiser) {
         this.jwt_token = jwt_token;
         this.participantID = participantID;
         this.isOrganiser = isOrganiser;
     }
-
-
-    //    id (pk)
-//
-//    is organizer
-//    participant id (telemanas/user)
-//    jwt_token
-
-//    room id (fk)
-
-//    public void setRoom(VideoConsultationRoom room) {
-//        this.room = room;
-//    }
-
-//    // Utility method to add a participant...
-//    public void addParticipant(VideoConsultationParticipant participant) {
-//        participants.add(participant);
-//        participant.setRoom(this);
-//    }
-
-    //roomid
-
-
-//    private LocalDateTime creationDate;
-//
-//    private LocalDateTime expirationDate;
-
-    //For Future User...
-//    private LocalDateTime updateDate;
-
-
-
-
-//    id (pk)
-//    room id (fk)
-//    is organizer
-//    participant id (telemanas/user)
-//    jwt_token
-
-
-
 }

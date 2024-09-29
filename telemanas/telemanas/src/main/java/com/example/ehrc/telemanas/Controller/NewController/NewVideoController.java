@@ -4,6 +4,7 @@ import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 //import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
+import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import com.example.ehrc.telemanas.Service.NewStructuredService.NewVideoService;
 import com.example.ehrc.telemanas.Service.NewStructuredService.RoomManagerService;
 import jakarta.validation.Valid;
@@ -63,6 +64,15 @@ public class NewVideoController {
     @GetMapping("/getpatientjoinflag")
     public ResponseEntity<Map<String, Object>> getPatientRoomJoinDetails(@RequestParam String roomShortCode) {
         return videoService.PatientJoinVideoCall(roomShortCode);
+    }
+
+
+    //###################### VIDEO CALL RELATED API's ######################
+
+
+    @PostMapping("/saveeventsdata")
+    public ResponseEntity<Map<String, Object>> saveVideoCallEventsData(@Valid @RequestBody VideoCallEventsDTO videoCallEventsDTO) {
+        return videoService.saveVideoCallEvents(videoCallEventsDTO);
     }
 
 

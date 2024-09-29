@@ -1,6 +1,7 @@
 package com.example.ehrc.telemanas.Model.NewStructuredModal;
 
 import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
+import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Service.NewStructuredService.VideoConsultationCallService;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,6 +11,8 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -44,6 +47,10 @@ public class VideoConsultationCall implements Serializable {
     private boolean isMHPConsentGiven;
 
     private boolean isIDProofChecked;
+
+    @OneToMany(mappedBy = "videoCall", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VideoConsultationEvent> events = new ArrayList<>();
+
 
 //    @OneToOne
 //    @JoinColumn(name = "room_id", nullable = false)  // Foreign key column

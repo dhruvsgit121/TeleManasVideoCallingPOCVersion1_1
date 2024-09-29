@@ -3,9 +3,8 @@ package com.example.ehrc.telemanas.Service.NewStructuredService;
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
-import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
+import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +15,9 @@ public class NewVideoService {
 
     @Autowired
     private RoomManagerService roomManagerService;
+
+    @Autowired
+    private NewEventService eventService;
 
     @Autowired
     private AuthenticationService authenticationService;
@@ -47,7 +49,15 @@ public class NewVideoService {
 
     //Method to Join Video Call...
     public ResponseEntity<Map<String, Object>> PatientJoinVideoCall(String roomShortCode) {
+
+        eventService.getVideoConsultationMasterRecord("MHP Joined the room.");
+
         return roomManagerService.patientJoinCallFlagData(roomShortCode);
+    }
+
+
+    public ResponseEntity<Map<String, Object>> saveVideoCallEvents(VideoCallEventsDTO videoCallEventsDTO) {
+        return eventService.saveVideoCallEvent(videoCallEventsDTO);
     }
 
 //    //Method to Join Video Call...

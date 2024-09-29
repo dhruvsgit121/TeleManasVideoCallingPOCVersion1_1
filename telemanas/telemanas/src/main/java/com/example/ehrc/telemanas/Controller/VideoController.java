@@ -51,10 +51,10 @@ public class VideoController {
         return videoCallService.saveVideoCallEvents(videoCallEventsDTO);
     }
 
-    @GetMapping("/helloworld")
-    public String getVideoRoomDetails() {
-        return "videoCallService.startVideoCall(roomDetailsRequest)!!!!!!";
-    }
+//    @GetMapping("/helloworld")
+//    public String getVideoRoomDetails() {
+//        return "videoCallService.startVideoCall(roomDetailsRequest)!!!!!!";
+//    }
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("roomShortCode") String roomShortCode) {
@@ -121,36 +121,36 @@ public class VideoController {
     }
 
 
-    @PostMapping("/joinroom")
-    public ResponseEntity<Map<String, Object>> setJoinRoomTime(@Valid @RequestBody CallStartDTO callStartDTO, @RequestHeader("Authorization") String bearerToken,
-                                                               @RequestHeader(value = "Loggedin") String loggedIn) {
-        setAuthorizationData(callStartDTO, bearerToken, loggedIn);
-        return videoCallService.JoinVideoCall(callStartDTO);
-    }
+//    @PostMapping("/joinroom")
+//    public ResponseEntity<Map<String, Object>> setJoinRoomTime(@Valid @RequestBody CallStartDTO callStartDTO, @RequestHeader("Authorization") String bearerToken,
+//                                                               @RequestHeader(value = "Loggedin") String loggedIn) {
+//        setAuthorizationData(callStartDTO, bearerToken, loggedIn);
+//        return videoCallService.JoinVideoCall(callStartDTO);
+//    }
 
 
-    @PostMapping("/patientexitroom")
-    public ResponseEntity<Map<String, Object>> leaveVideoCall(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
-        return videoCallService.leaveVideoCall(roomDetailsRequest);
-    }
+//    @PostMapping("/patientexitroom")
+//    public ResponseEntity<Map<String, Object>> leaveVideoCall(@Valid @RequestBody RoomDetailsRequestDTO roomDetailsRequest) {
+//        return videoCallService.leaveVideoCall(roomDetailsRequest);
+//    }
+//
+//
+//    @PostMapping("/exitroom")
+//    public ResponseEntity<Map<String, Object>> leaveVideoCall(@Valid @RequestBody CallStartDTO callStartDTO, @RequestHeader("Authorization") String bearerToken,
+//                                                              @RequestHeader(value = "Loggedin") String loggedIn) {
+//        setAuthorizationData(callStartDTO, bearerToken, loggedIn);
+//        return videoCallService.leaveVideoCall(callStartDTO);
+//    }
 
 
-    @PostMapping("/exitroom")
-    public ResponseEntity<Map<String, Object>> leaveVideoCall(@Valid @RequestBody CallStartDTO callStartDTO, @RequestHeader("Authorization") String bearerToken,
-                                                              @RequestHeader(value = "Loggedin") String loggedIn) {
-        setAuthorizationData(callStartDTO, bearerToken, loggedIn);
-        return videoCallService.leaveVideoCall(callStartDTO);
-    }
-
-
-    private void setAuthorizationData(CallStartDTO callStartDTO, String bearerToken, String loggedIn) {
-
-        String token = bearerToken.substring(7);
-
-        //Adjusting The UserDTOData...
-        callStartDTO.setBearerToken(token);
-        callStartDTO.setLoggedInId(loggedIn);
-    }
+//    private void setAuthorizationData(CallStartDTO callStartDTO, String bearerToken, String loggedIn) {
+//
+//        String token = bearerToken.substring(7);
+//
+//        //Adjusting The UserDTOData...
+//        callStartDTO.setBearerToken(token);
+//        callStartDTO.setLoggedInId(loggedIn);
+//    }
 
     private void setAuthorizationData(AuthenticateUserDTO userDTOData, String bearerToken, String loggedIn) {
 
