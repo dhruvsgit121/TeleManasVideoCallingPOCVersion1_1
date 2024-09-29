@@ -112,13 +112,13 @@ public class VideoController {
 //    }
 
 
-    @RequestMapping("/resendlink")
-    public ResponseEntity<Map<String, Object>> resendMeetingLink(@Valid @RequestBody AuthenticateUserDTO userDTOData,
-                                                                 @RequestHeader("Authorization") String bearerToken,
-                                                                 @RequestHeader(value = "Loggedin") String loggedIn) {
-        setAuthorizationData(userDTOData, bearerToken, loggedIn);
-        return videoCallService.decryptPatientMobileNumberForResendSMS(userDTOData, authenticateUserFactory, userDTOData.getRoomShortCode());
-    }
+//    @RequestMapping("/resendlink")
+//    public ResponseEntity<Map<String, Object>> resendMeetingLink(@Valid @RequestBody AuthenticateUserDTO userDTOData,
+//                                                                 @RequestHeader("Authorization") String bearerToken,
+//                                                                 @RequestHeader(value = "Loggedin") String loggedIn) {
+//        setAuthorizationData(userDTOData, bearerToken, loggedIn);
+//        return videoCallService.decryptPatientMobileNumberForResendSMS(userDTOData, authenticateUserFactory, userDTOData.getRoomShortCode());
+//    }
 
 
 //    @PostMapping("/joinroom")
@@ -152,14 +152,14 @@ public class VideoController {
 //        callStartDTO.setLoggedInId(loggedIn);
 //    }
 
-    private void setAuthorizationData(AuthenticateUserDTO userDTOData, String bearerToken, String loggedIn) {
-
-        String token = bearerToken.substring(7);
-
-        //Adjusting The UserDTOData...
-        userDTOData.setBearerToken(token);
-        userDTOData.setLoggedInId(loggedIn);
-    }
+//    private void setAuthorizationData(AuthenticateUserDTO userDTOData, String bearerToken, String loggedIn) {
+//
+//        String token = bearerToken.substring(7);
+//
+//        //Adjusting The UserDTOData...
+//        userDTOData.setBearerToken(token);
+//        userDTOData.setLoggedInId(loggedIn);
+//    }
 
 //    @RequestMapping("/createroom")
 //    public ResponseEntity<Map<String, Object>> createRoom(@Valid @RequestBody AuthenticateUserDTO userDTOData,

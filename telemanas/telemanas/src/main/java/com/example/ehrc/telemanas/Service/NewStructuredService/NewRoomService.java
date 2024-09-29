@@ -16,6 +16,7 @@ import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationStat
 import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
+import com.example.ehrc.telemanas.Service.NewServices.TwilioSMSService;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationCallRepository;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationRoomRepository;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationStatusMasterRepository;
@@ -52,6 +53,9 @@ public class NewRoomService {
 
     @Autowired
     private JWTTokenService jwtTokenService;
+
+    @Autowired
+    private TwilioSMSService twilioSMSService;
 
     @Autowired
     private VideoConsultationCallService videoConsultationCallService;
@@ -156,6 +160,8 @@ public class NewRoomService {
 
         Map<String, Object> responseMap = videoCallingUtilities.getSuccessResponseMap();
         responseMap.put("roomCode", videoConsultationRoom.getRoomShortCode());
+
+        twilioSMSService.sendTestSms(patientDataModal.getMobileNumber(), roomShortCode);
 
         return new ResponseEntity(responseMap, HttpStatus.OK);
     }
