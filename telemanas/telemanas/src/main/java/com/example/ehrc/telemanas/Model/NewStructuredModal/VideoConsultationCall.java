@@ -3,6 +3,7 @@ package com.example.ehrc.telemanas.Model.NewStructuredModal;
 import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
 import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Service.NewStructuredService.VideoConsultationCallService;
+import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationIDProofRepository;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,6 +51,10 @@ public class VideoConsultationCall implements Serializable {
 
     @OneToMany(mappedBy = "videoCall", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VideoConsultationEvent> events = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "video_consultation_proof_id", nullable = true)  // Foreign key column
+    private VideoConsultationIDProof videoCallIdProof;
 
 
 //    @OneToOne
