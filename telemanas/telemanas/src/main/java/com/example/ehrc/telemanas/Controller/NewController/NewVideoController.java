@@ -4,6 +4,7 @@ import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 //import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.ResendVideoCallLinkDTO;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.SendPrescriptionDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import com.example.ehrc.telemanas.Service.NewStructuredService.NewVideoService;
@@ -81,6 +82,17 @@ public class NewVideoController {
     public ResponseEntity<Map<String, Object>> deactivatedRequestedRoom(@RequestParam String roomShortCode) {
         System.out.println("deactivateroom requetsed code is : " + roomShortCode);
         return videoService.deactivateRequestedRoom(roomShortCode);
+    }
+
+
+    @RequestMapping("/send_prescription")
+    public ResponseEntity<Map<String, Object>> sendPrescriptionLink(@Valid @RequestBody SendPrescriptionDTO sendPrescriptionData,
+                                                                 @RequestHeader("Authorization") String bearerToken,
+                                                                 @RequestHeader(value = "Loggedin") String loggedIn) {
+
+        AuthenticateUserDTO userDataDTO = new AuthenticateUserDTO(sendPrescriptionData);
+        setAuthorizationData(userDataDTO, bearerToken, loggedIn);
+        return videoService.resendPrescriptionLink(userDataDTO, sendPrescriptionData);
     }
 
 

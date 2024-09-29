@@ -46,4 +46,10 @@ public class AuthenticateUserDTO {
         this.loggedInId = resendLinkData.getLoggedInId();
         this.roomShortCode = resendLinkData.getRoomShortCode();
     }
+
+    public AuthenticateUserDTO(SendPrescriptionDTO prescriptionLinkData) {
+        this.bearerToken = prescriptionLinkData.getBearerToken();
+        this.loggedInId = prescriptionLinkData.getLoggedInId();
+        this.roomShortCode = prescriptionLinkData.getRoomShortCode();
+    }
 }

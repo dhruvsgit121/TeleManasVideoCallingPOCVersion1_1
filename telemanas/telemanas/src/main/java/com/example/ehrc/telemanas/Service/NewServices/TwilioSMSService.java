@@ -18,6 +18,9 @@ public class TwilioSMSService {
     @Value("${sms.patientMessageURL}")
     private String patientMeetingLinkBaseURL;
 
+    @Value("${prescriptionLink.patientMessageURL}")
+    private String patientPrescriptonLinkBaseURL;
+
     public TwilioSMSService(@Value("${twilio.auth.token}") String authToken,
                             @Value("${twilio.account.sid}") String accountSid,
                             @Value("${twilio.phone.number}") String twilioPhoneNumber) {
@@ -37,24 +40,25 @@ public class TwilioSMSService {
         }
     }
 
-//    public static String encodeUrl(String longUrl) {
-//        try {
-//            return URLEncoder.encode(longUrl, "UTF-8");
-//        } catch (UnsupportedEncodingException e) {
-//            throw new RuntimeException("Failed to encode URL", e);
-//        }
-//    }
+    public void sendVideoCallLinkSMS(String toPhoneNumber, String textBody) {
+        String messageTextBody = patientMeetingLinkBaseURL + textBody;
+        sendTestSms(toPhoneNumber, messageTextBody);
+    }
+
+    public void sendPrescriptionLinkSMS(String toPhoneNumber, String textBody) {
+        String messageTextBody = patientPrescriptonLinkBaseURL + textBody;
+        sendTestSms(toPhoneNumber, messageTextBody);
+    }
 
     public void sendTestSms(String toPhoneNumber, String textBody) {
 
-        String messageTextBody = patientMeetingLinkBaseURL + textBody;
-        System.out.println("message send to : " + toPhoneNumber + " with text : " + messageTextBody);
+        System.out.println("message send to : " + toPhoneNumber + " with text : " + textBody);
 
         try {
             Message.creator(
                     new PhoneNumber(toPhoneNumber),
                     new PhoneNumber(twilioPhoneNumber),
-                    messageTextBody
+                    textBody
             ).create();
             System.out.println("SMS Send to the user...");
         } catch (Exception exception) {
