@@ -119,7 +119,10 @@ public class NewVideoController {
         return videoService.getPatientRoomDetails(patientRoomDetailsDTO);
     }
 
-
+    @PostMapping("/getmhproomdetails")
+    public ResponseEntity<Map<String, Object>> getMHPRoomDetails(@Valid @RequestBody MHPRoomDetailsDTO mhpRoomDetailsDTO) {
+        return videoService.getMHPRoomDetails(mhpRoomDetailsDTO);
+    }
 
 
 

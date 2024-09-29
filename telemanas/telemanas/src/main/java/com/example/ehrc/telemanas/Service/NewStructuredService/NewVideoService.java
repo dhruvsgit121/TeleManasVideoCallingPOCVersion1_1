@@ -41,7 +41,11 @@ public class NewVideoService {
         return roomManagerService.getPatientRoomDetails(patientRoomDetailsDTO);
     }
 
-        public ResponseEntity<Map<String, Object>> uploadFile(MultipartFile file, String roomShortCode) {
+    public ResponseEntity<Map<String, Object>> getMHPRoomDetails(MHPRoomDetailsDTO mhpRoomDetailsDTO) {
+        return roomManagerService.getMHPRoomDetails(mhpRoomDetailsDTO);
+    }
+
+    public ResponseEntity<Map<String, Object>> uploadFile(MultipartFile file, String roomShortCode) {
         return roomManagerService.uploadFile(file, roomShortCode);
     }
 

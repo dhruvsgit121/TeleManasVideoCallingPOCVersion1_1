@@ -4,6 +4,7 @@ package com.example.ehrc.telemanas.Service.NewStructuredService;
 import com.example.ehrc.telemanas.CustomException.ValidationMessagesException;
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
+import com.example.ehrc.telemanas.DTO.NewStructuredDTO.MHPRoomDetailsDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.PatientRoomDetailsDTO;
 import com.example.ehrc.telemanas.DTO.RoomCreationDataDTO;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
@@ -337,5 +338,38 @@ public class NewRoomService {
             responseData.put("joinedRoom", true);
 
         return new ResponseEntity(responseData, HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity<Map<String, Object>> getMHPRoomDetails(MHPRoomDetailsDTO mhpRoomDetailsDTO) {
+
+        if (videoCallingUtilities.getRoomActivationCheckResponseMap(mhpRoomDetailsDTO.getRoomShortCode()) != null) {
+            return videoCallingUtilities.getRoomActivationCheckResponseMap(mhpRoomDetailsDTO.getRoomShortCode());
+        }
+
+        VideoConsultationRoom requestedRoom = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(mhpRoomDetailsDTO.getRoomShortCode());
+
+        List<VideoConsultationParticipant> participantList = requestedRoom.getParticipants();
+
+//        System.out.println("getPatientRoomDetails in participantList : " + participantList.size());
+
+        VideoConsultationParticipant patientParticipant = getParticipant(participantList, false);
+        VideoConsultationParticipant mhpParticipant = getParticipant(participantList, true);
+
+        VideoConsultationCall videoCall = requestedRoom.getVideoCallData();
+        videoCall.setMHPConsentGiven(true);
+
+        videoConsultationRoomRepository.save(requestedRoom);
+
+        Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
+
+        responseData.put("jwtToken", mhpParticipant.getJwt_token());
+        responseData.put("userName", mhpParticipant.getUser().getUserName());
+        responseData.put("participatingUserName", patientParticipant.getUser().getUserName());
+        responseData.put("userId", mhpParticipant.getUser().getUserID());
+        responseData.put("participatingUserId", patientParticipant.getUser().getUserID());
+        responseData.put("jwtURL", videoCallingUtilities.generateJWTURL(requestedRoom.getRoomId(), mhpParticipant.getJwt_token()));
+
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 }

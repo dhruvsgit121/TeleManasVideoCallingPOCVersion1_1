@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
+//@ToString
 
 
 @Entity(name = "video_consultation_participant")
