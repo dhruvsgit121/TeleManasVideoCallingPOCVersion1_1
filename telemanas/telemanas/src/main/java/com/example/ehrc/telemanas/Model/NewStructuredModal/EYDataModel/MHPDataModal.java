@@ -21,13 +21,6 @@ public class MHPDataModal {
                 '}';
     }
 
-    //    @Override
-//    public String toString() {
-//        return "MHPDataModal{" +
-//                "mhpName='" + mhpName + '\'' +
-//                '}';
-//    }
-
     public MHPDataModal(Map<String, Object> EYUserData) {
 
         System.out.println("Enetered here in this loop" + EYUserData);

@@ -1,7 +1,5 @@
 package com.example.ehrc.telemanas.UserRepository.NewRepository;
 
-
-//import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationRoom;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

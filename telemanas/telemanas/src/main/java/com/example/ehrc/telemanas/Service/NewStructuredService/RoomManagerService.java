@@ -6,17 +6,14 @@ import com.example.ehrc.telemanas.DTO.NewStructuredDTO.*;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.PatientDataModal;
-//import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.NewUserIdentityService;
 import com.example.ehrc.telemanas.Service.NewServices.EventService;
 import com.example.ehrc.telemanas.Service.NewServices.TwilioSMSService;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
@@ -144,50 +141,13 @@ public class RoomManagerService {
 
 
     public ResponseEntity<Map<String, Object>> getPatientRoomDetails(PatientRoomDetailsDTO patientRoomDetailsDTO) {
-
-
         return roomService.getPatientRoomDetails(patientRoomDetailsDTO);
-//
-//        if (videoCallingUtilities.getRoomActivationCheckResponseMap(patientRoomDetailsDTO.getRoomShortCode()) != null) {
-//            return videoCallingUtilities.getRoomActivationCheckResponseMap(patientRoomDetailsDTO.getRoomShortCode());
-//        }
-//
-//
-//
-//
-//
-//
-//        return new ResponseEntity<>(videoCallingUtilities.getSuccessResponseMap(), HttpStatus.OK);
-
     }
 
 
 
     public ResponseEntity<Map<String, Object>> resendPrescriptionLink(AuthenticateUserDTO userDTOData, AuthenticationService authenticationService, SendPrescriptionDTO sendPrescriptionData) {
         return prescriptionService.resendPrescriptionLink(userDTOData, authenticationService, authenticateUserFactory, sendPrescriptionData);
-//        System.out.println("resendPrescriptionLink called" + userDTOData);
-//
-//        System.out.println("resendPrescriptionLink called encryptedPhoneNumber" + sendPrescriptionData.getEncryptedPhoneNumber());
-//
-//        Map<String, Object> decryptPhoneNumberResponseMap = new HashMap<>();
-//
-//        ResponseEntity<Map<String, Object>> decryptUserPhoneNumberResponseMap = authenticationService.getDecryptedPhoneNumber(userDTOData, authenticateUserFactory,  sendPrescriptionData.getEncryptedPhoneNumber(), decryptPhoneNumberResponseMap);
-//        if (decryptUserPhoneNumberResponseMap != null)
-//            return decryptUserPhoneNumberResponseMap;
-//
-//        String decryptedPhoneNumber = "";
-//
-//        if (decryptPhoneNumberResponseMap != null && decryptPhoneNumberResponseMap.containsKey("decryptedPhoneNumber"))
-//            decryptedPhoneNumber = decryptPhoneNumberResponseMap.get("decryptedPhoneNumber").toString();
-//
-//        System.out.println("resend prescription link phone number is : " + decryptedPhoneNumber);
-//
-//        twilioSMSService.sendPrescriptionLinkSMS(decryptedPhoneNumber, userDTOData.getRoomShortCode());
-//
-//        Map<String, Object> resposneMap = videoCallingUtilities.getSuccessResponseMap();
-//
-//        return new ResponseEntity<>(resposneMap, HttpStatus.OK);
-
     }
 
 

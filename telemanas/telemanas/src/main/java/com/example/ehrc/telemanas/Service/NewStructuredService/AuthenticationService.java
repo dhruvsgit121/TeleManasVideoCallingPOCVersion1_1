@@ -3,8 +3,6 @@ package com.example.ehrc.telemanas.Service.NewStructuredService;
 
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
-//import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.MHPDataModal;
-//import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.PatientDataModal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,51 +25,8 @@ public class AuthenticationService {
         if (mhpResponseData != null && mhpResponseData.getStatusCode() != HttpStatus.OK)
             return mhpResponseData;
 
-//        ResponseEntity<Map<String, Object>> decryptPatientMobileNumberResponseData = getDecryptedPhoneNumber(userAuthorisationDataDTO, authenticateUserFactory, ,responseMap);
-//        if (mhpResponseData != null && mhpResponseData.getStatusCode() != HttpStatus.OK)
-//            return mhpResponseData;
-//
-//        System.out.println("Response Data in authenticateMHPAndPatientData is : " + responseMap);
-
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
-
-
-
-//    ResponseEntity<Map<String, Object>> decryptUserPhoneNumberResponseMap = authenticationService.getDecryptedPhoneNumber(userAuthorisationDataDTO, authenticateUserFactory,patientUserData.getEncryptedMobileNumber());
-//
-//        if(userDataAuthenticationResponseMap.getStatusCode() != HttpStatus.OK)
-//            return userDataAuthenticationResponseMap;
-//
-//
-//        if (decryptMobileData.hasBody()) {
-//        Map<String, Object> encryptMobileNumberResponseData = decryptMobileData.getBody();
-//        userDataModal.setMobileNumber((String) encryptMobileNumberResponseData.get("responsePhoneNo"));
-//    }
-
-
-//    public ResponseEntity<Map<String, Object>> decryptPatientMobileNumber(AuthenticateUserDTO userAuthorisationDataDTO, AuthenticateUserFactory authenticateUserFactory, Map<String, Object> responseMap, String encryptedPhoneNumber) {
-//
-//        //MHP Authentication Data...
-////        ResponseEntity<Map<String, Object>> MHPAuthenticationResponseData = authenticateMHPData(userAuthorisationDataDTO, authenticateUserFactory);
-//
-//        ResponseEntity<Map<String, Object>> decryptUserPhoneNumberResponseMap = getDecryptedPhoneNumber(userAuthorisationDataDTO, authenticateUserFactory,encryptedPhoneNumber);
-//
-////        System.out.println("createMeetingLink response in RoomManagerService MHPAuthenticationResponseData : " + MHPAuthenticationResponseData);
-//
-//        if (decryptUserPhoneNumberResponseMap.getStatusCode() != HttpStatus.OK)
-//            return decryptUserPhoneNumberResponseMap;
-//
-////        if (decryptUserPhoneNumberResponseMap.hasBody()) {
-//////            Map<String, Object> encryptMobileNumberResponseData = decryptUserPhoneNumberResponseMap.getBody();
-////            //userDataModal.setMobileNumber((String) encryptMobileNumberResponseData.get("responsePhoneNo"));
-////responseMap.put("decryptedPhoneNumber", )
-////        }
-////        if (decryptUserPhoneNumberResponseMap.hasBody())
-////            responseMap.put("decryptedPhoneNumber", MHPAuthenticationResponseData.getBody());
-//
-//        return null;
-//    }
 
 
     public ResponseEntity<Map<String, Object>> authenticateAndParseMHPData(AuthenticateUserDTO userAuthorisationDataDTO, AuthenticateUserFactory authenticateUserFactory, Map<String, Object> responseMap) {

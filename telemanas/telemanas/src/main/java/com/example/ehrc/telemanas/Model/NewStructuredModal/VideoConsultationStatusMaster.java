@@ -33,8 +33,4 @@ public class VideoConsultationStatusMaster implements Serializable {
 
     private LocalDateTime updationDate;
 
-//    @OneToOne
-//    @JoinColumn(name = "room_id", nullable = false, unique = true)
-//    private VideoConsultationRoom room;
-
 }

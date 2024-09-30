@@ -1,9 +1,6 @@
 package com.example.ehrc.telemanas.Model.NewStructuredModal;
 
-import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
-import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
 import com.example.ehrc.telemanas.Service.NewStructuredService.VideoConsultationCallService;
-import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationIDProofRepository;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,8 +32,6 @@ public class VideoConsultationCall implements Serializable {
 
     private LocalDateTime callEndTime;
 
-//    private String callStatus;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private VideoConsultationCallService.VideoCallStatus callStatus;
@@ -52,30 +47,12 @@ public class VideoConsultationCall implements Serializable {
     @Enumerated(EnumType.STRING)
     private VideoConsultationIDProof.VideoCallIDProofStatus isIDProofStatus;
 
-//    private boolean isIDProofChecked;
-
     @OneToMany(mappedBy = "videoCall", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VideoConsultationEvent> events = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "video_consultation_proof_id", nullable = true)  // Foreign key column
     private VideoConsultationIDProof videoCallIdProof;
-
-
-//    @OneToOne
-//    @JoinColumn(name = "room_id", nullable = false)  // Foreign key column
-//    private VideoConsultationRoom room;
-
-//    public VideoConsultationCall(String videoCallId, LocalDateTime callStartTime, LocalDateTime callEndTime, String callStatus, boolean isPatientConsent1Given, boolean isPatientConsent2Given, boolean isMHPConsentGiven, boolean isIDProofChecked) {
-//        this.videoCallId = videoCallId;
-//        this.callStartTime = callStartTime;
-//        this.callEndTime = callEndTime;
-//        this.callStatus = callStatus;
-//        this.isPatientConsent1Given = isPatientConsent1Given;
-//        this.isPatientConsent2Given = isPatientConsent2Given;
-//        this.isMHPConsentGiven = isMHPConsentGiven;
-//        this.isIDProofChecked = isIDProofChecked;
-//    }
 
     public VideoConsultationCall(String videoCallId, LocalDateTime callStartTime, LocalDateTime callEndTime, VideoConsultationCallService.VideoCallStatus callStatus, boolean isPatientConsent1Given, boolean isPatientConsent2Given, boolean isMHPConsentGiven, VideoConsultationIDProof.VideoCallIDProofStatus isIDProofStatus) {
         this.videoCallId = videoCallId;
@@ -88,35 +65,7 @@ public class VideoConsultationCall implements Serializable {
         this.isIDProofStatus = isIDProofStatus;
     }
 
-
-//    public VideoConsultationCall(String videoCallId, LocalDateTime callStartTime, LocalDateTime callEndTime, VideoConsultationCallService.VideoCallStatus callStatus, boolean isPatientConsent1Given, boolean isPatientConsent2Given, boolean isMHPConsentGiven, boolean isIDProofChecked) {
-//        this.videoCallId = videoCallId;
-//        this.callStartTime = callStartTime;
-//        this.callEndTime = callEndTime;
-//        this.callStatus = callStatus;
-//        this.isPatientConsent1Given = isPatientConsent1Given;
-//        this.isPatientConsent2Given = isPatientConsent2Given;
-//        this.isMHPConsentGiven = isMHPConsentGiven;
-//        this.isIDProofChecked = isIDProofChecked;
-//    }
-
     public VideoConsultationCall(String videoCallId) {
-
-//        this(videoCallId, null, null, VideoConsultationCallService.VideoCallStatus.STARTED, false, false, false, NOT);
-//        this.videoCallId = videoCallId;
         this(videoCallId, null, null, VideoConsultationCallService.VideoCallStatus.STARTED, false, false, false, VideoConsultationIDProof.VideoCallIDProofStatus.NOTVERIFIED);
     }
-
-    //    public VideoConsultationCall(String videoCallId, String callStatus, boolean isPatientConsent1Given, boolean isPatientConsent2Given, boolean isMHPConsentGiven, boolean isIDProofChecked) {
-//        this.videoCallId = videoCallId;
-//        this.callStatus = callStatus;
-//        this.isPatientConsent1Given = isPatientConsent1Given;
-//        this.isPatientConsent2Given = isPatientConsent2Given;
-//        this.isMHPConsentGiven = isMHPConsentGiven;
-//        this.isIDProofChecked = isIDProofChecked;
-//    }
-
-    //Foreign Keys...
-    //room id (fk)
-    //proof id
 }

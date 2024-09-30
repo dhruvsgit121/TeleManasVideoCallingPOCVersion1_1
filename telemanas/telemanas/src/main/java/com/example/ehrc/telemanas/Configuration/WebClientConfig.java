@@ -14,12 +14,4 @@ public class WebClientConfig {
         return new RestTemplate();
     }
 
-
-//    @Bean
-//    public WebClient.Builder webClientBuilder() {
-//
-//        System.out.println("we have enetred here~!!");
-//        return WebClient.builder();
-//    }
-
 }

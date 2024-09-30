@@ -2,23 +2,20 @@ package com.example.ehrc.telemanas.Controller.NewController;
 
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.*;
-//import com.example.ehrc.telemanas.Service.NewServices.VideoCallService;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import com.example.ehrc.telemanas.Service.NewStructuredService.NewVideoService;
 import com.example.ehrc.telemanas.Service.NewStructuredService.RoomManagerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-//import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/room")
+@RequestMapping("/v1/rooms")
 public class NewVideoController {
 
     @Autowired
@@ -26,7 +23,6 @@ public class NewVideoController {
 
     @Autowired
     private NewVideoService videoService;
-
 
     //###################### ROOM RELATED API's ######################
 
@@ -38,7 +34,6 @@ public class NewVideoController {
         setAuthorizationData(userAuthorisationDataDTO, bearerToken, loggedIn);
         return videoService.createMeetingLink(userAuthorisationDataDTO);
     }
-
 
     //###################### VIDEO CALL RELATED API's ######################
 
@@ -61,12 +56,10 @@ public class NewVideoController {
         return videoService.LeaveMHPVideoCall(callStartDTO);
     }
 
-
     @GetMapping("/getpatientjoinflag")
     public ResponseEntity<Map<String, Object>> getPatientRoomJoinDetails(@RequestParam String roomShortCode) {
         return videoService.PatientJoinVideoCall(roomShortCode);
     }
-
 
     //###################### VIDEO CALL RELATED API's ######################
 
@@ -75,7 +68,6 @@ public class NewVideoController {
     public ResponseEntity<Map<String, Object>> saveVideoCallEventsData(@Valid @RequestBody VideoCallEventsDTO videoCallEventsDTO) {
         return videoService.saveVideoCallEvents(videoCallEventsDTO);
     }
-
 
     @GetMapping("/deactivateroom")
     public ResponseEntity<Map<String, Object>> deactivatedRequestedRoom(@RequestParam String roomShortCode) {
@@ -88,17 +80,10 @@ public class NewVideoController {
         return videoService.getFile(roomShortCode);
     }
 
-
-
-
-
-
-
     @GetMapping("/fetchuseridentityuploadflag")
     public ResponseEntity<Map<String, Object>> fetchUserIdentityUploadFlag(@RequestParam String roomShortCode) {
         return videoService.fetchUserIdentityUploadFlag(roomShortCode);
     }
-
 
     @RequestMapping("/send_prescription")
     public ResponseEntity<Map<String, Object>> sendPrescriptionLink(@Valid @RequestBody SendPrescriptionDTO sendPrescriptionData,
@@ -110,12 +95,8 @@ public class NewVideoController {
         return videoService.resendPrescriptionLink(userDataDTO, sendPrescriptionData);
     }
 
-
     @PostMapping("/getpatientroomdetails")
     public ResponseEntity<Map<String, Object>> getPatientRoomDetails(@Valid @RequestBody PatientRoomDetailsDTO patientRoomDetailsDTO) {
-
-//        AuthenticateUserDTO userDataDTO = new AuthenticateUserDTO(patientRoomDetailsDTO);
-//        setAuthorizationData(userDataDTO, bearerToken, loggedIn);
         return videoService.getPatientRoomDetails(patientRoomDetailsDTO);
     }
 
@@ -124,19 +105,15 @@ public class NewVideoController {
         return videoService.getMHPRoomDetails(mhpRoomDetailsDTO);
     }
 
-
-
     @PostMapping("/verifyuseridentity")
     public ResponseEntity<Map<String, Object>> verifyUserIdentity(@Valid @RequestBody VerifyUserIdentityDTO verifyUserIdentityDTO) {
         return videoService.verifyUserIdentity(verifyUserIdentityDTO);
     }
 
-
     @PostMapping("/upload")
     public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("roomShortCode") String roomShortCode) {
         return videoService.uploadFile(file, roomShortCode);
     }
-
 
     @GetMapping("/get_prescription")
     public ResponseEntity<Map<String, Object>> getPrescriptionDetails(@RequestParam String roomShortCode) {
@@ -148,16 +125,10 @@ public class NewVideoController {
     public ResponseEntity<Map<String, Object>> resendMeetingLink(@Valid @RequestBody ResendVideoCallLinkDTO resendLinkData,
                                                                  @RequestHeader("Authorization") String bearerToken,
                                                                  @RequestHeader(value = "Loggedin") String loggedIn) {
-
         AuthenticateUserDTO userDataDTO = new AuthenticateUserDTO(resendLinkData);
-
-
         setAuthorizationData(userDataDTO, bearerToken, loggedIn);
         return videoService.resendVideoCallLink(userDataDTO, resendLinkData.getEncryptedPhoneNumber());
     }
-
-
-
 
     private void setAuthorizationData(AuthenticateUserDTO userDTOData, String bearerToken, String loggedIn) {
         String token = bearerToken.substring(7);
@@ -166,14 +137,6 @@ public class NewVideoController {
         userDTOData.setBearerToken(token);
         userDTOData.setLoggedInId(loggedIn);
     }
-
-//    private void setAuthorizationData(ResendVideoCallLinkDTO resendLinkData, String bearerToken, String loggedIn) {
-//        String token = bearerToken.substring(7);
-//
-//        //Adjusting The UserDTOData...
-//        resendLinkData.setBearerToken(token);
-//        resendLinkData.setLoggedInId(loggedIn);
-//    }
 
     private void setAuthorizationData(CallStartDTO callStartDTO, String bearerToken, String loggedIn) {
         String token = bearerToken.substring(7);

@@ -7,16 +7,12 @@ import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultation
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationEventRepository;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationRoomRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
-//import com.twilio.http.Response;
-//import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-//import java.lang.module.ResolutionException;
-//import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -35,8 +31,6 @@ public class NewEventService {
 
     @Autowired
     private VideoConsultationEventRepository videoConsultationEventRepository;
-
-//    VideoConsultationEventRepository
 
     public VideoConsultationEventMaster getVideoConsultationMasterRecord(String eventDescription) {
 

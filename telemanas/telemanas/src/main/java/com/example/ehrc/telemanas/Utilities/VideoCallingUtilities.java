@@ -1,11 +1,11 @@
 package com.example.ehrc.telemanas.Utilities;
 
-import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
+//import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 //import com.example.ehrc.telemanas.Model.Participant;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationRoom;
-import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
-import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
-import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
+//import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
+//import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
+//import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 //import com.example.ehrc.telemanas.Service.ParticipantService;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationRoomRepository;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -125,17 +125,17 @@ public class VideoCallingUtilities {
 //    }
 
 
-    public Participant getRequestedUpdatedUserAsPerRequest(Room roomData, RoomDetailsRequestDTO roomDetailsRequest) {
-
-        Participant firstParticipant = roomData.getParticipants().get(0);
-        Participant secondParticipant = roomData.getParticipants().get(1);
-
-        if((firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.MHP) && roomDetailsRequest.getIsMHP() == 1) ||
-                (firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) && roomDetailsRequest.getIsMHP() == 0) ){
-            return firstParticipant;
-        }
-        return secondParticipant;
-    }
+//    public Participant getRequestedUpdatedUserAsPerRequest(Room roomData, RoomDetailsRequestDTO roomDetailsRequest) {
+//
+//        Participant firstParticipant = roomData.getParticipants().get(0);
+//        Participant secondParticipant = roomData.getParticipants().get(1);
+//
+//        if((firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.MHP) && roomDetailsRequest.getIsMHP() == 1) ||
+//                (firstParticipant.getAuthenticatedUser().getUserRole().equals(AuthenticatedUser.UserRole.PATIENT) && roomDetailsRequest.getIsMHP() == 0) ){
+//            return firstParticipant;
+//        }
+//        return secondParticipant;
+//    }
 
 
     public HttpEntity<String> createHttpRequestEntity(String loggedInID, String bearerToken, String payload) {

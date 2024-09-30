@@ -7,10 +7,6 @@ import lombok.Setter;
 @Setter
 public class PatientRoomDetailsDTO {
 
-//    private String bearerToken;
-//
-//    private String loggedInId;
-
     private String roomShortCode;
 
     private int isFirstConsentProvided;

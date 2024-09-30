@@ -1,7 +1,6 @@
 package com.example.ehrc.telemanas.Service.NewStructuredService;
 
 
-import com.example.ehrc.telemanas.CustomException.ValidationMessagesException;
 import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.MHPRoomDetailsDTO;
@@ -11,10 +10,6 @@ import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.*;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.MHPDataModal;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.EYDataModel.PatientDataModal;
-//import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
-import com.example.ehrc.telemanas.Model.UpdatedModels.AuthenticatedUser;
-import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
-import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import com.example.ehrc.telemanas.Service.NewServices.TwilioSMSService;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationCallRepository;
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationRoomRepository;
@@ -22,15 +17,12 @@ import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultation
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationUserRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
-//import jakarta.validation.constraints.Null;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -194,7 +186,7 @@ public class NewRoomService {
         Map<String, Object> responseMap = videoCallingUtilities.getSuccessResponseMap();
         responseMap.put("roomCode", videoConsultationRoom.getRoomShortCode());
 
-        twilioSMSService.sendTestSms(patientDataModal.getMobileNumber(), roomShortCode);
+        twilioSMSService.sendVideoCallLinkSMS(patientDataModal.getMobileNumber(), roomShortCode);
 
         return new ResponseEntity(responseMap, HttpStatus.OK);
     }

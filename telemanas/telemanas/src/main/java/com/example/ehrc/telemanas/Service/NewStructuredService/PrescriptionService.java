@@ -4,7 +4,6 @@ package com.example.ehrc.telemanas.Service.NewStructuredService;
 import com.example.ehrc.telemanas.AuthenticateService.AuthenticateUserFactory;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.AuthenticateUserDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.SendPrescriptionDTO;
-//import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationCall;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationPrescription;
 import com.example.ehrc.telemanas.Model.NewStructuredModal.VideoConsultationRoom;
 import com.example.ehrc.telemanas.Service.NewServices.TwilioSMSService;
@@ -12,7 +11,6 @@ import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultation
 import com.example.ehrc.telemanas.UserRepository.NewRepository.VideoConsultationRoomRepository;
 import com.example.ehrc.telemanas.Utilities.VideoCallingAPIConstants;
 import com.example.ehrc.telemanas.Utilities.VideoCallingUtilities;
-//import org.hibernate.tool.schema.spi.SchemaTruncator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

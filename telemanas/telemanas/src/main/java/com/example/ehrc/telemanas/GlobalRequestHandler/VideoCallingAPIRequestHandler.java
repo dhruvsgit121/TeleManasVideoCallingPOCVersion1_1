@@ -13,11 +13,6 @@ import java.util.Map;
 @Service
 public class VideoCallingAPIRequestHandler {
 
-//    @Value("${videocalling.api.eybase.url}")
-    //private String EYAPIBaseURl = "https://telemanas-test.iiitb.ac.in/v3/";
-//    private String EYAPIBaseURl = "https://telemanas-preprod.iiitb.ac.in/v3/";
-
-
     @Autowired
     private GlobalRequestHandler globalRequestHandler;
 

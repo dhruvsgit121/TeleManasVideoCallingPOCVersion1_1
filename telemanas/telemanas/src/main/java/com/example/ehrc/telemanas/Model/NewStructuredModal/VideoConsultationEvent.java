@@ -1,7 +1,5 @@
 package com.example.ehrc.telemanas.Model.NewStructuredModal;
 
-
-import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,29 +35,9 @@ public class VideoConsultationEvent implements Serializable {
     @JoinColumn(name = "video_consultation_participant_id", referencedColumnName = "id")
     private VideoConsultationParticipant participant;
 
-//    @ManyToOne
-//    @JoinColumn(name = "video_consultation_call_id", nullable = false)  // Foreign key column
-//    private VideoConsultationCall videoCall;
-
-//    @ManyToOne
-//    @JoinColumn(name = "video_consultation_event_id", nullable = false)  // Foreign key column
-//    private VideoConsultationEventMaster videoCallEvent;
-//
-//
-//    @ManyToOne
-//    @JoinColumn(name = "video_consultation_participant_id", nullable = false)  // Foreign key column
-//    private VideoConsultationParticipant participant;
-
     private LocalDateTime eventTimeStamp;
 
     public VideoConsultationEvent(LocalDateTime eventTimeStamp) {
         this.eventTimeStamp = eventTimeStamp;
     }
-
-    //    id (pk)
-//    video call id (fk)
-//    event id (fk)
-//    participant id (fk)
-//    event timestamp
-
 }

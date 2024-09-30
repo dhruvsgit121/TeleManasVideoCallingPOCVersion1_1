@@ -4,11 +4,9 @@ import com.example.ehrc.telemanas.DTO.CallStartDTO;
 import com.example.ehrc.telemanas.DTO.NewStructuredDTO.*;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
@@ -57,22 +55,17 @@ public class NewVideoService {
         return roomManagerService.verifyUserIdentity(verifyUserIdentityDTO);
     }
 
-//    public ResponseEntity<Map<String, Object>> resendVideoCallLink(AuthenticateUserDTO userAuthorisationDataDTO, AuthenticationService authenticationService) {
-
     public ResponseEntity<Map<String, Object>> deactivateRequestedRoom(String roomShortCode) {
         return roomManagerService.deactivateRequestedRoom(roomShortCode);
     }
-
 
     public ResponseEntity<Map<String, Object>> getFile(String roomShortCode) {
         return roomManagerService.getFile(roomShortCode);
     }
 
-
     public ResponseEntity<Map<String, Object>> fetchUserIdentityUploadFlag(String roomShortCode) {
         return roomManagerService.fetchUserIdentityUploadFlag(roomShortCode);
     }
-
 
     //Method to Join Video Call...
     public ResponseEntity<Map<String, Object>> JoinVideoCall(CallStartDTO callStartDTO) {
@@ -84,7 +77,6 @@ public class NewVideoService {
         return roomManagerService.JoinPatientVideoCall(roomDetailsRequest);
     }
 
-
     //Method to Join Video Call...
     public ResponseEntity<Map<String, Object>> LeaveMHPVideoCall(CallStartDTO callStartDTO) {
         return roomManagerService.leaveVideoCall(callStartDTO);
@@ -92,20 +84,11 @@ public class NewVideoService {
 
     //Method to Join Video Call...
     public ResponseEntity<Map<String, Object>> PatientJoinVideoCall(String roomShortCode) {
-
         eventService.getVideoConsultationMasterRecord("MHP Joined the room.");
-
         return roomManagerService.patientJoinCallFlagData(roomShortCode);
     }
-
 
     public ResponseEntity<Map<String, Object>> saveVideoCallEvents(VideoCallEventsDTO videoCallEventsDTO) {
         return eventService.saveVideoCallEvent(videoCallEventsDTO);
     }
-
-//    //Method to Join Video Call...
-//    public ResponseEntity<Map<String, Object>> LeavePatientVideoCall(RoomDetailsRequestDTO roomDetailsRequest) {
-//        return roomManagerService.leaveVideoCall(roomDetailsRequest);
-//    }
-
 }

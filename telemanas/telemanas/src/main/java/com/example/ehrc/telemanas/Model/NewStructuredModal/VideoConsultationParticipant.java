@@ -1,22 +1,17 @@
 package com.example.ehrc.telemanas.Model.NewStructuredModal;
 
-//import com.example.ehrc.telemanas.Model.UpdatedModels.Participant;
-//import com.example.ehrc.telemanas.Model.UpdatedModels.Room;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.io.Serializable;
-//import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-//@ToString
 
 
 @Entity(name = "video_consultation_participant")
