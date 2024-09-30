@@ -242,6 +242,10 @@ public class NewRoomService {
 
         VideoConsultationRoom requestedRoom = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(patientRoomDetailsDTO.getRoomShortCode());
 
+        if (requestedRoom.getVideoCallData().getCallStatus() == VideoConsultationCallService.VideoCallStatus.INPROGRESS) {
+            return videoCallingUtilities.getGlobalErrorResponseMessageEntity("Currently video call is going for current room. please try again later.");
+        }
+
         List<VideoConsultationParticipant> participantList = requestedRoom.getParticipants();
 
         System.out.println("getPatientRoomDetails in participantList : " + participantList.size());
