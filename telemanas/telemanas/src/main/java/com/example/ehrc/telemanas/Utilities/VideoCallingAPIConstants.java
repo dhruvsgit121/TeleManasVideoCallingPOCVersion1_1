@@ -20,18 +20,23 @@ public class VideoCallingAPIConstants {
     public static String callEndEventURL;
     public static String authenticatePatientURL;
     public static String eyAPIBaseURL;
+    public static String getPatientPrescriptionURL;
+
 
     public VideoCallingAPIConstants(@Value("${videocalling.api.autheticate.patient}") String authenticatePatientURL,
                                @Value("${videocalling.api.getuserdetails.username}") String getUserDetailsURL,
                                @Value("${videocalling.api.decrypt.mobilenumber}") String decryptPatientMobileNumberURL,
                                     @Value("${videocalling.api.eybase.url}") String eyAPIBaseURL,
                                     @Value("${videocalling.api.call.start.event}") String callStartEventURL,
-                                    @Value("${videocalling.api.eybase.url}") String callEndEventURL) {
+                                    @Value("${videocalling.api.eybase.url}") String callEndEventURL,
+                                    @Value("${videocalling.api.get_prescription}") String getPrescriptionURL
+                                    ) {
         this.authenticatePatientURL = authenticatePatientURL;
         this.getUserDetailsURL = getUserDetailsURL;
         this.decryptPatientMobileNumberURL = decryptPatientMobileNumberURL;
         this.eyAPIBaseURL = eyAPIBaseURL;
         this.callStartEventURL = callStartEventURL;
         this.callEndEventURL = callEndEventURL;
+        this.getPatientPrescriptionURL =getPrescriptionURL;
     }
 }

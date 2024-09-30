@@ -75,16 +75,16 @@ public class AuthenticateUserRequestHandler {
         if (response.getBody().containsKey("code") && response.getBody().containsKey("message")) {
             int responseCode = (int) response.getBody().get("code");
             String responseMessage = response.getBody().get("message").toString();
-            if (responseCode == 200 ) {
+            if (responseCode == 200) {
 //                && responseMessage.equals("SUCCESS")
-                if(responseMessage.equals("SUCCESS")){
+                if (responseMessage.equals("SUCCESS")) {
                     if (response.getBody().containsKey("payload")) {
                         parsedResponseData = (Map<String, Object>) response.getBody().get("payload");
                     }
                     return new ResponseEntity<>(parsedResponseData, HttpStatus.OK);
-                }else{
+                } else {
                     ResponseEntity<Map<String, Object>> responseEntity = videoCallingUtilities.getErrorResponseMessageEntity(responseMessage, HttpStatus.SEE_OTHER);
-                    return  responseEntity;
+                    return responseEntity;
                 }
 //                if (response.getBody().containsKey("payload")) {
 //                    parsedResponseData = (Map<String, Object>) response.getBody().get("payload");
@@ -115,16 +115,44 @@ public class AuthenticateUserRequestHandler {
         System.out.println("response.getBody() in Encrypt Mobile Number is = " + response.getBody());
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            if(response.getBody().containsKey("code")){
-                int responseCode = (int)response.getBody().get("code");
+            if (response.getBody().containsKey("code")) {
+                int responseCode = (int) response.getBody().get("code");
                 return videoCallingUtilities.getErrorResponseMessageEntity(response.getBody().get("message").toString(), HttpStatusCode.valueOf(responseCode));
-            }else{
+            } else {
                 parsedResponseData = response.getBody();
                 System.out.println("Entered in this with data being : " + parsedResponseData);
                 return new ResponseEntity<>(parsedResponseData, HttpStatus.OK);
             }
         }
         return videoCallingUtilities.getGlobalErrorResponseMessageEntity(null);
+    }
+
+
+    public ResponseEntity<Map<String, Object>> getPrescriptionData(AuthenticateUserDTO userData, String ivrsCallID) {
+
+        String payload = "{\r\n    \"callSegmentId\": \"" +
+                ivrsCallID +
+                "\"\r\n}";
+
+        //Create HTTP Request Entity...
+        HttpEntity<String> requestEntity = createHttpRequestEntity(userData, payload);//new HttpEntity<>(payload, headers);
+
+        // Make the POST request
+        ResponseEntity<Map<String, Object>> response = videoCallingAPIRequestHandler.makePostRequest(VideoCallingAPIConstants.getPatientPrescriptionURL, requestEntity);
+
+        Map<String, Object> parsedResponseData = videoCallingUtilities.getSuccessResponseMap();
+
+        if (response.getBody().containsKey("message")) {
+            String responseMessage = response.getBody().get("message").toString();
+            if (responseMessage.equals("Fetch successfully")) {
+                parsedResponseData.putAll(response.getBody());
+                return new ResponseEntity<>(parsedResponseData, HttpStatus.OK);
+            } else {
+                ResponseEntity<Map<String, Object>> responseEntity = videoCallingUtilities.getErrorResponseMessageEntity(responseMessage, HttpStatus.SEE_OTHER);
+                return responseEntity;
+            }
+        }
+        return videoCallingUtilities.getErrorResponseMessageEntity(response.getBody().get("message").toString(), HttpStatus.SEE_OTHER);
     }
 
 

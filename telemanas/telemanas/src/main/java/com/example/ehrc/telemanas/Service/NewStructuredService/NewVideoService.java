@@ -5,6 +5,7 @@ import com.example.ehrc.telemanas.DTO.NewStructuredDTO.*;
 import com.example.ehrc.telemanas.DTO.RoomDetailsRequestDTO;
 import com.example.ehrc.telemanas.DTO.VideoCallEventsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,14 @@ public class NewVideoService {
 
     @Autowired
     private AuthenticationService authenticationService;
+
+    @Value("${EY_BEARER_TOKEN}")
+    private String bearerToken;
+
+
+    @Value("${EY_LOGGED_IN}")
+    private String loggedIn;
+
 
     public ResponseEntity<Map<String, Object>> createMeetingLink(AuthenticateUserDTO userAuthorisationDataDTO) {
         return roomManagerService.createMeetingLink(userAuthorisationDataDTO, authenticationService);
@@ -48,7 +57,19 @@ public class NewVideoService {
     }
 
     public ResponseEntity<Map<String, Object>> getPrescriptionDetails(String roomShortCode) {
-        return roomManagerService.getPrescriptionDetails(roomShortCode);
+
+        AuthenticateUserDTO userDTOData = new AuthenticateUserDTO();
+        userDTOData.setBearerToken(bearerToken);
+        userDTOData.setLoggedInId(loggedIn);
+
+        ResponseEntity<Map<String, Object>> responseMap = roomManagerService.getPrescriptionDetails(roomShortCode);
+
+        if(responseMap.hasBody() && responseMap.getBody().containsKey("isErrorPresent") && (boolean)responseMap.getBody().get("isErrorPresent") == true)
+            return responseMap;
+
+        String callivrsid = responseMap.getBody().get("ivrsCallid").toString();
+
+        return roomManagerService.getPatientPrescriptionData(userDTOData, authenticationService ,callivrsid);
     }
 
     public ResponseEntity<Map<String, Object>> verifyUserIdentity(VerifyUserIdentityDTO verifyUserIdentityDTO) {

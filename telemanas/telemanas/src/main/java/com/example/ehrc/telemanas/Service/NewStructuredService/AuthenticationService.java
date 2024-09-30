@@ -73,6 +73,11 @@ public class AuthenticationService {
         return null;
     }
 
+
+    public ResponseEntity<Map<String, Object>> getPrescriptionData(AuthenticateUserDTO userAuthorisationDataDTO, AuthenticateUserFactory authenticateUserFactory, String ivrsCallID, Map<String, Object> responseMap) {
+        return authenticateUserFactory.getPrescriptionData(userAuthorisationDataDTO, ivrsCallID);
+    }
+
     public ResponseEntity<Map<String, Object>> authenticateMHPData(AuthenticateUserDTO userDTOData, AuthenticateUserFactory authenticateUserFactory) {
 
         //Checking for Authentication of MHP...

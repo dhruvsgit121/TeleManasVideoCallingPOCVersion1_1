@@ -176,4 +176,33 @@ public class RoomManagerService {
         return new ResponseEntity<>(resposneMap, HttpStatus.OK);
 
     }
+
+
+
+
+    public ResponseEntity<Map<String, Object>> getPatientPrescriptionData(AuthenticateUserDTO userDTOData, AuthenticationService authenticationService, String ivrsCallID) {
+
+        System.out.println("getPatientPrescriptionData called" + userDTOData);
+
+        System.out.println("getPatientPrescriptionData called ivrsCallID" + ivrsCallID);
+
+        Map<String, Object> patientPrescritionResponseMap = new HashMap<>();
+
+        return authenticationService.getPrescriptionData(userDTOData, authenticateUserFactory, ivrsCallID, patientPrescritionResponseMap);
+//        if (decryptUserPhoneNumberResponseMap != null)
+//            return decryptUserPhoneNumberResponseMap;
+
+//        String decryptedPhoneNumber = "";
+//
+//        if (patientPrescritionResponseMap != null && patientPrescritionResponseMap.containsKey("decryptedPhoneNumber"))
+//            decryptedPhoneNumber = patientPrescritionResponseMap.get("decryptedPhoneNumber").toString();
+
+//        System.out.println("reswnd link phone number is : " + decryptedPhoneNumber);
+
+//        twilioSMSService.sendVideoCallLinkSMS(decryptedPhoneNumber, userDTOData.getRoomShortCode());
+//        Map<String, Object> resposneMap = videoCallingUtilities.getSuccessResponseMap();
+
+//        return new ResponseEntity<>(resposneMap, HttpStatus.OK);
+
+    }
 }

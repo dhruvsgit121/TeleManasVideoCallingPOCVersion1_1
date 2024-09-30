@@ -24,4 +24,9 @@ public class AuthenticateUserFactory {
         return user.decryptMobileNumber(userData, encryptedMobileNumber);
     }
 
+    public ResponseEntity<Map<String, Object>> getPrescriptionData(AuthenticateUserDTO userData, String ivrsCallID) {
+        AuthenticatePatient user = new AuthenticatePatient();
+        return user.getPrescriptionData(userData, ivrsCallID);
+    }
+
 }

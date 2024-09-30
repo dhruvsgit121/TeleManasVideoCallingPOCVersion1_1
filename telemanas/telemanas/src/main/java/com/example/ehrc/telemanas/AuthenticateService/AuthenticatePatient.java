@@ -23,4 +23,8 @@ public class AuthenticatePatient implements AuthenticateUser {
     public ResponseEntity<Map<String, Object>> decryptMobileNumber(AuthenticateUserDTO userData, String encryptedMobileNumber) {
         return authenticateUserRequestHandler.decryptPatientMobileNumber(userData, encryptedMobileNumber);
     }
+
+    public ResponseEntity<Map<String, Object>> getPrescriptionData(AuthenticateUserDTO userData, String ivrsCallID) {
+        return authenticateUserRequestHandler.getPrescriptionData(userData, ivrsCallID);
+    }
 }
