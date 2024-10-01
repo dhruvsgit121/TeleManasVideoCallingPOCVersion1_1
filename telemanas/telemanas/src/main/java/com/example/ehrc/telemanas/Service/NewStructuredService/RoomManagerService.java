@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
@@ -113,6 +114,7 @@ public class RoomManagerService {
     }
 
 
+    @Transactional
     public ResponseEntity<Map<String, Object>> patientJoinCallFlagData(String roomShortCode) {
         return roomService.getPatientJoinData(roomShortCode);
     }

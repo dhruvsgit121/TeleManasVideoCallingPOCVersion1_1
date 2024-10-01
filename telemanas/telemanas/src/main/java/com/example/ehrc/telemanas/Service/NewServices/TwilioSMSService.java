@@ -40,9 +40,40 @@ public class TwilioSMSService {
         }
     }
 
+
+    public void sendSMS() {
+
+        String messageTemplate = "Please click to join the Tele MANAS video consultation https://telemanas-test.iiitb.ac.in/video-call-app/?{shortCode}-NIMHANS";
+
+                //"Please click to join the Tele MANAS Video Consultation https://telemanas-test.iiitb.ac.in/video-call-app/?{shortCode} . " +
+//                "with Photo ID card to verify identity - NIMHANS";
+
+        String messageTemplateId = "1107172665608900651";//LoadConfig.getConfigValue("APPOINTMENT_SMS_TEMPLATE_ID");
+
+        String messageContent = null;
+
+        if (messageTemplate != null) {
+
+            messageContent = messageTemplate
+                    .replace("{shortCode}",
+                            "code=ksadhjklfhjfhsfjdk");
+
+        }
+
+        String toPhoneNumber = "9015346166";
+
+        if (toPhoneNumber != null && messageContent != null) {
+            boolean sendSmsRes = NimhansSmsGateway.sendSms(toPhoneNumber, messageContent, messageTemplateId);
+        }
+
+    }
+
+
+
     public void sendVideoCallLinkSMS(String toPhoneNumber, String textBody) {
         String messageTextBody = patientMeetingLinkBaseURL + textBody;
         sendTestSms(toPhoneNumber, messageTextBody);
+        sendSMS();
     }
 
     public void sendPrescriptionLinkSMS(String toPhoneNumber, String textBody) {
@@ -54,9 +85,11 @@ public class TwilioSMSService {
 
         System.out.println("message send to : " + toPhoneNumber + " with text : " + textBody);
 
+        String recieverPhoneNumber = "+91" + toPhoneNumber;
+
         try {
             Message.creator(
-                    new PhoneNumber(toPhoneNumber),
+                    new PhoneNumber(recieverPhoneNumber),
                     new PhoneNumber(twilioPhoneNumber),
                     textBody
             ).create();

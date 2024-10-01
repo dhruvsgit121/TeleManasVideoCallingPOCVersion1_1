@@ -263,6 +263,7 @@ public class NewRoomService {
 
         responseData.put("jwtToken", patientParticipant.getJwt_token());
         responseData.put("userName", patientParticipant.getUser().getUserName());
+        responseData.put("roomID", requestedRoom.getRoomId());
         responseData.put("participatingUserName", mhpParticipant.getUser().getUserName());
         responseData.put("userId", patientParticipant.getUser().getUserID());
         responseData.put("participatingUserId", mhpParticipant.getUser().getId());
@@ -297,6 +298,7 @@ public class NewRoomService {
     }
 
 
+    @Transactional
     public ResponseEntity<Map<String, Object>> getPatientJoinData(String roomShortCode) {
 
         VideoConsultationRoom roomData = videoConsultationRoomRepository.findRoomDetailsWithActiveStatus(roomShortCode);
@@ -360,6 +362,7 @@ public class NewRoomService {
         Map<String, Object> responseData = videoCallingUtilities.getSuccessResponseMap();
 
         responseData.put("jwtToken", mhpParticipant.getJwt_token());
+        responseData.put("roomID", requestedRoom.getRoomId());
         responseData.put("userName", mhpParticipant.getUser().getUserName());
         responseData.put("participatingUserName", patientParticipant.getUser().getUserName());
         responseData.put("userId", mhpParticipant.getUser().getUserID());
